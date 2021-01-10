@@ -1,4 +1,4 @@
-package de.raidcraft.template;
+package de.raidcraft.achievements;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
@@ -8,13 +8,13 @@ import org.junit.jupiter.api.*;
 public class IntegrationTest {
 
     private ServerMock server;
-    private PluginTemplate plugin;
+    private AchievementsPlugin plugin;
 
     @BeforeEach
     void setUp() {
 
         this.server = MockBukkit.mock();
-        this.plugin = MockBukkit.load(PluginTemplate.class);
+        this.plugin = MockBukkit.load(AchievementsPlugin.class);
     }
 
     @AfterEach
