@@ -1,6 +1,7 @@
 package de.raidcraft.achievements.entities;
 
 import com.google.common.base.Strings;
+import de.raidcraft.achievements.entities.query.QAchievement;
 import io.ebean.Finder;
 import io.ebean.annotation.DbJson;
 import io.ebean.annotation.Index;
@@ -75,8 +76,8 @@ public class Achievement extends BaseEntity {
 
         if (Strings.isNullOrEmpty(alias)) return Optional.empty();
 
-        return find.query().where()
-                .ieq("alias", alias)
+        return new QAchievement().where()
+                .alias.ieq(alias)
                 .findOneOrEmpty();
     }
 

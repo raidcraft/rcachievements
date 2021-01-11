@@ -5,6 +5,7 @@ import de.raidcraft.achievements.commands.AdminCommands;
 import de.raidcraft.achievements.commands.PlayerCommands;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import io.ebean.Database;
 import kr.entree.spigradle.annotations.PluginMain;
@@ -55,10 +56,8 @@ public class AchievementsPlugin extends JavaPlugin {
 
         loadConfig();
         setupDatabase();
-        if (!testing) {
-            setupListener();
-            setupCommands();
-        }
+        setupListener();
+        setupCommands();
     }
 
     public void reload() {
@@ -92,7 +91,8 @@ public class AchievementsPlugin extends JavaPlugin {
                 .entities(
                         AchievementPlayer.class,
                         Achievement.class,
-                        PlayerAchievement.class
+                        PlayerAchievement.class,
+                        DataStore.class
                 )
                 .build()).connect();
     }
