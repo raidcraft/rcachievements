@@ -3,6 +3,9 @@ package de.raidcraft.achievements;
 import co.aikar.commands.PaperCommandManager;
 import de.raidcraft.achievements.commands.AdminCommands;
 import de.raidcraft.achievements.commands.PlayerCommands;
+import de.raidcraft.achievements.entities.Achievement;
+import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.PlayerAchievement;
 import io.ebean.Database;
 import kr.entree.spigradle.annotations.PluginMain;
 import lombok.AccessLevel;
@@ -19,6 +22,8 @@ import java.io.File;
 
 @PluginMain
 public class AchievementsPlugin extends JavaPlugin {
+
+    public static final String TABLE_PREFIX = "rcachievements_";
 
     @Getter
     @Accessors(fluent = true)
@@ -85,7 +90,9 @@ public class AchievementsPlugin extends JavaPlugin {
 
         this.database = new EbeanWrapper(Config.builder(this)
                 .entities(
-                        // TODO: add your database entities here
+                        AchievementPlayer.class,
+                        Achievement.class,
+                        PlayerAchievement.class
                 )
                 .build()).connect();
     }
