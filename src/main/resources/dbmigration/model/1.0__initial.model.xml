@@ -13,7 +13,7 @@
             <column name="broadcast" type="boolean" defaultValue="false" notnull="true"/>
             <column name="restricted" type="boolean" defaultValue="false" notnull="true"/>
             <column name="config" type="json"/>
-            <column name="data_id" type="uuid" uniqueOneToOne="uq_rcachievements_achievements_data_id" references="rcs_datastore.id" foreignKeyName="fk_rcachievements_achievements_data_id"/>
+            <column name="data_id" type="uuid" uniqueOneToOne="uq_rcachievements_achievements_data_id" references="rcachievements_datastore.id" foreignKeyName="fk_rcachievements_achievements_data_id"/>
             <column name="version" type="bigint" notnull="true"/>
             <column name="when_created" type="timestamp" notnull="true"/>
             <column name="when_modified" type="timestamp" notnull="true"/>
@@ -26,7 +26,7 @@
             <column name="when_created" type="timestamp" notnull="true"/>
             <column name="when_modified" type="timestamp" notnull="true"/>
         </createTable>
-        <createTable name="rcs_datastore" identityType="external" pkName="pk_rcs_datastore">
+        <createTable name="rcachievements_datastore" identityType="external" pkName="pk_rcachievements_datastore">
             <column name="id" type="uuid" primaryKey="true" identity="true"/>
             <column name="data" type="json"/>
             <column name="version" type="bigint" notnull="true"/>
@@ -38,7 +38,7 @@
             <column name="achievement_id" type="uuid" notnull="true" references="rcachievements_achievements.id" foreignKeyName="fk_rcachievements_player_achievements_achievement_id" foreignKeyIndex="ix_rcachievements_player_achievements_achievement_id"/>
             <column name="player_id" type="uuid" notnull="true" references="rcachievements_players.id" foreignKeyName="fk_rcachievements_player_achievements_player_id" foreignKeyIndex="ix_rcachievements_player_achievements_player_id"/>
             <column name="unlocked" type="timestamp"/>
-            <column name="data_id" type="uuid" uniqueOneToOne="uq_rcachievements_player_achievements_data_id" references="rcs_datastore.id" foreignKeyName="fk_rcachievements_player_achievements_data_id"/>
+            <column name="data_id" type="uuid" uniqueOneToOne="uq_rcachievements_player_achievements_data_id" references="rcachievements_datastore.id" foreignKeyName="fk_rcachievements_player_achievements_data_id"/>
             <column name="version" type="bigint" notnull="true"/>
             <column name="when_created" type="timestamp" notnull="true"/>
             <column name="when_modified" type="timestamp" notnull="true"/>

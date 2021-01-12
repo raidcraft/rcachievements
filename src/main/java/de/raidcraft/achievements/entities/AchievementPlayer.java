@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * The achievement player is the database link between the bukkit player
@@ -67,6 +68,23 @@ public class AchievementPlayer extends BaseEntity {
         this.name(player.getName());
     }
 
+    /**
+     * @return a list of all unlocked achievements of this player
+     */
+    public List<PlayerAchievement> unlockedAchievements() {
+
+        return achievements().stream()
+                .filter(PlayerAchievement::isUnlocked)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Checks if the given achievement was unlocked by this player.
+     * <p>Will create a new {@link PlayerAchievement} entry if none exists.
+     *
+     * @param achievement the achievement to check
+     * @return true if the achievement is unlocked
+     */
     public boolean unlocked(Achievement achievement) {
 
         return PlayerAchievement.of(achievement, this).unlocked() != null;

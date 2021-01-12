@@ -1,52 +1,49 @@
 package de.raidcraft.achievements;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
+import de.raidcraft.achievements.entities.Achievement;
+import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.PlayerAchievement;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-public class IntegrationTest {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    private ServerMock server;
-    private AchievementsPlugin plugin;
-
-    @BeforeEach
-    void setUp() {
-
-        this.server = MockBukkit.mock();
-        this.plugin = MockBukkit.load(AchievementsPlugin.class);
-    }
-
-    @AfterEach
-    void tearDown() {
-
-        MockBukkit.unmock();
-    }
+public class IntegrationTest extends TestBase {
 
     @Nested
     @DisplayName("Commands")
     class Commands {
 
         private Player player;
+        private Achievement achievement;
 
         @BeforeEach
         void setUp() {
-            player = server.addPlayer();
+            player = server().addPlayer("foobar");
+            player.setOp(true);
+            achievement = loadAchievement();
         }
 
         @Nested
-        @DisplayName("/template:admin")
+        @DisplayName("/rca:admin")
         class AdminCommands {
 
             @Nested
-            @DisplayName("foo bar")
+            @DisplayName("add")
             class add {
 
                 @Test
                 @DisplayName("should work")
                 void shouldWork() {
 
-                    server.dispatchCommand(server.getConsoleSender(),"rc:template add foo " + player.getName() + " bar");
+                    server().dispatchCommand(player,"rca:admin add " + player.getName() + " " + achievement.alias());
+                    PlayerAchievement playerAchievement = PlayerAchievement.of(achievement, AchievementPlayer.of(player));
+                    assertThat(playerAchievement)
+                            .extracting(PlayerAchievement::isUnlocked)
+                            .isEqualTo(true);
                 }
             }
         }

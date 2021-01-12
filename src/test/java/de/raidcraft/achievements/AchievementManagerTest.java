@@ -24,14 +24,14 @@ import static org.mockito.Mockito.verify;
 class AchievementManagerTest {
 
     private ServerMock server;
-    private AchievementsPlugin plugin;
+    private RCAchievements plugin;
     private AchievementManager manager;
 
     @BeforeEach
     void setUp() {
 
         server = MockBukkit.mock();
-        plugin = MockBukkit.load(AchievementsPlugin.class);
+        plugin = MockBukkit.load(RCAchievements.class);
         manager = new AchievementManager(plugin);
     }
 

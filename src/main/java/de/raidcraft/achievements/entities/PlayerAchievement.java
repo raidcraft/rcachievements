@@ -1,22 +1,20 @@
 package de.raidcraft.achievements.entities;
 
-import de.raidcraft.achievements.entities.query.QPlayerAchievement;
 import de.raidcraft.achievements.events.PlayerUnlockAchievementEvent;
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
+import io.ebean.Finder;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.silthus.ebean.BaseEntity;
 import org.bukkit.Bukkit;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
@@ -31,6 +29,8 @@ import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 @Table(name = TABLE_PREFIX + "player_achievements")
 public class PlayerAchievement extends BaseEntity {
 
+    public static final Finder<UUID, PlayerAchievement> find = new Finder<>(PlayerAchievement.class);
+
     /**
      * Finds or creates a player achievement from the given achievement and player combination.
      *
@@ -38,7 +38,7 @@ public class PlayerAchievement extends BaseEntity {
      * @param player the player
      * @return the created or existing player achievement
      */
-    public static PlayerAchievement of(Achievement achievement, AchievementPlayer player) {
+    public static PlayerAchievement of(@NonNull Achievement achievement, @NonNull AchievementPlayer player) {
 
         return find(achievement, player)
                 .orElseGet(() -> {
@@ -55,12 +55,11 @@ public class PlayerAchievement extends BaseEntity {
      * @param player the player
      * @return the player achievement or an empty optional
      */
-    public static Optional<PlayerAchievement> find(Achievement achievement, AchievementPlayer player) {
+    public static Optional<PlayerAchievement> find(@NonNull Achievement achievement, @NonNull AchievementPlayer player) {
 
-        return new QPlayerAchievement().where()
-                .achievement.eq(achievement)
-                .and()
-                .player.eq(player)
+        return find.query().where()
+                .eq("achievement_id", achievement.id())
+                .and().eq("player_id", player.id())
                 .findOneOrEmpty();
     }
 
@@ -88,9 +87,17 @@ public class PlayerAchievement extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private DataStore data = new DataStore();
 
-    PlayerAchievement(Achievement achievement, AchievementPlayer player) {
+    PlayerAchievement(@NonNull Achievement achievement, @NonNull AchievementPlayer player) {
         this.achievement = achievement;
         this.player = player;
+    }
+
+    /**
+     * @return true if the player unlocked the achievement
+     */
+    public boolean isUnlocked() {
+
+        return unlocked() != null;
     }
 
     /**

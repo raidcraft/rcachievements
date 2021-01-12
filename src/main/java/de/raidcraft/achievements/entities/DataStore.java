@@ -14,11 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
 @Entity
-@Table(name = "rcs_datastore")
+@Table(name = TABLE_PREFIX + "datastore")
 @Log(topic = "RCSkills")
 public class DataStore extends BaseEntity {
 

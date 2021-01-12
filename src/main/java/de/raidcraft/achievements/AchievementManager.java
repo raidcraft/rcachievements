@@ -34,12 +34,12 @@ import java.util.stream.Collectors;
 @Accessors(fluent = true)
 public final class AchievementManager {
 
-    private final AchievementsPlugin plugin;
+    private final RCAchievements plugin;
     private final Map<String, Set<Map.Entry<String, ConfigurationSection>>> failedLoads = new HashMap<>();
     private final Map<String, AchievementType.Registration<?>> types = new HashMap<>();
     private final Map<UUID, AchievementContext> activeAchievements = new HashMap<>();
 
-    AchievementManager(AchievementsPlugin plugin) {
+    AchievementManager(RCAchievements plugin) {
         this.plugin = plugin;
     }
 
@@ -56,7 +56,11 @@ public final class AchievementManager {
     }
 
     void unload() {
-        // TODO: implement
+
+        activeAchievements().values().forEach(AchievementContext::disable);
+        activeAchievements.clear();
+        types.clear();
+        failedLoads.clear();
     }
 
     void registerDefaults() {
@@ -227,7 +231,10 @@ public final class AchievementManager {
      */
     void loadAchievements() {
 
-        loadAchievements(new File(plugin().getDataFolder(), plugin().getPluginConfig().getAchievements()).toPath())
+        File path = new File(plugin().getDataFolder(), plugin().pluginConfig().getAchievements());
+        path.mkdirs();
+
+        loadAchievements(path.toPath())
                 .forEach(this::initialize);
     }
 
@@ -378,6 +385,6 @@ public final class AchievementManager {
 
     private String registration(@NonNull ConfigurationSection config) {
 
-        return config.getString("type", plugin().getPluginConfig().getDefaultType());
+        return config.getString("type", plugin().pluginConfig().getDefaultType());
     }
 }

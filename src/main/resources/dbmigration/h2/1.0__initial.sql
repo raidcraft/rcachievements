@@ -29,13 +29,13 @@ create table rcachievements_players (
   constraint pk_rcachievements_players primary key (id)
 );
 
-create table rcs_datastore (
+create table rcachievements_datastore (
   id                            uuid not null,
   data                          clob,
   version                       bigint not null,
   when_created                  timestamp not null,
   when_modified                 timestamp not null,
-  constraint pk_rcs_datastore primary key (id)
+  constraint pk_rcachievements_datastore primary key (id)
 );
 
 create table rcachievements_player_achievements (
@@ -51,7 +51,7 @@ create table rcachievements_player_achievements (
   constraint pk_rcachievements_player_achievements primary key (id)
 );
 
-alter table rcachievements_achievements add constraint fk_rcachievements_achievements_data_id foreign key (data_id) references rcs_datastore (id) on delete restrict on update restrict;
+alter table rcachievements_achievements add constraint fk_rcachievements_achievements_data_id foreign key (data_id) references rcachievements_datastore (id) on delete restrict on update restrict;
 
 create index ix_rcachievements_player_achievements_achievement_id on rcachievements_player_achievements (achievement_id);
 alter table rcachievements_player_achievements add constraint fk_rcachievements_player_achievements_achievement_id foreign key (achievement_id) references rcachievements_achievements (id) on delete restrict on update restrict;
@@ -59,5 +59,5 @@ alter table rcachievements_player_achievements add constraint fk_rcachievements_
 create index ix_rcachievements_player_achievements_player_id on rcachievements_player_achievements (player_id);
 alter table rcachievements_player_achievements add constraint fk_rcachievements_player_achievements_player_id foreign key (player_id) references rcachievements_players (id) on delete restrict on update restrict;
 
-alter table rcachievements_player_achievements add constraint fk_rcachievements_player_achievements_data_id foreign key (data_id) references rcs_datastore (id) on delete restrict on update restrict;
+alter table rcachievements_player_achievements add constraint fk_rcachievements_player_achievements_data_id foreign key (data_id) references rcachievements_datastore (id) on delete restrict on update restrict;
 

@@ -2,7 +2,7 @@ package de.raidcraft.achievements.entities;
 
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.Constants;
-import de.raidcraft.achievements.entities.query.QAchievement;
+import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.annotation.DbJson;
 import io.ebean.annotation.Index;
@@ -24,11 +24,7 @@ import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
@@ -79,9 +75,36 @@ public class Achievement extends BaseEntity {
 
         if (Strings.isNullOrEmpty(alias)) return Optional.empty();
 
-        return new QAchievement().where()
-                .alias.ieq(alias)
+        return find.query().where()
+                .ieq("alias", alias)
                 .findOneOrEmpty();
+    }
+
+    /**
+     * @return a list of all enabled and non hidden achievements
+     */
+    public static List<Achievement> allEnabled() {
+
+        return allEnabled(false);
+    }
+
+    /**
+     * Gets a list of all enabled achievements.
+     *
+     * @param hidden set to true to include hidden achievements
+     * @return a list of all enabled achievements
+     */
+    public static List<Achievement> allEnabled(boolean hidden) {
+
+        ExpressionList<Achievement> query = find.query().where()
+                .eq("enabled", true);
+        if (!hidden) {
+            return query.and()
+                    .eq("hidden", false)
+                    .findList();
+        }
+
+        return query.findList();
     }
 
     /**

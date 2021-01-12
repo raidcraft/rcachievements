@@ -7,16 +7,13 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 /**
- * The unlock achievement event is fired after the player received an achievement.
+ * The PlayerUnlockedAchievementEvent is fired after the player received an achievement.
  * <p>Use the {@link PlayerUnlockAchievementEvent} if you want to influence or cancel the process.
  */
-public class PlayerUnlockedAchievementEvent extends PlayerAchievementEvent implements Cancellable {
+public class PlayerUnlockedAchievementEvent extends PlayerAchievementEvent {
 
     @Getter
     private static final HandlerList handlerList = new HandlerList();
-    @Getter
-    @Setter
-    private boolean cancelled;
 
     public PlayerUnlockedAchievementEvent(PlayerAchievement playerAchievement) {
 

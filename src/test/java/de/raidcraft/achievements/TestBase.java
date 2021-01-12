@@ -23,7 +23,7 @@ import static de.raidcraft.achievements.AchievementMockFactory.TYPE;
 public class TestBase {
 
     private ServerMock server;
-    private AchievementsPlugin plugin;
+    private RCAchievements plugin;
     private AchievementPlayer player;
 
     @SneakyThrows
@@ -31,9 +31,9 @@ public class TestBase {
     void setUp() {
 
         server = MockBukkit.mock();
-        plugin = MockBukkit.load(AchievementsPlugin.class);
+        plugin = MockBukkit.load(RCAchievements.class);
         player = AchievementPlayer.of(server.addPlayer());
-        plugin.getAchievementManager().register(new AchievementMockFactory());
+        plugin.achievementManager().register(new AchievementMockFactory());
     }
 
     @AfterEach
@@ -47,7 +47,7 @@ public class TestBase {
         MemoryConfiguration config = new MemoryConfiguration();
         config.set("type", TYPE);
         cfg.accept(config);
-        return plugin.getAchievementManager().loadAchievement(alias, config);
+        return plugin.achievementManager().loadAchievement(alias, config);
     }
 
     protected Optional<Achievement> loadAchievement(String alias) {
