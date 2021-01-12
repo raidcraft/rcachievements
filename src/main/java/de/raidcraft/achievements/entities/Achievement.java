@@ -1,6 +1,7 @@
 package de.raidcraft.achievements.entities;
 
 import com.google.common.base.Strings;
+import de.raidcraft.achievements.Constants;
 import de.raidcraft.achievements.entities.query.QAchievement;
 import io.ebean.Finder;
 import io.ebean.annotation.DbJson;
@@ -15,8 +16,10 @@ import net.silthus.ebean.BaseEntity;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -27,7 +30,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.raidcraft.achievements.AchievementsPlugin.TABLE_PREFIX;
+import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
 /**
  * The achievement entity holds all configuration information about an achievement.
@@ -39,7 +42,7 @@ import static de.raidcraft.achievements.AchievementsPlugin.TABLE_PREFIX;
  */
 @Entity
 @Getter
-@Setter
+@Setter(AccessLevel.PACKAGE)
 @Accessors(fluent = true)
 @Table(name = TABLE_PREFIX + "achievements")
 public class Achievement extends BaseEntity {
@@ -123,6 +126,13 @@ public class Achievement extends BaseEntity {
      */
     @Index(unique = true)
     private String alias;
+
+    /**
+     * The type key of the achievement that determins the underlying implementation.
+     * <p>The type must be registered on load or else the achievement is not enabled.
+     */
+    private String type = Constants.DEFAULT_TYPE;
+
     /**
      * The friendly name of the achievement that is displayed to the player.
      */
@@ -151,12 +161,24 @@ public class Achievement extends BaseEntity {
      * <p>If it is secret the description will be obfuscated to all players that do not have it.
      */
     private boolean broadcast = true;
-
+    /**
+     * Restricted is true if a permission is required to obtain this achievement.
+     * <p>This is useful for testing new achievements without giving every player access to it.
+     */
+    private boolean restricted = false;
+    /**
+     * The serialized configuration used to load the properties of this achievement.
+     */
     @DbJson
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
     @Column(name = "config")
     private Map<String, Object> _config = new HashMap<>();
+    /**
+     * The persistent meta data store of this achievement.
+     */
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private DataStore data = new DataStore();
 
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
@@ -168,6 +190,14 @@ public class Achievement extends BaseEntity {
         this.id(uuid);
         this.alias(alias);
         this.name(alias);
+    }
+
+    /**
+     * @return true if the achievement is disabled and should not be loaded
+     */
+    public boolean disabled() {
+
+        return !enabled();
     }
 
     /**
@@ -200,6 +230,30 @@ public class Achievement extends BaseEntity {
         return Objects.requireNonNullElse(config.getConfigurationSection("with"), config.createSection("with"));
     }
 
+    /**
+     * Adds this achievement to the given player, unlocking it if not unlocked.
+     * <p>Will do nothing and return the existing achievement if it is already unlocked.
+     *
+     * @param player the player to add the achievement to
+     * @return true if the achievement was unlocked or is already unlocked
+     *         false if the unlock failed, e.g. a cancelled event
+     * @see PlayerAchievement#unlock()
+     */
+    public boolean addTo(AchievementPlayer player) {
+
+        return PlayerAchievement.of(this, player).unlock();
+    }
+
+    /**
+     * Removes this achievement from the player if the achievement is unlocked.
+     *
+     * @param player the player to remove the achievement from
+     */
+    public void removeFrom(AchievementPlayer player) {
+
+        PlayerAchievement.of(this, player).delete();
+    }
+
     @PostLoad
     void onPostLoad() {
 
@@ -219,12 +273,14 @@ public class Achievement extends BaseEntity {
 
         if (!force && loaded()) return;
 
-        this.name(config.getString("name", name()));
-        this.description(config.getString("description", description()));
-        this.enabled(config.getBoolean("enabled", enabled()));
-        this.secret(config.getBoolean("secret", secret()));
-        this.hidden(config.getBoolean("hidden", hidden()));
-        this.broadcast(config.getBoolean("broadcast", broadcast()));
+        this.name(config.getString("name", name));
+        this.type(config.getString("type", type));
+        this.description(config.getString("description", description));
+        this.enabled(config.getBoolean("enabled", enabled));
+        this.secret(config.getBoolean("secret", secret));
+        this.hidden(config.getBoolean("hidden", hidden));
+        this.broadcast(config.getBoolean("broadcast", broadcast));
+        this.restricted(config.getBoolean("restricted", restricted));
     }
 
     private ConfigurationSection updateConfig(ConfigurationSection config) {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="rcachievements_achievements" identityType="external" pkName="pk_rcachievements_achievements">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="alias" type="varchar"/>
+            <column name="type" type="varchar"/>
+            <column name="name" type="varchar"/>
+            <column name="description" type="varchar"/>
+            <column name="enabled" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="secret" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="hidden" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="broadcast" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="restricted" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="config" type="json"/>
+            <column name="data_id" type="uuid" uniqueOneToOne="uq_rcachievements_achievements_data_id" references="rcs_datastore.id" foreignKeyName="fk_rcachievements_achievements_data_id"/>
+            <column name="version" type="bigint" notnull="true"/>
+            <column name="when_created" type="timestamp" notnull="true"/>
+            <column name="when_modified" type="timestamp" notnull="true"/>
+            <uniqueConstraint name="uq_rcachievements_achievements_alias" columnNames="alias" oneToOne="false" nullableColumns="alias"/>
+        </createTable>
+        <createTable name="rcachievements_players" identityType="external" pkName="pk_rcachievements_players">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="name" type="varchar"/>
+            <column name="version" type="bigint" notnull="true"/>
+            <column name="when_created" type="timestamp" notnull="true"/>
+            <column name="when_modified" type="timestamp" notnull="true"/>
+        </createTable>
+        <createTable name="rcs_datastore" identityType="external" pkName="pk_rcs_datastore">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="data" type="json"/>
+            <column name="version" type="bigint" notnull="true"/>
+            <column name="when_created" type="timestamp" notnull="true"/>
+            <column name="when_modified" type="timestamp" notnull="true"/>
+        </createTable>
+        <createTable name="rcachievements_player_achievements" identityType="external" pkName="pk_rcachievements_player_achievements">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="achievement_id" type="uuid" notnull="true" references="rcachievements_achievements.id" foreignKeyName="fk_rcachievements_player_achievements_achievement_id" foreignKeyIndex="ix_rcachievements_player_achievements_achievement_id"/>
+            <column name="player_id" type="uuid" notnull="true" references="rcachievements_players.id" foreignKeyName="fk_rcachievements_player_achievements_player_id" foreignKeyIndex="ix_rcachievements_player_achievements_player_id"/>
+            <column name="unlocked" type="timestamp"/>
+            <column name="data_id" type="uuid" uniqueOneToOne="uq_rcachievements_player_achievements_data_id" references="rcs_datastore.id" foreignKeyName="fk_rcachievements_player_achievements_data_id"/>
+            <column name="version" type="bigint" notnull="true"/>
+            <column name="when_created" type="timestamp" notnull="true"/>
+            <column name="when_modified" type="timestamp" notnull="true"/>
+        </createTable>
+    </changeSet>
+</migration>

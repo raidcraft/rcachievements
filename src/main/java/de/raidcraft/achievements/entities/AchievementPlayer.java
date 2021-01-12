@@ -1,6 +1,6 @@
 package de.raidcraft.achievements.entities;
 
-import de.raidcraft.achievements.AchievementsPlugin;
+import de.raidcraft.achievements.Constants;
 import io.ebean.Finder;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +27,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Accessors(fluent = true)
-@Table(name = AchievementsPlugin.TABLE_PREFIX + "players")
+@Table(name = Constants.TABLE_PREFIX + "players")
 public class AchievementPlayer extends BaseEntity {
 
     public static final Finder<UUID, AchievementPlayer> find = new Finder<>(AchievementPlayer.class);
@@ -65,5 +65,10 @@ public class AchievementPlayer extends BaseEntity {
 
         this.id(player.getUniqueId());
         this.name(player.getName());
+    }
+
+    public boolean unlocked(Achievement achievement) {
+
+        return PlayerAchievement.of(achievement, this).unlocked() != null;
     }
 }

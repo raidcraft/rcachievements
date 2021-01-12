@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class RCAchievementsEvent extends Event {
+
     @Getter
     private static final HandlerList handlerList = new HandlerList();
 }

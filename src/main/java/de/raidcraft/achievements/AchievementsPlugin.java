@@ -24,8 +24,6 @@ import java.io.File;
 @PluginMain
 public class AchievementsPlugin extends JavaPlugin {
 
-    public static final String TABLE_PREFIX = "rcachievements_";
-
     @Getter
     @Accessors(fluent = true)
     private static AchievementsPlugin instance;
@@ -36,6 +34,8 @@ public class AchievementsPlugin extends JavaPlugin {
     private PluginConfig pluginConfig;
 
     private PaperCommandManager commandManager;
+    @Getter
+    private AchievementManager achievementManager;
 
     @Getter
     private static boolean testing = false;
@@ -56,6 +56,7 @@ public class AchievementsPlugin extends JavaPlugin {
 
         loadConfig();
         setupDatabase();
+        setupAchievementManager();
         setupListener();
         setupCommands();
     }
@@ -70,6 +71,13 @@ public class AchievementsPlugin extends JavaPlugin {
         getDataFolder().mkdirs();
         pluginConfig = new PluginConfig(new File(getDataFolder(), "config.yml").toPath());
         pluginConfig.loadAndSave();
+    }
+
+    private void setupAchievementManager() {
+
+        this.achievementManager = new AchievementManager(this);
+        achievementManager.registerDefaults();
+        achievementManager.load();
     }
 
     private void setupListener() {

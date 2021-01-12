@@ -1,20 +1,24 @@
 package de.raidcraft.achievements.entities;
 
 import de.raidcraft.achievements.entities.query.QPlayerAchievement;
-import io.ebean.Finder;
+import de.raidcraft.achievements.events.PlayerUnlockAchievementEvent;
+import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.silthus.ebean.BaseEntity;
+import org.bukkit.Bukkit;
 
-import javax.persistence.*;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
-import static de.raidcraft.achievements.AchievementsPlugin.TABLE_PREFIX;
+import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
 /**
  * The player achievement is created when a player discovers or unlocks an achievement.
@@ -87,5 +91,28 @@ public class PlayerAchievement extends BaseEntity {
     PlayerAchievement(Achievement achievement, AchievementPlayer player) {
         this.achievement = achievement;
         this.player = player;
+    }
+
+    /**
+     * Unlocks the achievement for this player if it is not unlocked.
+     * <p>Nothing will happen if the achievement is already unlocked.
+     *
+     * @return true if the achievement was unlocked or is already unlocked
+     *         false if the unlock failed, e.g. a cancelled event
+     */
+    public boolean unlock() {
+
+        if (unlocked() != null) return true;
+
+        PlayerUnlockAchievementEvent event = new PlayerUnlockAchievementEvent(this);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return false;
+
+        unlocked(Instant.now()).save();
+
+        Bukkit.getPluginManager().callEvent(new PlayerUnlockedAchievementEvent(this));
+
+        return true;
     }
 }
