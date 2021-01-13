@@ -28,6 +28,18 @@ public final class LocationUtil {
 
     }
 
+    public static boolean isBlockEquals(Location l1, Location l2) {
+
+        if (l1.getWorld() == null || l2.getWorld() == null) {
+            return false;
+        }
+
+        return l1.getWorld().getUID().equals(l2.getWorld().getUID())
+                && l1.getBlockX() == l2.getBlockX()
+                && l1.getBlockY() == l2.getBlockY()
+                && l1.getBlockZ() == l2.getBlockZ();
+    }
+
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
         if (l1.getWorld() != null && l2.getWorld() != null) {

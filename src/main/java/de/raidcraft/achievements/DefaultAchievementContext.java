@@ -1,14 +1,20 @@
 package de.raidcraft.achievements;
 
 import de.raidcraft.achievements.entities.Achievement;
+import de.raidcraft.achievements.entities.AchievementPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Getter
 @Log(topic = "RCAchievements")
@@ -23,6 +29,8 @@ public class DefaultAchievementContext implements AchievementContext {
     private boolean initialized = false;
     private boolean loadFailed = false;
     private boolean enabled = false;
+
+    private final Map<UUID, Boolean> applicableCheckCache = new HashMap<>();
 
     public DefaultAchievementContext(Plugin plugin, Achievement achievement, AchievementType.Registration<?> registration) {
 
@@ -117,5 +125,29 @@ public class DefaultAchievementContext implements AchievementContext {
         type.disable();
         type.load(achievement().achievementConfig());
         type.enable();
+    }
+
+    @Override
+    public boolean applicable(OfflinePlayer player) {
+
+        return applicableCheckCache.computeIfAbsent(player.getUniqueId(),
+                uuid -> !player(player).unlocked(achievement())
+        );
+    }
+
+    @Override
+    public boolean addTo(AchievementPlayer player) {
+
+        applicableCheckCache.remove(player.id());
+
+        return achievement().addTo(player);
+    }
+
+    @Override
+    public void removeFrom(AchievementPlayer player) {
+
+        applicableCheckCache.remove(player.id());
+
+        achievement().removeFrom(player);
     }
 }
