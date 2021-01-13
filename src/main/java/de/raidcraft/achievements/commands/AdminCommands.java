@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.annotation.*;
 import com.google.common.base.Strings;
+import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.Messages;
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
@@ -82,6 +83,7 @@ public class AdminCommands extends BaseCommand {
         }
 
         achievement.removeFrom(player);
+        plugin.achievementManager().active(achievement).ifPresent(AchievementContext::clearCache);
         send(getCurrentCommandIssuer(), removeSuccess(achievement, player));
     }
 

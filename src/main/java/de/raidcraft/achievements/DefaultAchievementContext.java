@@ -118,10 +118,16 @@ public class DefaultAchievementContext implements AchievementContext {
         disable();
 
         if (achievement.enabled()) {
-            applicableCheckCache.clear();
+            clearCache();
             load();
             enable();
         }
+    }
+
+    @Override
+    public void clearCache() {
+
+        applicableCheckCache.clear();
     }
 
     @Override

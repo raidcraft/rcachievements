@@ -58,6 +58,11 @@ public interface AchievementContext {
     void reload();
 
     /**
+     * Clears the cache of the achievement context.
+     */
+    void clearCache();
+
+    /**
      * The type is null until {@link #initialize()} is called and {@link #initialized()} returns true.
      *
      * @return the achievement type after {@link #initialize()} was called
