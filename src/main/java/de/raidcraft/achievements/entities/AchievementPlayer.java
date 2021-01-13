@@ -79,6 +79,29 @@ public class AchievementPlayer extends BaseEntity {
     }
 
     /**
+     * Adds the given achievement to the player unlocking it.
+     *
+     * @param achievement the achievement to add
+     * @return true if the achievement was unlocked or is already unlocked.
+     *         <p>false if the unlock failed, e.g. a cancelled event
+     * @see Achievement#addTo(AchievementPlayer)
+     */
+    public boolean add(Achievement achievement) {
+
+        return achievement.addTo(this);
+    }
+
+    /**
+     * Removes the given achievement from this player.
+     *
+     * @param achievement the achievement to remove
+     */
+    public void remove(Achievement achievement) {
+
+        achievement.removeFrom(this);
+    }
+
+    /**
      * Checks if the given achievement was unlocked by this player.
      * <p>Will create a new {@link PlayerAchievement} entry if none exists.
      *

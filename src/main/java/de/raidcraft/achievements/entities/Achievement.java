@@ -135,13 +135,10 @@ public class Achievement extends BaseEntity {
      */
     public static Achievement load(@NonNull UUID uuid, @NonNull String alias, @NonNull ConfigurationSection config) {
 
-        Achievement achievement = find.byId(uuid);
-
-        if (achievement == null) {
-            achievement = byAlias(alias).orElse(new Achievement(uuid, alias));
-        }
-
-        return achievement.load(config);
+        return byId(uuid)
+                .or(() -> byAlias(alias))
+                .orElse(new Achievement(uuid, alias))
+                .load(config);
     }
 
     /**
@@ -258,8 +255,8 @@ public class Achievement extends BaseEntity {
      * <p>Will do nothing and return the existing achievement if it is already unlocked.
      *
      * @param player the player to add the achievement to
-     * @return true if the achievement was unlocked or is already unlocked
-     *         false if the unlock failed, e.g. a cancelled event
+     * @return true if the achievement was unlocked or is already unlocked.
+     *         <p>false if the unlock failed, e.g. a cancelled event
      * @see PlayerAchievement#unlock()
      */
     public boolean addTo(AchievementPlayer player) {

@@ -361,6 +361,13 @@ public final class AchievementManager {
         if (!Strings.isNullOrEmpty(idString)) {
             try {
                 UUID id = UUID.fromString(idString);
+
+                Optional<Achievement> existing = Achievement.byAlias(alias);
+                if (Achievement.byId(id).isEmpty() && existing.isPresent()) {
+                    log.severe("an achievement with the same alias \"" + alias + "\" but a different id already exists: " + existing.get().id());
+                    return Optional.empty();
+                }
+
                 achievement = Achievement.load(id, alias, config);
             } catch (IllegalArgumentException e) {
                 log.severe(idString + " is not a valid UUID inside achievement config of: " + alias);
