@@ -1,3 +1,19 @@
+# [1.3.0](https://github.com/raidcraft/rcachievements/compare/v1.2.0...v1.3.0) (2021-01-13)
+
+
+### Bug Fixes
+
+* restricted flag not checking permission ([e6161b4](https://github.com/raidcraft/rcachievements/commit/e6161b45621aa726b623745e8f2e76d523d173e7))
+
+
+### Features
+
+* add achievement count template ([1d35042](https://github.com/raidcraft/rcachievements/commit/1d35042c4bc6f32a3cea23cb5d319b39e46a3474))
+* add block place and break achievement ([34f26b5](https://github.com/raidcraft/rcachievements/commit/34f26b56c6365a0903342b9c103ed04f76ef5b2e))
+* add combined achievement type ([093f064](https://github.com/raidcraft/rcachievements/commit/093f06478ac5e59bd87718739d73af5910709285))
+* add kill-entity achievement type ([fb133cd](https://github.com/raidcraft/rcachievements/commit/fb133cdb0c5f4c0d94ed767d2b72ab4e03ae7280))
+* cache applicable check ([7df4671](https://github.com/raidcraft/rcachievements/commit/7df467196dcc3daab3b6525d3750888310ccc8a4))
+
 # [1.2.0](https://github.com/raidcraft/rcachievements/compare/v1.1.0...v1.2.0) (2021-01-13)
 
 
