@@ -132,7 +132,7 @@ public class DefaultAchievementContext implements AchievementContext {
         if (player == null) return false;
 
         return applicableCheckCache.computeIfAbsent(player.id(),
-                uuid -> !player.unlocked(achievement())
+                uuid -> player.canUnlock(achievement)
         );
     }
 

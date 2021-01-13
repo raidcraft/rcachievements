@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.silthus.ebean.BaseEntity;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -111,5 +113,18 @@ public class AchievementPlayer extends BaseEntity {
     public boolean unlocked(Achievement achievement) {
 
         return PlayerAchievement.of(achievement, this).unlocked() != null;
+    }
+
+    public boolean canUnlock(Achievement achievement) {
+
+        if (unlocked(achievement)) return false;
+
+        if (achievement.restricted()) {
+            Player player = Bukkit.getPlayer(id());
+            if (player == null) return false;
+            return player.hasPermission(Constants.ACHIEVEMENT_PERMISSION_PREFIX + achievement.alias());
+        }
+
+        return true;
     }
 }

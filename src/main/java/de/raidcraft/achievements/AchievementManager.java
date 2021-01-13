@@ -325,7 +325,7 @@ public final class AchievementManager {
         try {
             YamlConfiguration config = new YamlConfiguration();
             config.load(file);
-            Optional<Achievement> achievement = loadAchievement(ConfigUtil.getFileIdentifier(path, file), config);
+            Optional<Achievement> achievement = loadAchievement(config.getString("alias", ConfigUtil.getFileIdentifier(path, file)), config);
             config.save(file);
             achievement.ifPresentOrElse(s -> log.info("loaded achievement \"" + s.alias() + "\" (" + s.type() + ") from: " + file),
                     () -> log.warning("failed to load achievement from config: " + file));
