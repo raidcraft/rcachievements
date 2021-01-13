@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/raidcraft/rcachievements/compare/v1.3.0...v1.3.1) (2021-01-13)
+
+
+### Bug Fixes
+
+* add craft achievement ([206efab](https://github.com/raidcraft/rcachievements/commit/206efabc3d46f4d1aa51bc638dee0cf3cee9023f))
+
 # [1.3.0](https://github.com/raidcraft/rcachievements/compare/v1.2.0...v1.3.0) (2021-01-13)
 
 
