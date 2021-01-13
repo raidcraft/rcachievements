@@ -130,6 +130,21 @@ public interface AchievementType {
      */
     default DataStore store(OfflinePlayer player) {
 
+        return store(player(player));
+    }
+
+    /**
+     * Gets the persistent data store for the given player and the achievement of this context.
+     * <p>Use the data store to track persistent data for this achievement context and player.
+     * <p>There is an additional {@link #store()} to store data global to this achievement.
+     * <p>Make sure to call the {@link DataStore#save()} method after setting your data with {@link DataStore#set(String, Object)}.
+     * <p>Will create a new {@link PlayerAchievement} if none exists yet.
+     *
+     * @param player the player to get the linked data store for this achievement
+     * @return the data store of this achievement player combination
+     */
+    default DataStore store(AchievementPlayer player) {
+
         return context().store(player);
     }
 
@@ -145,7 +160,7 @@ public interface AchievementType {
      */
     default boolean applicable(OfflinePlayer player) {
 
-        return applicable(player);
+        return context().applicable(player);
     }
 
     /**
@@ -177,15 +192,15 @@ public interface AchievementType {
      * Enable is called after the achievement was loaded and when this type is active.
      * <p>Use it to load cached data from the store and initialize any tasks.
      * <p>When the achievement is reloaded {@link #load(ConfigurationSection)}, {@link #disable()}
-     * and {@code #enable()} will be called in this order.
+     * and {@code enable()} will be called in this order.
      */
     default void enable() {}
 
     /**
      * Disable is called when the achievement is disabled.
      * <p>Use it to store your cache that should be persisted.
-     * <p>When the achievement is reloaded {@link #load(ConfigurationSection)}, {@link #disable()}
-     * and {@code #enable()} will be called in this order.
+     * <p>When the achievement is reloaded {@link #load(ConfigurationSection)}, {@code disable()}
+     * and {@link #enable()} will be called in this order.
      */
     default void disable() {}
 

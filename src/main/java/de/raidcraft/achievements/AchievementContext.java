@@ -4,6 +4,7 @@ import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
+import lombok.NonNull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
@@ -116,7 +117,7 @@ public interface AchievementContext {
 
     /**
      * Gets the persistent global meta data store for the achievement of this context.
-     * <p>Generally you should use the player specific {@link #store(OfflinePlayer)} to
+     * <p>Generally you should use the player specific {@link #store(AchievementPlayer)} to
      * store meta data. Use this global store if tracking something across player, e.g. toplists, etc.
      *
      * @return the global meta store for this achievement context
@@ -136,9 +137,9 @@ public interface AchievementContext {
      * @param player the player to get the linked data store for this achievement
      * @return the data store of this achievement player combination
      */
-    default DataStore store(OfflinePlayer player) {
+    default DataStore store(@NonNull AchievementPlayer player) {
 
-        return PlayerAchievement.of(achievement(), player(player)).data();
+        return PlayerAchievement.of(achievement(), player).data();
     }
 
     /**
