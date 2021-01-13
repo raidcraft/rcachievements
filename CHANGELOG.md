@@ -1,3 +1,17 @@
+# [1.4.0](https://github.com/raidcraft/rcachievements/compare/v1.3.1...v1.4.0) (2021-01-13)
+
+
+### Bug Fixes
+
+* clear check cache when achievement is removed ([115059f](https://github.com/raidcraft/rcachievements/commit/115059fffce83cb69cd8a5159ffd1618f6b54649))
+* clear check cache when reloading achievement ([fadcf43](https://github.com/raidcraft/rcachievements/commit/fadcf43ff84bb80dab9dd6576c87af7454b32659))
+* remove unneeded click notice ([844906b](https://github.com/raidcraft/rcachievements/commit/844906bcef1cb58394152e29a80563b2e094ff1a))
+
+
+### Features
+
+* add create and set commands ([6110d64](https://github.com/raidcraft/rcachievements/commit/6110d64edda5c572e09d56794230f9c770e3909e))
+
 ## [1.3.1](https://github.com/raidcraft/rcachievements/compare/v1.3.0...v1.3.1) (2021-01-13)
 
 
