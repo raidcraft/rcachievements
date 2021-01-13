@@ -2,6 +2,8 @@ package de.raidcraft.achievements;
 
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.entities.Achievement;
+import de.raidcraft.achievements.types.LocationAchievement;
+import de.raidcraft.achievements.types.MobKillAchievement;
 import de.raidcraft.achievements.types.NoneAchievementType;
 import de.raidcraft.achievements.util.ConfigUtil;
 import lombok.AccessLevel;
@@ -43,6 +45,18 @@ public final class AchievementManager {
         this.plugin = plugin;
     }
 
+    void registerDefaults() {
+
+        try {
+            register(new NoneAchievementType.Factory());
+            register(new LocationAchievement.Factory());
+            register(new MobKillAchievement.Factory());
+        } catch (TypeRegistrationException e) {
+            log.severe("failed to register default types: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void reload() {
 
         failedLoads().clear();
@@ -61,16 +75,6 @@ public final class AchievementManager {
         activeAchievements.clear();
         types.clear();
         failedLoads.clear();
-    }
-
-    void registerDefaults() {
-
-        try {
-            register(new NoneAchievementType.Factory());
-        } catch (TypeRegistrationException e) {
-            log.severe("failed to register default types: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     /**

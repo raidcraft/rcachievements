@@ -130,6 +130,8 @@ public class DefaultAchievementContext implements AchievementContext {
     @Override
     public boolean applicable(OfflinePlayer player) {
 
+        if (player == null) return false;
+
         return applicableCheckCache.computeIfAbsent(player.getUniqueId(),
                 uuid -> !player(player).unlocked(achievement())
         );

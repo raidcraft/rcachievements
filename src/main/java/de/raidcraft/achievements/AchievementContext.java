@@ -149,13 +149,10 @@ public interface AchievementContext {
      * <p>Important: make sure to check the applicability of players in bukkit events
      * before processing them inside your achievement type.
      *
-     * @param player the player to check
+     * @param player the player to check. can be null.
      * @return true if the player is applicable and should be included in this achievement
      */
-    default boolean applicable(OfflinePlayer player) {
-
-        return !player(player).unlocked(achievement());
-    }
+    boolean applicable(OfflinePlayer player);
 
     /**
      * Checks if the given player can receive this achievement and should be checked.
@@ -164,10 +161,12 @@ public interface AchievementContext {
      * <p>Important: make sure to check the applicability of players in bukkit events
      * before processing them inside your achievement type.
      *
-     * @param player the player to check
+     * @param player the player to check. can be null.
      * @return true if the player is not applicable and should be excluded in this achievement
      */
     default boolean notApplicable(OfflinePlayer player) {
+
+        if (player == null) return true;
 
         return !applicable(player);
     }
