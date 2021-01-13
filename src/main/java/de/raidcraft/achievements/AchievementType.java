@@ -160,7 +160,7 @@ public interface AchievementType {
      */
     default boolean applicable(OfflinePlayer player) {
 
-        return context().applicable(player);
+        return context().applicable(player(player));
     }
 
     /**
@@ -174,6 +174,21 @@ public interface AchievementType {
      * @return true if the player is not applicable and should be excluded in this achievement
      */
     default boolean notApplicable(OfflinePlayer player) {
+
+        return context().notApplicable(player(player));
+    }
+
+    /**
+     * Checks if the given player can receive this achievement and should be checked.
+     * <p>Players that already obtained the achievement or do not have the permission
+     * are not applicable for obtaining the achievement.
+     * <p>Important: make sure to check the applicability of players in bukkit events
+     * before processing them inside your achievement type.
+     *
+     * @param player the player to check
+     * @return true if the player is not applicable and should be excluded in this achievement
+     */
+    default boolean notApplicable(AchievementPlayer player) {
 
         return context().notApplicable(player);
     }

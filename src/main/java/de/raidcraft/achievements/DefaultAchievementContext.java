@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -128,12 +127,12 @@ public class DefaultAchievementContext implements AchievementContext {
     }
 
     @Override
-    public boolean applicable(OfflinePlayer player) {
+    public boolean applicable(AchievementPlayer player) {
 
         if (player == null) return false;
 
-        return applicableCheckCache.computeIfAbsent(player.getUniqueId(),
-                uuid -> !player(player).unlocked(achievement())
+        return applicableCheckCache.computeIfAbsent(player.id(),
+                uuid -> !player.unlocked(achievement())
         );
     }
 

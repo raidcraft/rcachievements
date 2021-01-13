@@ -89,20 +89,14 @@ public interface AchievementContext {
      *         false if the unlock failed, e.g. a cancelled event
      * @see PlayerAchievement#unlock()
      */
-    default boolean addTo(AchievementPlayer player) {
-
-        return achievement().addTo(player);
-    }
+    boolean addTo(AchievementPlayer player);
 
     /**
      * Removes this achievement from the player if it is present.
      *
      * @param player the player to remove the achievement from
      */
-    default void removeFrom(AchievementPlayer player) {
-
-        achievement().removeFrom(player);
-    }
+    void removeFrom(AchievementPlayer player);
 
     /**
      * Gets an achievement player instance of the given bukkit player.
@@ -152,7 +146,7 @@ public interface AchievementContext {
      * @param player the player to check. can be null.
      * @return true if the player is applicable and should be included in this achievement
      */
-    boolean applicable(OfflinePlayer player);
+    boolean applicable(AchievementPlayer player);
 
     /**
      * Checks if the given player can receive this achievement and should be checked.
@@ -164,7 +158,7 @@ public interface AchievementContext {
      * @param player the player to check. can be null.
      * @return true if the player is not applicable and should be excluded in this achievement
      */
-    default boolean notApplicable(OfflinePlayer player) {
+    default boolean notApplicable(AchievementPlayer player) {
 
         if (player == null) return true;
 
