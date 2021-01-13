@@ -1,6 +1,7 @@
 package de.raidcraft.achievements;
 
 import co.aikar.commands.CommandIssuer;
+import de.raidcraft.achievements.commands.AdminCommands;
 import de.raidcraft.achievements.commands.PlayerCommands;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
@@ -33,6 +34,7 @@ import static de.raidcraft.achievements.Messages.Colors.*;
 import static de.raidcraft.achievements.commands.PlayerCommands.INFO;
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.event.ClickEvent.runCommand;
+import static net.kyori.adventure.text.event.ClickEvent.suggestCommand;
 import static net.kyori.adventure.text.event.HoverEvent.showText;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.*;
@@ -141,10 +143,48 @@ public final class Messages {
                 .build();
     }
 
+    public static Component createSuccess(Achievement achievement) {
+
+        TextComponent text = text("Klicke um den Befehl auszuführen.", NOTE, ITALIC);
+
+        TextComponent.Builder builder = text().append(text("Der Erfolg ", SUCCESS))
+                .append(achievement(achievement))
+                .append(text(" wurde erfolgreich erstellt.", SUCCESS)).append(newline())
+                .append(text("Nutze die \"/rca:admin set\" Befehle um z.B. den Namen und die Beschreibung zu setzen. Und führe danach ", NOTE))
+                .append(text(AdminCommands.RELOAD, ACCENT).hoverEvent(text).clickEvent(runCommand(AdminCommands.RELOAD)))
+                .append(text(" aus.", NOTE))
+                .append(newline());
+
+        for (String command : AdminCommands.SET_COMMANDS) {
+            builder.append(text("  - ", TEXT))
+                    .append(text(command, HIGHLIGHT)
+                            .hoverEvent(text.asHoverEvent())
+                            .clickEvent(suggestCommand(command + achievement.alias()))
+                    ).append(newline());
+        }
+
+        return builder.build();
+    }
+
+    public static Component setSuccess(Achievement achievement, String property) {
+
+        return text().append(text("Die Eigenschaft ", SUCCESS))
+                .append(text(property, HIGHLIGHT))
+                .append(text(" des Erfolgs ", SUCCESS))
+                .append(achievement(achievement))
+                .append(text(" wurde erfolgreich geändert.", SUCCESS)).append(newline())
+                .append(text("Gebe ", NOTE))
+                .append(text(AdminCommands.RELOAD, ACCENT)
+                        .hoverEvent(text("Klicken zum Ausführen von ", NOTE).append(text(AdminCommands.RELOAD, ACCENT)))
+                        .clickEvent(runCommand(AdminCommands.RELOAD))
+                ).append(text(" um deine Änderungen zu aktivieren.", NOTE))
+                .build();
+    }
+
     public static Component achievementUnlockedSelf(PlayerAchievement achievement) {
 
         return text().append(text("Du", ACCENT, BOLD)
-                    .hoverEvent(playerInfo(achievement.player()).asHoverEvent()))
+                .hoverEvent(playerInfo(achievement.player()).asHoverEvent()))
                 .append(text(" hast den Erfolg ", SUCCESS))
                 .append(achievement(achievement.achievement()))
                 .append(text(" freigeschaltet!", SUCCESS))

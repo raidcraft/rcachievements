@@ -248,6 +248,10 @@ public final class AchievementManager {
 
         loadAchievements(path.toPath())
                 .forEach(this::initialize);
+
+        List<Achievement> achievements = Achievement.unknownSource();
+        achievements.forEach(this::initialize);
+        log.info("loaded " + achievements.size() + " achievements without a file config from the database");
     }
 
     /**
@@ -329,7 +333,10 @@ public final class AchievementManager {
             config.load(file);
             Optional<Achievement> achievement = loadAchievement(config.getString("alias", ConfigUtil.getFileIdentifier(path, file)), config);
             config.save(file);
-            achievement.ifPresentOrElse(s -> log.info("loaded achievement \"" + s.alias() + "\" (" + s.type() + ") from: " + file),
+            achievement.ifPresentOrElse(a -> {
+                        a.source(file.getAbsolutePath()).save();
+                        log.info("loaded achievement \"" + a.alias() + "\" (" + a.type() + ") from: " + file);
+                    },
                     () -> log.warning("failed to load achievement from config: " + file));
             return achievement;
         } catch (IOException | InvalidConfigurationException e) {

@@ -3,6 +3,7 @@ package de.raidcraft.achievements;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.types.LocationAchievement;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +45,23 @@ public class IntegrationTest extends TestBase {
                     assertThat(playerAchievement)
                             .extracting(PlayerAchievement::isUnlocked)
                             .isEqualTo(true);
+                }
+            }
+
+            @Nested
+            @DisplayName("create")
+            class create {
+
+                @Test
+                @DisplayName("should set achievement type to location")
+                void shouldSetLocationType() {
+
+                    server().dispatchCommand(player, "rca:admin create loc foobar 1");
+
+                    assertThat(Achievement.byAlias("foobar"))
+                            .isPresent().get()
+                            .extracting(Achievement::type)
+                            .isEqualTo(LocationAchievement.TYPE);
                 }
             }
         }

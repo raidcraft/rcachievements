@@ -374,7 +374,7 @@ public final class LocationUtil {
      * @param name name or id to check for
      * @return world or null if no world was found
      */
-    public static World getCaseInsensitiveWorld(String name) {
+    public static World getWorld(String name) {
         return Bukkit.getWorlds().stream()
                 .filter(world -> world.getName().equalsIgnoreCase(name) || world.getUID().toString().equalsIgnoreCase(name))
                 .findFirst().orElse(null);

@@ -28,7 +28,7 @@ public class ConfiguredLocation implements Cloneable {
 
     protected ConfiguredLocation(ConfigurationSection config) {
         this.location = new Location(
-                LocationUtil.getCaseInsensitiveWorld(config.getString("world", "world")),
+                LocationUtil.getWorld(config.getString("world", "world")),
                 config.getDouble("x"),
                 config.getDouble("y"),
                 config.getDouble("z"),

@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import de.raidcraft.achievements.Constants;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.annotation.DbEnumValue;
 import io.ebean.annotation.DbJson;
 import io.ebean.annotation.Index;
 import io.ebean.text.json.EJson;
@@ -26,6 +27,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
@@ -39,7 +41,7 @@ import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
  */
 @Entity
 @Getter
-@Setter(AccessLevel.PACKAGE)
+@Setter
 @Accessors(fluent = true)
 @Table(name = TABLE_PREFIX + "achievements")
 public class Achievement extends BaseEntity {
@@ -79,6 +81,17 @@ public class Achievement extends BaseEntity {
         return find.query().where()
                 .ieq("alias", alias)
                 .findOneOrEmpty();
+    }
+
+    /**
+     * @return all achievements that are enabled and have a null source
+     */
+    public static List<Achievement> unknownSource() {
+
+        return find.query().where()
+                .isNull("source")
+                .eq("enabled", true)
+                .findList();
     }
 
     /**
@@ -143,6 +156,57 @@ public class Achievement extends BaseEntity {
     }
 
     /**
+     * Creates a new achievement with the given alias and provided config.
+     * <p>The config builder is only for the achievement type config in the {@code with} section.
+     * Use the fluent builder on the returned achievement to set the other properties.
+     * <p>{@link #save()} needs to be called when the achievement has all properties set
+     * or else it will not persist in the database.
+     *
+     * @param alias the alias of the achievement
+     * @param config the config that provides the detailed configuration about the implementing achievement type
+     * @return the created achievement. {@link #save()} needs to be called to persist it.
+     * @throws IllegalArgumentException if an achievement with the same alias exists.
+     *         <p>Check the existence of an achievement with {@link #byAlias(String)}
+     *         before calling this method.
+     */
+    public static Achievement create(String alias, ConfigurationSection config) {
+
+        if (byAlias(alias).isPresent()) {
+            throw new IllegalArgumentException("An achievement with the same alias \"" + alias + "\" already exists!");
+        }
+
+        MemoryConfiguration root = new MemoryConfiguration();
+        root.createSection("with", config.getValues(true));
+
+        Achievement achievement = new Achievement(UUID.randomUUID(), alias);
+        achievement.updateConfig(root);
+
+        return achievement;
+    }
+
+    /**
+     * Creates a new achievement with the given alias and provided config.
+     * <p>The config builder is only for the achievement type config in the {@code with} section.
+     * Use the fluent builder on the returned achievement to set the other properties.
+     * <p>{@link #save()} needs to be called when the achievement has all properties set
+     * or else it will not persist in the database.
+     *
+     * @param alias the alias of the achievement
+     * @param builder the config builder that provides the detailed configuration about the implementing achievement type
+     * @return the created achievement. {@link #save()} needs to be called to persist it.
+     * @throws IllegalArgumentException if an achievement with the same alias exists.
+     *         <p>Check the existence of an achievement with {@link #byAlias(String)}
+     *         before calling this method.
+     */
+    public static Achievement create(String alias, Consumer<ConfigurationSection> builder) {
+
+        MemoryConfiguration config = new MemoryConfiguration();
+        builder.accept(config);
+
+        return create(alias, config);
+    }
+
+    /**
      * A unique key of the achievement used in configurations and references.
      */
     @Index(unique = true)
@@ -188,6 +252,11 @@ public class Achievement extends BaseEntity {
      */
     private boolean restricted = false;
     /**
+     * The path to the config file that loaded the achievement
+     * or null if the achievement was created from code.
+     */
+    private String source;
+    /**
      * The serialized configuration used to load the properties of this achievement.
      */
     @DbJson
@@ -198,9 +267,11 @@ public class Achievement extends BaseEntity {
     /**
      * The persistent meta data store of this achievement.
      */
+    @Setter(AccessLevel.PRIVATE)
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private DataStore data = new DataStore();
 
+    @Setter(AccessLevel.PRIVATE)
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PlayerAchievement> playerAchievements = new ArrayList<>();
 
@@ -212,6 +283,11 @@ public class Achievement extends BaseEntity {
     Achievement(UUID uuid, String alias) {
 
         this.id(uuid);
+        this.alias(alias);
+        this.name(alias);
+    }
+
+    Achievement(String alias) {
         this.alias(alias);
         this.name(alias);
     }
@@ -297,14 +373,14 @@ public class Achievement extends BaseEntity {
 
         if (!force && loaded()) return;
 
-        this.name(config.getString("name", name));
-        this.type(config.getString("type", type));
-        this.description(config.getString("description", description));
-        this.enabled(config.getBoolean("enabled", enabled));
-        this.secret(config.getBoolean("secret", secret));
-        this.hidden(config.getBoolean("hidden", hidden));
-        this.broadcast(config.getBoolean("broadcast", broadcast));
-        this.restricted(config.getBoolean("restricted", restricted));
+        this.name(config.getString("name", name()));
+        this.type(config.getString("type", type()));
+        this.description(config.getString("description", description()));
+        this.enabled(config.getBoolean("enabled", enabled()));
+        this.secret(config.getBoolean("secret", secret()));
+        this.hidden(config.getBoolean("hidden", hidden()));
+        this.broadcast(config.getBoolean("broadcast", broadcast()));
+        this.restricted(config.getBoolean("restricted", restricted()));
     }
 
     private ConfigurationSection updateConfig(ConfigurationSection config) {
