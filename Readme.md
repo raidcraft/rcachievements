@@ -16,6 +16,7 @@ RCAchievements ist das Achievement Plugin des [Raid-Craft](https://raid-craft.de
   * [combined](#combined)
   * [location](#location)
   * [kill-entity](#kill-entity)
+  * [craft](#craft)
 
 ## Configuration
 
@@ -95,7 +96,7 @@ A `counter` achievement that tracks placing and breaking blocks.
 | ------ | ------- | ----------- |
 | `count` | `1` | How many times must the action execute until the achievement is unlocked. |
 | `action` | `place` | The action that is tracked by the achievement. `place`, `break` |
-| `blocks` | `[]` | A list of block materials that increase the counter. Can be any valid minecraft material. The counter is shared between all block types. |
+| `blocks` | `[]` | A list of block materials that increase the counter. Can be any valid [minecraft item](https://minecraft-ids.grahamedgecombe.com/). The counter is shared between all block types. |
 
 ### combined
 
@@ -126,3 +127,12 @@ Counts the killing of entities.
 | ------ | ------- | ----------- |
 | `count` | `1` | How many times must the action execute until the achievement is unlocked. |
 | `entities` | `[]` | A list of entities that increase the counter. Can be any valid [minecraft entity](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html). The counter is shared between all entity types. |
+
+### craft
+
+Counts the number of crafted items. The counter is always increased by the amount of items crafted. Crafting 64 `minecraft:planks` will increase the counter by `64`.
+
+| Config | Default | Description |
+| ------ | ------- | ----------- |
+| `count` | `1` | How many items must be crafted until the achievement is unlocked. |
+| `items` | `[]` | A list of items that increase the counter. Can be any valid [minecraft item](https://minecraft-ids.grahamedgecombe.com/). The counter is shared between all entity types. |

@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.types.BlockAchievement;
 import de.raidcraft.achievements.types.CombinedAchievement;
+import de.raidcraft.achievements.types.CraftAchievement;
 import de.raidcraft.achievements.types.LocationAchievement;
 import de.raidcraft.achievements.types.MobKillAchievement;
 import de.raidcraft.achievements.types.NoneAchievementType;
@@ -55,6 +56,7 @@ public final class AchievementManager {
             register(new MobKillAchievement.Factory());
             register(new BlockAchievement.Factory());
             register(new CombinedAchievement.Factory());
+            register(new CraftAchievement.Factory());
         } catch (TypeRegistrationException e) {
             log.severe("failed to register default types: " + e.getMessage());
             e.printStackTrace();

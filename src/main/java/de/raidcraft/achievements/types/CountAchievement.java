@@ -67,6 +67,20 @@ public abstract class CountAchievement extends AbstractAchievementType {
     }
 
     /**
+     * Increases the counter for the player by the given amount and then
+     * checks if the player count is equal or greater then the configured count.
+     *
+     * @param player the player to check the counter for
+     * @param amount the amount for which the counter should be increased
+     */
+    protected void increaseAndCheck(AchievementPlayer player, long amount) {
+
+        if (increase(player, amount) >= count) {
+            addTo(player);
+        }
+    }
+
+    /**
      * Checks the current player count and gives the player the achievement if successful.
      *
      * @param player the player to check the counter for
@@ -99,6 +113,17 @@ public abstract class CountAchievement extends AbstractAchievementType {
     protected long increase(AchievementPlayer player) {
 
         return countCache.compute(player.id(), (uuid, integer) -> integer != null ? ++integer : 1L);
+    }
+
+    /**
+     * Increases the count of the player by the given amount.
+     * @param player the player to increase the counter for
+     * @param amount the amount for which the counter is increased
+     * @return the new count of the player. can be negative.
+     */
+    protected long increase(AchievementPlayer player, long amount) {
+
+        return countCache.compute(player.id(), (uuid, aLong) -> aLong != null ? aLong + amount : amount);
     }
 
     /**
