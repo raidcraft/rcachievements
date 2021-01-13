@@ -9,6 +9,7 @@ import de.raidcraft.achievements.types.LocationAchievement;
 import de.raidcraft.achievements.types.MobKillAchievement;
 import de.raidcraft.achievements.types.NoneAchievementType;
 import de.raidcraft.achievements.util.ConfigUtil;
+import io.ebeaninternal.server.expression.Op;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -17,6 +18,7 @@ import lombok.extern.java.Log;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.checkerframework.checker.nullness.Opt;
 
 import java.io.File;
 import java.io.IOException;
@@ -224,7 +226,9 @@ public final class AchievementManager {
     public Optional<AchievementContext> initialize(@NonNull Achievement achievement) {
 
         if (achievement.disabled()) return Optional.empty();
-        if (activeAchievements.containsKey(achievement.id())) return Optional.empty();
+        if (activeAchievements.containsKey(achievement.id())) {
+            return Optional.of(activeAchievements.get(achievement.id()));
+        }
 
         return registration(achievement.type()).map(registration -> {
             AchievementContext context = AchievementContext.create(plugin, achievement, registration);

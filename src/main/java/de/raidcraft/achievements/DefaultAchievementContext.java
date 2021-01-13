@@ -46,8 +46,8 @@ public class DefaultAchievementContext implements AchievementContext {
 
         try {
             type = registration().create(this);
-            load();
             initialized(true);
+            load();
         } catch (Exception e) {
             log.severe("faield to initialize context of " + achievement().alias()
                     + " (" + achievement().id() + "): " + e.getMessage());
@@ -58,6 +58,7 @@ public class DefaultAchievementContext implements AchievementContext {
 
     private void load() {
 
+        if (!initialized()) initialize();
         if (type == null) {
             loadFailed(true);
             return;
@@ -85,9 +86,7 @@ public class DefaultAchievementContext implements AchievementContext {
 
         try {
             type.enable();
-            if (type instanceof Listener) {
-                plugin.getServer().getPluginManager().registerEvents((Listener) type, plugin);
-            }
+            updateEventListener(true);
             enabled(true);
         } catch (Exception e) {
             log.severe("failed to call enable() on achievement " + achievement().alias()
@@ -102,9 +101,7 @@ public class DefaultAchievementContext implements AchievementContext {
         if (!enabled()) return;
 
         try {
-            if (type instanceof Listener) {
-                HandlerList.unregisterAll((Listener) type);
-            }
+            updateEventListener(false);
             type.disable();
         } catch (Exception e) {
             log.severe("failed to call disable() on achievement " + achievement().alias()
@@ -117,13 +114,14 @@ public class DefaultAchievementContext implements AchievementContext {
     @Override
     public void reload() {
 
-        if (!enabled()) return;
-
         achievement().refresh();
+        disable();
 
-        type.disable();
-        type.load(achievement().achievementConfig());
-        type.enable();
+        if (achievement.enabled()) {
+            applicableCheckCache.clear();
+            load();
+            enable();
+        }
     }
 
     @Override
@@ -150,5 +148,16 @@ public class DefaultAchievementContext implements AchievementContext {
         applicableCheckCache.remove(player.id());
 
         achievement().removeFrom(player);
+    }
+
+    private void updateEventListener(boolean register) {
+
+        if (type instanceof Listener) {
+            if (register) {
+                plugin.getServer().getPluginManager().registerEvents((Listener) type, plugin);
+            } else {
+                HandlerList.unregisterAll((Listener) type);
+            }
+        }
     }
 }

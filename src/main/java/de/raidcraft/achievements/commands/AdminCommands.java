@@ -3,6 +3,7 @@ package de.raidcraft.achievements.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.annotation.*;
+import com.google.common.base.Strings;
 import de.raidcraft.achievements.Messages;
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
@@ -10,8 +11,12 @@ import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.types.LocationAchievement;
 import io.ebeaninternal.server.lib.Str;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 import java.util.function.Function;
 
 import static de.raidcraft.achievements.Constants.PERMISSION_PREFIX;
@@ -78,6 +83,54 @@ public class AdminCommands extends BaseCommand {
 
         achievement.removeFrom(player);
         send(getCurrentCommandIssuer(), removeSuccess(achievement, player));
+    }
+
+    @Subcommand("save")
+    @CommandPermission(PERMISSION_PREFIX + "admin.achievement.save")
+    @CommandCompletion("@achievements *")
+    @Description("Saves an achievement to disk.")
+    public void save(Achievement achievement, @Optional String path) {
+
+        if (!Strings.isNullOrEmpty(achievement.source())) {
+            throw new ConditionFailedException("Der Erfolg " + achievement.alias() + " existiert bereits als Datei unter: " + achievement.source());
+        }
+
+        File baseDir = new File(plugin.getDataFolder(), plugin.pluginConfig().getAchievements());
+        File file;
+        if (Strings.isNullOrEmpty(path)) {
+            file = new File(baseDir, achievement.alias() + ".yml");
+        } else {
+            path = path.replace(".", "/");
+            if (!path.endsWith(".yml") && !path.endsWith(".yaml")) {
+                path += ".yml";
+            }
+            file = new File(baseDir, path);
+        }
+
+        if (file.exists()) {
+            throw new ConditionFailedException("Die Datei " + file.getAbsolutePath() + " existiert bereits. Bitte verwende einen anderen Speicherort.");
+        }
+
+        try {
+            file.getParentFile().mkdirs();
+            YamlConfiguration config = new YamlConfiguration();
+            config.set("id", achievement.id().toString());
+            config.set("type", achievement.type());
+            config.set("name", achievement.name());
+            config.set("description", achievement.description());
+            config.set("enabled", achievement.enabled());
+            config.set("secret", achievement.secret());
+            config.set("hidden", achievement.hidden());
+            config.set("broadcast", achievement.broadcast());
+            for (Map.Entry<String, Object> entry : achievement.config().getValues(true).entrySet()) {
+                config.set(entry.getKey(), entry.getValue());
+            }
+            config.save(file);
+            getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Der Erfolg wurde erfolgreich als Datei gespeichert: " + file.getAbsolutePath());
+        } catch (IOException e) {
+            getCurrentCommandIssuer().sendMessage("Fehler beim Speichern der Datei: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Subcommand("set")
