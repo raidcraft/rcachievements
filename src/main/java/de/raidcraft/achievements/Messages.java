@@ -246,10 +246,6 @@ public final class Messages {
 
         return text().append(text("[", ACCENT))
                 .append(text(achievement.name(), achievementColor(achievement, player))
-                        .hoverEvent(achievementInfo(achievement).append(newline())
-                                .append(text("Klicken um mehr Details anzuzeigen.", NOTE, ITALIC))
-                                .asHoverEvent()
-                        )
                         .clickEvent(runCommand(INFO.apply(achievement)))
                 )
                 .append(text("]", ACCENT))
