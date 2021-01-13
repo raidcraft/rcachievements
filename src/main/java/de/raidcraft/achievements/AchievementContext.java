@@ -5,6 +5,7 @@ import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.Plugin;
 
 /**
  * The achievement context holds additional information for the instantiated achievement type.
@@ -17,12 +18,13 @@ public interface AchievementContext {
     /**
      * Creates a new achievement context for the given achievement.
      *
+     * @param plugin the plugin that created the context
      * @param achievement the achievement to create a context for
      * @return the created context
      */
-    static AchievementContext create(Achievement achievement, AchievementType.Registration<?> registration) {
+    static AchievementContext create(Plugin plugin, Achievement achievement, AchievementType.Registration<?> registration) {
 
-        return new DefaultAchievementContext(achievement, registration);
+        return new DefaultAchievementContext(plugin, achievement, registration);
     }
 
     /**
@@ -53,6 +55,29 @@ public interface AchievementContext {
      * Reloads the achievement context and the underlying achievement type.
      */
     void reload();
+
+    /**
+     * The type is null until {@link #initialize()} is called and {@link #initialized()} returns true.
+     *
+     * @return the achievement type after {@link #initialize()} was called
+     */
+    AchievementType type();
+
+    /**
+     * Returns true if the context was initialized and created
+     * an instance of the achievement type.
+     * <p>{@link #type()} is null until the context is initialized
+     *
+     * @return true if the context was initialized
+     */
+    boolean initialized();
+
+    /**
+     * Returns true if the achievement type is enabled and actively listening on events.
+     *
+     * @return true if the context is enabled
+     */
+    boolean enabled();
 
     /**
      * Adds this achievement to the given player, unlocking it if not unlocked.

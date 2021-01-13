@@ -19,6 +19,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
@@ -199,6 +200,9 @@ public class Achievement extends BaseEntity {
      */
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private DataStore data = new DataStore();
+
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PlayerAchievement> playerAchievements = new ArrayList<>();
 
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)

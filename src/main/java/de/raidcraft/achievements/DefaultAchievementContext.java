@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 
 @Getter
 @Log(topic = "RCAchievements")
@@ -13,13 +16,17 @@ import lombok.extern.java.Log;
 @Accessors(fluent = true)
 public class DefaultAchievementContext implements AchievementContext {
 
+    private final Plugin plugin;
     private final Achievement achievement;
     private final AchievementType.Registration<?> registration;
     private AchievementType type;
     private boolean initialized = false;
+    private boolean loadFailed = false;
     private boolean enabled = false;
 
-    public DefaultAchievementContext(Achievement achievement, AchievementType.Registration<?> registration) {
+    public DefaultAchievementContext(Plugin plugin, Achievement achievement, AchievementType.Registration<?> registration) {
+
+        this.plugin = plugin;
 
         this.achievement = achievement;
         this.registration = registration;
@@ -32,12 +39,33 @@ public class DefaultAchievementContext implements AchievementContext {
 
         try {
             type = registration().create(this);
-            type.load(achievement().achievementConfig());
+            load();
             initialized(true);
         } catch (Exception e) {
             log.severe("faield to initialize context of " + achievement().alias()
                     + " (" + achievement().id() + "): " + e.getMessage());
             e.printStackTrace();
+            loadFailed(true);
+        }
+    }
+
+    private void load() {
+
+        if (type == null) {
+            loadFailed(true);
+            return;
+        }
+
+        try {
+            loadFailed(!type.load(achievement().achievementConfig()));
+        } catch (Exception e) {
+            log.severe("failed to load " + achievement().alias() + " (" + achievement().id() + "): " + e.getMessage());
+            e.printStackTrace();
+            loadFailed(true);
+        }
+
+        if (loadFailed()) {
+            log.severe("loading config of " + achievement().alias() + " failed. Achievement will not enable!");
         }
     }
 
@@ -46,9 +74,13 @@ public class DefaultAchievementContext implements AchievementContext {
 
         if (enabled()) return;
         if (!initialized()) initialize();
+        if (loadFailed()) return;
 
         try {
             type.enable();
+            if (type instanceof Listener) {
+                plugin.getServer().getPluginManager().registerEvents((Listener) type, plugin);
+            }
             enabled(true);
         } catch (Exception e) {
             log.severe("failed to call enable() on achievement " + achievement().alias()
@@ -63,6 +95,9 @@ public class DefaultAchievementContext implements AchievementContext {
         if (!enabled()) return;
 
         try {
+            if (type instanceof Listener) {
+                HandlerList.unregisterAll((Listener) type);
+            }
             type.disable();
         } catch (Exception e) {
             log.severe("failed to call disable() on achievement " + achievement().alias()

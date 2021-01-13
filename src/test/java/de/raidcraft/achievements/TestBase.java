@@ -4,6 +4,7 @@ import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import io.ebean.Model;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
@@ -25,6 +26,7 @@ public class TestBase {
     private ServerMock server;
     private RCAchievements plugin;
     private AchievementPlayer player;
+    private AchievementMockFactory factory;
 
     @SneakyThrows
     @BeforeEach
@@ -33,12 +35,14 @@ public class TestBase {
         server = MockBukkit.mock();
         plugin = MockBukkit.load(RCAchievements.class);
         player = AchievementPlayer.of(server.addPlayer());
-        plugin.achievementManager().register(new AchievementMockFactory());
+        factory = new AchievementMockFactory();
+        plugin.achievementManager().register(factory);
     }
 
     @AfterEach
     void tearDown() {
 
+        Achievement.find.all().forEach(Model::delete);
         MockBukkit.unmock();
     }
 
@@ -58,5 +62,13 @@ public class TestBase {
     protected Achievement loadAchievement() {
 
         return loadAchievement(RandomStringUtils.randomAlphabetic(20)).get();
+    }
+
+    protected DefaultAchievementContext context(Achievement achievement) {
+
+        return (DefaultAchievementContext) AchievementContext.create(plugin,
+                achievement,
+                plugin.achievementManager().registration(achievement.type()).get()
+        );
     }
 }

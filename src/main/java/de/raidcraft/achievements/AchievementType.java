@@ -168,8 +168,10 @@ public interface AchievementType {
      * <p>It will also be called on reload calls and should be atomic.
      *
      * @param config the config of the achievement
+     * @return true if the loading succeeded and the achievement type can enable
+     *         <p>false if the loading failed and the achievement type cannot enable
      */
-    default void load(ConfigurationSection config) {}
+    default boolean load(ConfigurationSection config) { return true; }
 
     /**
      * Enable is called after the achievement was loaded and when this type is active.

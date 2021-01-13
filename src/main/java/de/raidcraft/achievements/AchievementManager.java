@@ -209,16 +209,18 @@ public final class AchievementManager {
      * then call initialize to start listening for achievement events.
      *
      * @param achievement the achievemet that should be initialized. must not be null.
+     * @return the created {@link AchievementContext} if the initialization was succcessful
      */
-    public void initialize(@NonNull Achievement achievement) {
+    public Optional<AchievementContext> initialize(@NonNull Achievement achievement) {
 
-        if (achievement.disabled()) return;
-        if (activeAchievements.containsKey(achievement.id())) return;
+        if (achievement.disabled()) return Optional.empty();
+        if (activeAchievements.containsKey(achievement.id())) return Optional.empty();
 
-        registration(achievement.type()).ifPresent(registration -> {
-            AchievementContext context = AchievementContext.create(achievement, registration);
+        return registration(achievement.type()).map(registration -> {
+            AchievementContext context = AchievementContext.create(plugin, achievement, registration);
             context.enable();
             activeAchievements.put(achievement.id(), context);
+            return context;
         });
     }
 
