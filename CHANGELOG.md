@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/raidcraft/rcachievements/compare/v1.8.0...v1.9.0) (2021-01-14)
+
+
+### Features
+
+* add /rcaa nearby command ([366469f](https://github.com/raidcraft/rcachievements/commit/366469fd407b1e6ad5ae95a105898e93e3a6ad8f))
+
 # [1.8.0](https://github.com/raidcraft/rcachievements/compare/v1.7.0...v1.8.0) (2021-01-14)
 
 
