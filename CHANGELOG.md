@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/raidcraft/rcachievements/compare/v1.9.1...v1.9.2) (2021-01-14)
+
+
+### Bug Fixes
+
+* nearby command output not printed ([e942ac6](https://github.com/raidcraft/rcachievements/commit/e942ac63f6b3b4a2b8c186a9e51b7f444da015a6))
+
 ## [1.9.1](https://github.com/raidcraft/rcachievements/compare/v1.9.0...v1.9.1) (2021-01-14)
 
 
