@@ -2,6 +2,7 @@ package de.raidcraft.achievements;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
+import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import io.ebean.Model;
@@ -25,6 +26,7 @@ public class TestBase {
 
     private ServerMock server;
     private RCAchievements plugin;
+    private PlayerMock bukkitPlayer;
     private AchievementPlayer player;
     private AchievementMockFactory factory;
 
@@ -34,7 +36,8 @@ public class TestBase {
 
         server = MockBukkit.mock();
         plugin = MockBukkit.load(RCAchievements.class);
-        player = AchievementPlayer.of(server.addPlayer());
+        bukkitPlayer = server.addPlayer();
+        player = AchievementPlayer.of(bukkitPlayer);
         factory = new AchievementMockFactory();
         plugin.achievementManager().register(factory);
     }
