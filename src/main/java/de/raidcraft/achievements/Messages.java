@@ -10,34 +10,34 @@ import de.raidcraft.achievements.util.TimeUtil;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.feature.pagination.Pagination;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.PAGE_WIDTH;
 import static de.raidcraft.achievements.Constants.RESULTS_PER_PAGE;
 import static de.raidcraft.achievements.Messages.Colors.*;
 import static de.raidcraft.achievements.commands.PlayerCommands.INFO;
-import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.Component.empty;
+import static net.kyori.adventure.text.Component.newline;
+import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.event.ClickEvent.runCommand;
 import static net.kyori.adventure.text.event.ClickEvent.suggestCommand;
-import static net.kyori.adventure.text.event.HoverEvent.showText;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.*;
+import static net.kyori.adventure.text.format.TextDecoration.BOLD;
+import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
+import static net.kyori.adventure.text.format.TextDecoration.OBFUSCATED;
 
 public final class Messages {
 
@@ -216,23 +216,26 @@ public final class Messages {
                 .build();
     }
 
-    public static List<Component> list(AchievementPlayer player, List<Achievement> achievements, int page) {
+    public static List<Component> list(@NonNull AchievementPlayer player, List<Achievement> achievements, int page) {
+
+        achievements = achievements.stream()
+                .sorted()
+                .sorted((o1, o2) -> Boolean.compare(player.unlocked(o1), player.unlocked(o2)))
+                .sorted((o1, o2) -> Boolean.compare(player.canView(o1), player.canView(o2)))
+                .collect(Collectors.toList());
 
         return Pagination.builder()
                 .resultsPerPage(RESULTS_PER_PAGE)
                 .width(PAGE_WIDTH)
                 .build(
                         text("Erfolge von ", DARK_ACCENT).append(player(player)),
-                        new Pagination.Renderer.RowRenderer<Achievement>() {
-                            @Override
-                            public @NonNull Collection<Component> renderRow(Achievement value, int index) {
+                        (Pagination.Renderer.RowRenderer<Achievement>) (value, index) -> {
 
-                                if (value == null) return Collections.singleton(empty());
+                            if (value == null) return Collections.singleton(empty());
 
-                                return Collections.singleton(text()
-                                        .append(text("|- ", DARK_ACCENT))
-                                        .append(achievement(value, player)).build());
-                            }
+                            return Collections.singleton(text()
+                                    .append(text("|  ", DARK_ACCENT))
+                                    .append(achievement(value, player)).build());
                         }, PlayerCommands.LIST::apply
                 ).render(achievements, page);
     }
@@ -244,8 +247,16 @@ public final class Messages {
 
     public static Component achievement(Achievement achievement, AchievementPlayer player) {
 
+        if (player != null && !player.canView(achievement)) {
+            return text().append(text("[", ACCENT))
+                    .append(text(achievement.name().replaceAll(".", "?"), achievementColor(achievement, player)))
+                    .append(text("]", ACCENT))
+                    .build();
+        }
+
         return text().append(text("[", ACCENT))
                 .append(text(achievement.name(), achievementColor(achievement, player))
+                        .hoverEvent(achievementInfo(achievement, player))
                         .clickEvent(runCommand(INFO.apply(achievement)))
                 )
                 .append(text("]", ACCENT))
@@ -259,15 +270,22 @@ public final class Messages {
 
     public static Component achievementInfo(Achievement achievement, AchievementPlayer player) {
 
+        if (player != null && !player.canView(achievement)) {
+            return text("Versteckter Erfolg", ERROR);
+        }
+
         TextComponent.Builder builder = text().append(text(achievement.name(), achievementColor(achievement, player)))
                 .append(text(" (" + achievement.alias() + ")", NOTE))
-                .append(newline())
-                .append(text(achievement.description(), NOTE, achievement.secret() ? OBFUSCATED : ITALIC));
+                .append(newline());
 
         if (player != null) {
             PlayerAchievement playerAchievement = PlayerAchievement.of(achievement, player);
-            builder.append(text("Freigeschaltet: ", TEXT))
+            builder.append(text(achievement.description(), NOTE, player.canViewDetails(achievement) ? ITALIC : OBFUSCATED))
+                    .append(newline())
+                    .append(text("Freigeschaltet: ", TEXT))
                     .append(text(playerAchievement.isUnlocked() ? TimeUtil.formatDateTime(playerAchievement.unlocked()) : "N/A", playerAchievement.isUnlocked() ? UNLOCKED : NOT_UNLOCKED));
+        } else {
+            builder.append(text(achievement.description(), NOTE, achievement.secret() ? OBFUSCATED : ITALIC));
         }
 
         return builder.build();
@@ -277,7 +295,13 @@ public final class Messages {
 
         TextColor color = ACCENT;
         if (player != null) {
-            color = player.unlocked(achievement) ? UNLOCKED : NOT_UNLOCKED;
+            if (player.unlocked(achievement)) {
+                color = UNLOCKED;
+            } else if (!player.canView(achievement)) {
+                color = DISABLED;
+            } else {
+                color = NOT_UNLOCKED;
+            }
         }
 
         return color;

@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import de.raidcraft.achievements.Constants;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
-import io.ebean.annotation.DbEnumValue;
 import io.ebean.annotation.DbJson;
 import io.ebean.annotation.Index;
 import io.ebean.text.json.EJson;
@@ -26,7 +25,13 @@ import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
@@ -44,7 +49,7 @@ import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 @Setter
 @Accessors(fluent = true)
 @Table(name = TABLE_PREFIX + "achievements")
-public class Achievement extends BaseEntity {
+public class Achievement extends BaseEntity implements Comparable<Achievement> {
 
     public static final Finder<UUID, Achievement> find = new Finder<>(Achievement.class);
 
@@ -222,6 +227,7 @@ public class Achievement extends BaseEntity {
      * The friendly name of the achievement that is displayed to the player.
      */
     private String name;
+
     /**
      * A detailed description about the achievement.
      * <p>Can be hidden with the {@link #secret()} or {@link #hidden()} property.
@@ -270,7 +276,6 @@ public class Achievement extends BaseEntity {
     @Setter(AccessLevel.PRIVATE)
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private DataStore data = new DataStore();
-
     @Setter(AccessLevel.PRIVATE)
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PlayerAchievement> playerAchievements = new ArrayList<>();
@@ -394,5 +399,13 @@ public class Achievement extends BaseEntity {
         this._config(cfg);
 
         return config;
+    }
+
+    @Override
+    public int compareTo(@NonNull Achievement o) {
+
+        if (o.equals(this)) return 0;
+
+        return name().compareTo(o.name());
     }
 }

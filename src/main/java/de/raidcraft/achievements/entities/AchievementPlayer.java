@@ -115,6 +115,14 @@ public class AchievementPlayer extends BaseEntity {
         return PlayerAchievement.of(achievement, this).unlocked() != null;
     }
 
+    /**
+     * Checks if the player can unlock the given achievement.
+     * <p>The check will return false if the player already has the achievement
+     * or does not have the permission to unlock it.
+     *
+     * @param achievement the achievement to check
+     * @return true if the achievement can be unlocked
+     */
     public boolean canUnlock(Achievement achievement) {
 
         if (unlocked(achievement)) return false;
@@ -126,5 +134,45 @@ public class AchievementPlayer extends BaseEntity {
         }
 
         return true;
+    }
+
+    /**
+     * Checks if this player can view this achievement.
+     * <p>Will check if it is hidden, the player has the bypass permission
+     * or unlocked the achievement.
+     *
+     * @param achievement the achievement to check
+     * @return true if the player is allowed to view the achievement
+     */
+    public boolean canView(Achievement achievement) {
+
+        if (!achievement.hidden()) return true;
+        if (unlocked(achievement)) return true;
+
+        Player player = Bukkit.getPlayer(id());
+        if (player == null) return false;
+
+        return player.hasPermission(Constants.SHOW_HIDDEN);
+    }
+
+    /**
+     * Checks if the player is allowed to view details of the achievement.
+     * <p>Details may be hidden if the achievement is secret and the player
+     * has not unlocked it or does not have the permission to view secret achievements.
+     *
+     * @param achievement the achievement to check
+     * @return true if the player is allowed to view details of the achievement
+     */
+    public boolean canViewDetails(Achievement achievement) {
+
+        if (!achievement.secret() && !achievement.hidden()) return true;
+        if (unlocked(achievement)) return true;
+
+        Player player = Bukkit.getPlayer(id());
+        if (player == null) return false;
+
+        boolean canViewSecret = !achievement.secret() || player.hasPermission(Constants.SHOW_SECRET);
+
+        return canViewSecret && canView(achievement);
     }
 }

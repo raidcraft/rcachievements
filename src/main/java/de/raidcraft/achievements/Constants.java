@@ -10,7 +10,8 @@ public final class Constants {
     public static final String DEFAULT_TYPE = "none";
     public static final String PERMISSION_PREFIX = "rcachievements.";
     public static final String ACHIEVEMENT_PERMISSION_PREFIX = PERMISSION_PREFIX + "achievement.";
-    public static final String SHOW_HIDDEN = PERMISSION_PREFIX + "achievement.hidden";
+    public static final String SHOW_HIDDEN = PERMISSION_PREFIX + "achievements.hidden";
+    public static final String SHOW_SECRET = PERMISSION_PREFIX + "achievements.secret";
 
     private Constants() {}
 }
