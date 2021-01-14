@@ -1,70 +1,26 @@
 package de.raidcraft.achievements;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.types.NoneAchievementType;
 import lombok.SneakyThrows;
 import net.silthus.ebean.BaseEntity;
-import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import static de.raidcraft.achievements.AchievementMockFactory.TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("ALL")
-class AchievementManagerTest {
-
-    private ServerMock server;
-    private RCAchievements plugin;
-    private AchievementManager manager;
-
-    @BeforeEach
-    void setUp() {
-
-        server = MockBukkit.mock();
-        plugin = MockBukkit.load(RCAchievements.class);
-        manager = new AchievementManager(plugin);
-    }
-
-    @AfterEach
-    void tearDown() {
-
-        MockBukkit.unmock();
-    }
-
-    Optional<Achievement> loadAchievement(String alias, Consumer<ConfigurationSection> cfg) {
-
-        MemoryConfiguration config = new MemoryConfiguration();
-        config.set("type", TYPE);
-        cfg.accept(config);
-        return manager.loadAchievement(alias, config);
-    }
-
-    Optional<Achievement> loadAchievement(String alias) {
-
-        return loadAchievement(alias, configurationSection -> {});
-    }
-
-    Optional<Achievement> loadAchievement() {
-
-        return loadAchievement(RandomStringUtils.randomAlphabetic(20));
-    }
+class AchievementManagerTest extends TestBase {
 
     @Nested
     @DisplayName("register(...)")
@@ -74,6 +30,8 @@ class AchievementManagerTest {
         @Test
         @DisplayName("should load achievements that failed to load after type registration")
         void shouldLoadFailedAchievementsAfterRegistration() {
+
+            manager.types().clear();
 
             assertThat(loadAchievement("test")).isEmpty();
             assertThat(manager.failedLoads()).containsKey(TYPE);
@@ -94,9 +52,6 @@ class AchievementManagerTest {
         @DisplayName("should throw if type is duplicate")
         void shouldThrowIfTypeIsDuplicate() {
 
-            assertThatCode(() -> manager.register(new AchievementMockFactory()))
-                    .doesNotThrowAnyException();
-
             assertThatExceptionOfType(TypeRegistrationException.class)
                     .isThrownBy(() -> manager.register("mock", NoneAchievementType.class, context -> mock(NoneAchievementType.class)));
         }
@@ -105,19 +60,6 @@ class AchievementManagerTest {
     @Nested
     @DisplayName("load(...)")
     class AchievementLoading {
-
-        @SneakyThrows
-        @BeforeEach
-        void setUp() {
-
-            manager.register(new AchievementMockFactory());
-        }
-
-        @AfterEach
-        void tearDown() {
-
-            Achievement.find.all().forEach(achievement -> achievement.delete());
-        }
 
         @Test
         @DisplayName("should use id from config to load achievement")
@@ -226,6 +168,25 @@ class AchievementManagerTest {
                     .extracting(Achievement::alias, Achievement::name, Achievement::hidden)
                     .contains("foobar", "Foo Bar", false);
             assertThat(Achievement.find.all()).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("should activate achievements on load")
+        void shouldActivateAchievementsOnLoad() {
+
+            Achievement achievement = Achievement.create("load-test",
+                    configurationSection -> {
+            }).type(TYPE);
+            achievement.save();
+
+            manager.load();
+
+            assertThat(manager.active(achievement))
+                    .isPresent().get()
+                    .extracting(AchievementContext::enabled)
+                    .isEqualTo(true);
+
+            verify(factory().last(), times(1)).enable();
         }
     }
 }
