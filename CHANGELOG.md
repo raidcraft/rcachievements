@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/raidcraft/rcachievements/compare/v1.4.0...v1.4.1) (2021-01-14)
+
+
+### Bug Fixes
+
+* show achievement details and sort by name and hidden status ([83b7e87](https://github.com/raidcraft/rcachievements/commit/83b7e87a22b0c6274f4003839a71466b8746eee8))
+
 # [1.4.0](https://github.com/raidcraft/rcachievements/compare/v1.3.1...v1.4.0) (2021-01-13)
 
 
