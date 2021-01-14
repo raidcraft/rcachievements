@@ -1,10 +1,15 @@
 package de.raidcraft.achievements.entities;
 
 import de.raidcraft.achievements.TestBase;
+import org.assertj.core.util.Arrays;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -94,6 +99,22 @@ class AchievementTest extends TestBase {
                     true,
                     "foobar"
             );
+        }
+
+        @Test
+        @DisplayName("should load reward list from config")
+        void shouldLoadRewardsFromConfig() {
+
+            MemoryConfiguration cfg = new MemoryConfiguration();
+            ArrayList<String> rewards = new ArrayList<>();
+            rewards.add("foobar");
+            cfg.set("rewards", rewards);
+            Achievement achievement = Achievement.load("foobar", cfg);
+
+            assertThat(Achievement.byId(achievement.id()))
+                    .isPresent().get()
+                    .extracting(Achievement::rewards)
+                    .isEqualTo(rewards);
         }
     }
 }
