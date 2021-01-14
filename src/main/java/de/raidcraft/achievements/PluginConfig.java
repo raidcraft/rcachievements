@@ -19,6 +19,9 @@ public class PluginConfig extends BukkitYamlConfiguration {
     private String achievements = "achievements/";
     @Comment("The achievement type that should be used if none is set in the config.")
     private String defaultType = DEFAULT_TYPE;
+    @Comment("Set to false to disable the global achievement broadcast.")
+    private boolean broadcast = true;
+    private long playerListUpdateInterval = 200L;
     private DatabaseConfig database = new DatabaseConfig();
 
     public PluginConfig(Path path) {

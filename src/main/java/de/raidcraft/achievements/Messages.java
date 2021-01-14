@@ -191,6 +191,15 @@ public final class Messages {
                 .build();
     }
 
+    public static Component achievementUnlockedOther(PlayerAchievement achievement, AchievementPlayer viewer) {
+
+        return text().append(player(achievement.player()))
+                .append(text(" hat den Erfolg ", SUCCESS))
+                .append(achievement(achievement.achievement(), viewer))
+                .append(text(" freigeschaltet!", SUCCESS))
+                .build();
+    }
+
     public static Title achievementUnlockedTitle(PlayerAchievement achievement) {
 
         return Title.title(

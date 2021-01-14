@@ -105,6 +105,14 @@ public class RCAchievements extends JavaPlugin {
 
         playerListener = new PlayerListener(this);
         getServer().getPluginManager().registerEvents(playerListener, this);
+
+        setupBungeecord();
+    }
+
+    private void setupBungeecord() {
+
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", playerListener);
     }
 
     private void setupCommands() {
