@@ -123,7 +123,8 @@ public class AdminCommands extends BaseCommand {
         if (locations.isEmpty()) {
             getCurrentCommandIssuer().sendMessage(ChatColor.RED + "In der Nähe wurden keine Erfolge gefunden.");
         } else {
-            Messages.listNearby(AchievementPlayer.of(player), locations, page, radius);
+            Messages.listNearby(AchievementPlayer.of(player), locations, page, radius)
+                    .forEach(component -> send(getCurrentCommandIssuer(), component));
         }
     }
 
