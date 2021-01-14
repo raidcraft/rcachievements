@@ -1,3 +1,11 @@
+## [1.9.3](https://github.com/raidcraft/rcachievements/compare/v1.9.2...v1.9.3) (2021-01-14)
+
+
+### Bug Fixes
+
+* location achievements not loaded on enable ([aa3e710](https://github.com/raidcraft/rcachievements/commit/aa3e710da3c7f3969aa3a86ff4b862202f0b814c))
+* npe in applicable check if player is null ([0d403ae](https://github.com/raidcraft/rcachievements/commit/0d403ae5cccde5fd14f4cc3419690829e1400ae6))
+
 ## [1.9.2](https://github.com/raidcraft/rcachievements/compare/v1.9.1...v1.9.2) (2021-01-14)
 
 
