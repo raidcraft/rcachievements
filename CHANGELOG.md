@@ -1,3 +1,11 @@
+## [1.9.1](https://github.com/raidcraft/rcachievements/compare/v1.9.0...v1.9.1) (2021-01-14)
+
+
+### Bug Fixes
+
+* make achievement not secret by default ([a7dbeba](https://github.com/raidcraft/rcachievements/commit/a7dbeba389db2b199e863684df34edfd7a7c07ad))
+* rename statistic key ([c5b27eb](https://github.com/raidcraft/rcachievements/commit/c5b27ebf1a3baf02a70781c99b384a6fb4ea4e47))
+
 # [1.9.0](https://github.com/raidcraft/rcachievements/compare/v1.8.0...v1.9.0) (2021-01-14)
 
 
