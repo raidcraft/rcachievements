@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/raidcraft/rcachievements/compare/v1.4.1...v1.5.0) (2021-01-14)
+
+
+### Features
+
+* add /rca top command ([baed99e](https://github.com/raidcraft/rcachievements/commit/baed99ef4297714f272eed3ca607d17167cbe19e))
+* cross server broadcast of achievement unlock ([0854558](https://github.com/raidcraft/rcachievements/commit/08545585cc55a9356b79449fe8c09542ad79d600))
+
 ## [1.4.1](https://github.com/raidcraft/rcachievements/compare/v1.4.0...v1.4.1) (2021-01-14)
 
 
