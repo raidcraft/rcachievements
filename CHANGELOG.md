@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/raidcraft/rcachievements/compare/v1.7.0...v1.8.0) (2021-01-14)
+
+
+### Features
+
+* add generic statistic achievement ([1d515e1](https://github.com/raidcraft/rcachievements/commit/1d515e192a427e1660605edca460b48a4c54cdb8))
+
 # [1.7.0](https://github.com/raidcraft/rcachievements/compare/v1.6.0...v1.7.0) (2021-01-14)
 
 
