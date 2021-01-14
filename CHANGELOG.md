@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/raidcraft/rcachievements/compare/v1.5.0...v1.6.0) (2021-01-14)
+
+
+### Features
+
+* add login achievement type ([49355f1](https://github.com/raidcraft/rcachievements/commit/49355f129b629b47c975f16db36f4d15c192c2e6))
+
 # [1.5.0](https://github.com/raidcraft/rcachievements/compare/v1.4.1...v1.5.0) (2021-01-14)
 
 
