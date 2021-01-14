@@ -2,11 +2,13 @@ package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.AbstractAchievementType;
 import de.raidcraft.achievements.AchievementContext;
+import de.raidcraft.achievements.Progressable;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import io.ebean.annotation.Transactional;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
+import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -14,8 +16,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static de.raidcraft.achievements.Messages.Colors.ACCENT;
+import static de.raidcraft.achievements.Messages.Colors.DARK_HIGHLIGHT;
+import static de.raidcraft.achievements.Messages.Colors.HIGHLIGHT;
+import static de.raidcraft.achievements.Messages.Colors.TEXT;
+import static net.kyori.adventure.text.Component.text;
+
 @Accessors(fluent = true)
-public abstract class CountAchievement extends AbstractAchievementType {
+public abstract class CountAchievement extends AbstractAchievementType implements Progressable {
 
     static final String COUNT_KEY = "count";
 
@@ -51,6 +59,16 @@ public abstract class CountAchievement extends AbstractAchievementType {
                 .map(AchievementPlayer.find::byId)
                 .filter(Objects::nonNull)
                 .forEach(this::save);
+    }
+
+    @Override
+    public Component progress(AchievementPlayer player) {
+
+        return text().append(text("Fortschritt: ", TEXT))
+                .append(text(count(player), HIGHLIGHT))
+                .append(text("/", DARK_HIGHLIGHT))
+                .append(text(count, ACCENT))
+                .build();
     }
 
     /**

@@ -317,6 +317,12 @@ public final class Messages {
                     .append(newline())
                     .append(text("Freigeschaltet: ", TEXT))
                     .append(text(playerAchievement.isUnlocked() ? TimeUtil.formatDateTime(playerAchievement.unlocked()) : "N/A", playerAchievement.isUnlocked() ? UNLOCKED : NOT_UNLOCKED));
+
+            RCAchievements.instance().achievementManager()
+                    .active(achievement)
+                    .filter(context -> context.type() instanceof Progressable)
+                    .map(context -> (Progressable) context.type())
+                    .ifPresent(context -> builder.append(newline()).append(context.progress(player)));
         } else {
             builder.append(text(achievement.description(), NOTE, achievement.secret() ? OBFUSCATED : ITALIC));
         }
@@ -324,7 +330,7 @@ public final class Messages {
         return builder.build();
     }
 
-    private static TextColor achievementColor(Achievement achievement, AchievementPlayer player) {
+    public static TextColor achievementColor(Achievement achievement, AchievementPlayer player) {
 
         TextColor color = ACCENT;
         if (player != null) {
