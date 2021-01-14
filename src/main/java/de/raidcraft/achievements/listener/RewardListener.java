@@ -23,8 +23,12 @@ public class RewardListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onUnlocked(PlayerUnlockedAchievementEvent event) {
 
-        ArtContext context = rewards.computeIfAbsent(event.achievement().id(), uuid -> scope.load(event.achievement().rewards()));
+        if (event.achievement().rewards().isEmpty()) return;
 
-        context.execute(event.playerAchievement());
+        ArtContext context = rewards.computeIfAbsent(event.achievement().id(),
+                uuid -> scope.load(event.achievement().rewards())
+        );
+
+        context.execute(event.player().offlinePlayer().getPlayer());
     }
 }

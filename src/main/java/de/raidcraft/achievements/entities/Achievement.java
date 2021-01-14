@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import de.raidcraft.achievements.Constants;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.DbJson;
 import io.ebean.annotation.Index;
 import io.ebean.text.json.EJson;
@@ -270,6 +271,9 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     @Setter(AccessLevel.PRIVATE)
     @Column(name = "config")
     private Map<String, Object> _config = new HashMap<>();
+    @DbJson
+    @DbDefault("[]")
+    private List<String> rewards = new ArrayList<>();
     /**
      * The persistent meta data store of this achievement.
      */
@@ -386,6 +390,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.hidden(config.getBoolean("hidden", hidden()));
         this.broadcast(config.getBoolean("broadcast", broadcast()));
         this.restricted(config.getBoolean("restricted", restricted()));
+        this.rewards(config.getStringList("rewards"));
     }
 
     private ConfigurationSection updateConfig(ConfigurationSection config) {
