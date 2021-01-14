@@ -134,7 +134,9 @@ public class RCAchievements extends JavaPlugin {
 
         this.achievementManager = new AchievementManager(this);
         achievementManager.registerDefaults();
-        achievementManager.load();
+
+        // needs to be delayed by one tick to allow all worlds to load
+        Bukkit.getScheduler().runTaskLater(this, achievementManager::load, 1L);
     }
 
     private void setupListener() {

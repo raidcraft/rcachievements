@@ -29,12 +29,7 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.PERMISSION_PREFIX;
-import static de.raidcraft.achievements.Messages.addError;
-import static de.raidcraft.achievements.Messages.addSuccess;
-import static de.raidcraft.achievements.Messages.createSuccess;
-import static de.raidcraft.achievements.Messages.removeSuccess;
-import static de.raidcraft.achievements.Messages.send;
-import static de.raidcraft.achievements.Messages.setSuccess;
+import static de.raidcraft.achievements.Messages.*;
 
 @CommandAlias("rca:admin|rcaa|rcachievements:admin")
 @CommandPermission(PERMISSION_PREFIX + "admin")
@@ -115,6 +110,7 @@ public class AdminCommands extends BaseCommand {
                 .filter(AchievementContext::initialized)
                 .filter(context -> context.type() instanceof LocationAchievement)
                 .map(context -> (LocationAchievement) context.type())
+                .filter(achievement -> achievement.getLocation() != null)
                 .filter(achievement -> LocationUtil.isWithinRadius(player.getLocation(), achievement.getLocation().getLocation(), radius))
                 .sorted((o1, o2) -> LocationUtil.getBlockDistance(o2.getLocation().getLocation(), o1.getLocation().getLocation()))
                 .map(achievement -> Map.entry(achievement.achievement(), LocationUtil.getBlockDistance(player.getLocation(), achievement.getLocation().getLocation())))

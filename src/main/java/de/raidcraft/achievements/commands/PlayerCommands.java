@@ -31,7 +31,7 @@ public class PlayerCommands extends BaseCommand {
 
     @Subcommand("info")
     @CommandCompletion("@achievements")
-    @CommandPermission(PERMISSION_PREFIX + "achievement.info")
+    @CommandPermission(PERMISSION_PREFIX + "achievements.info")
     @Description("Shows the information about an achievement.")
     public void info(@Conditions("visible") Achievement achievement) {
 
@@ -41,25 +41,31 @@ public class PlayerCommands extends BaseCommand {
     @Default
     @Subcommand("list")
     @CommandAlias("erfolge")
-    @CommandCompletion("* MY|ALL @players")
-    @CommandPermission(PERMISSION_PREFIX + "achievement.list")
-    public void list(@Default("1") int page, @Default("MY") @Values("MY|ALL") String mode, @Conditions("self") AchievementPlayer player) {
+    @CommandCompletion("* @players")
+    @CommandPermission(PERMISSION_PREFIX + "achievements.list.all")
+    public void list(@Default("1") int page, @Conditions("self") AchievementPlayer player) {
 
-        switch (mode.toUpperCase()) {
-            case "MY":
-                Messages.list(player, player.unlockedAchievements().stream().map(PlayerAchievement::achievement).collect(Collectors.toList()), page)
-                        .forEach(component -> send(getCurrentCommandIssuer(), component));
-                break;
-            case "ALL":
-                Messages.list(player, Achievement.allEnabled(getCurrentCommandIssuer().hasPermission(SHOW_HIDDEN)), page)
-                        .forEach(component -> send(getCurrentCommandIssuer(), component));
-                break;
-        }
+        Messages.list(player, Achievement.allEnabled(getCurrentCommandIssuer().hasPermission(SHOW_HIDDEN)), page)
+                .forEach(component -> send(getCurrentCommandIssuer(), component));
+
     }
+
+    @Default
+    @Subcommand("my|mylist")
+    @CommandAlias("meineerfolge")
+    @CommandCompletion("* @players")
+    @CommandPermission(PERMISSION_PREFIX + "achievements.list")
+    public void mylist(@Default("1") int page, @Conditions("self") AchievementPlayer player) {
+
+        Messages.list(player, player.unlockedAchievements().stream().map(PlayerAchievement::achievement).collect(Collectors.toList()), page)
+                .forEach(component -> send(getCurrentCommandIssuer(), component));
+
+    }
+
 
     @Subcommand("top|toplist")
     @CommandCompletion("*")
-    @CommandPermission(PERMISSION_PREFIX + "achievement.top")
+    @CommandPermission(PERMISSION_PREFIX + "achievements.top")
     public void top(@Default("1") int page) {
 
         Messages.topList(page).forEach(component -> Messages.send(getCurrentCommandIssuer(), component));
