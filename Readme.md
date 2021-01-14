@@ -17,6 +17,7 @@ RCAchievements ist das Achievement Plugin des [Raid-Craft](https://raid-craft.de
   * [location](#location)
   * [kill-entity](#kill-entity)
   * [craft](#craft)
+  * [login](#login)
 
 ## Configuration
 
@@ -29,6 +30,10 @@ achievements: achievements/
 # the default achievement type to use if none is specified in the config
 # see below for a list of inbuilt types
 default_type: none
+# set to false to disable global broadcasting
+broadcast: true
+# how often (in ticks) should the global bungeecord player list update
+player_list_update_interval: 200
 database:
   username: sa
   password: sa
@@ -136,3 +141,12 @@ Counts the number of crafted items. The counter is always increased by the amoun
 | ------ | ------- | ----------- |
 | `count` | `1` | How many items must be crafted until the achievement is unlocked. |
 | `items` | `[]` | A list of items that increase the counter. Can be any valid [minecraft item](https://minecraft-ids.grahamedgecombe.com/). The counter is shared between all entity types. |
+
+### login
+
+Counts daily login streaks. The counter increases if the player logged in the same time in a row and resets on missed streaks. The `24:00` clock mark is used as day reference.
+
+| Config | Default | Description |
+| ------ | ------- | ----------- |
+| `count` | `1` | How often the player must login in a row until the achievement is unlocked. |
+| `reset` | `true` | Resets the counter to `0` if the player misses a streak. |

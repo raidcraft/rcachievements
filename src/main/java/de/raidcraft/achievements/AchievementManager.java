@@ -6,10 +6,10 @@ import de.raidcraft.achievements.types.BlockAchievement;
 import de.raidcraft.achievements.types.CombinedAchievement;
 import de.raidcraft.achievements.types.CraftAchievement;
 import de.raidcraft.achievements.types.LocationAchievement;
+import de.raidcraft.achievements.types.LoginAchievement;
 import de.raidcraft.achievements.types.MobKillAchievement;
 import de.raidcraft.achievements.types.NoneAchievementType;
 import de.raidcraft.achievements.util.ConfigUtil;
-import io.ebeaninternal.server.expression.Op;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -18,7 +18,6 @@ import lombok.extern.java.Log;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.checkerframework.checker.nullness.Opt;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +58,7 @@ public final class AchievementManager {
             register(new BlockAchievement.Factory());
             register(new CombinedAchievement.Factory());
             register(new CraftAchievement.Factory());
+            register(new LoginAchievement.Factory());
         } catch (TypeRegistrationException e) {
             log.severe("failed to register default types: " + e.getMessage());
             e.printStackTrace();
