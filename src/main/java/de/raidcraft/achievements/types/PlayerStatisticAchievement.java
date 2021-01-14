@@ -34,7 +34,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         @Override
         public String identifier() {
 
-            return DEFAULT_TYPE;
+            return "statistic";
         }
 
         @Override
