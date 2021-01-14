@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/raidcraft/rcachievements/compare/v1.6.0...v1.7.0) (2021-01-14)
+
+
+### Features
+
+* add progress details to achievement types ([b633032](https://github.com/raidcraft/rcachievements/commit/b6330329a171bbfe59097fa2a55f20888a30403a))
+
 # [1.6.0](https://github.com/raidcraft/rcachievements/compare/v1.5.0...v1.6.0) (2021-01-14)
 
 
