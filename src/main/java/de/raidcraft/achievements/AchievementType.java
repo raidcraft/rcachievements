@@ -160,6 +160,8 @@ public interface AchievementType {
      */
     default boolean applicable(OfflinePlayer player) {
 
+        if (player == null) return false;
+
         return context().applicable(player(player));
     }
 
@@ -174,6 +176,8 @@ public interface AchievementType {
      * @return true if the player is not applicable and should be excluded in this achievement
      */
     default boolean notApplicable(OfflinePlayer player) {
+
+        if (player == null) return true;
 
         return context().notApplicable(player(player));
     }
