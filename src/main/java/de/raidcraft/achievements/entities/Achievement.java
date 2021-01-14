@@ -241,7 +241,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     /**
      * Secret achievements hide their description to players that have not unlocked it.
      */
-    private boolean secret = true;
+    private boolean secret = false;
     /**
      * Hidden achievements are only visible to players that unlocked them.
      */
