@@ -21,6 +21,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -247,6 +248,28 @@ public final class Messages {
                             );
                         }, PlayerCommands.TOP::apply
                 ).render(players, page);
+    }
+
+    public static List<Component> listNearby(@NonNull AchievementPlayer player, @NonNull List<Map.Entry<Achievement, Integer>> locations, int page, int radius) {
+
+        return Pagination.builder()
+                .resultsPerPage(RESULTS_PER_PAGE)
+                .width(PAGE_WIDTH)
+                .build(
+                        text("Erfolge von ", DARK_ACCENT).append(player(player)),
+                        (Pagination.Renderer.RowRenderer<Map.Entry<Achievement, Integer>>) (value, index) -> {
+
+                            if (value == null) return Collections.singleton(empty());
+
+                            return Collections.singleton(text()
+                                    .append(text("|  ", DARK_ACCENT))
+                                    .append(achievement(value.getKey(), player))
+                                    .append(text(" (", NOTE))
+                                    .append(text(value.getValue() + "m", NOTE))
+                                    .append(text(")", NOTE))
+                                    .build());
+                        }, p -> AdminCommands.NEARBY.apply(p, radius)
+                ).render(locations, page);
     }
 
     public static List<Component> list(@NonNull AchievementPlayer player, List<Achievement> achievements, int page) {

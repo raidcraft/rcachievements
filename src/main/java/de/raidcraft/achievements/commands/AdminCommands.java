@@ -2,7 +2,13 @@ package de.raidcraft.achievements.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.ConditionFailedException;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Subcommand;
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.Messages;
@@ -10,23 +16,31 @@ import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.types.LocationAchievement;
-import io.ebeaninternal.server.lib.Str;
+import de.raidcraft.achievements.util.LocationUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.PERMISSION_PREFIX;
-import static de.raidcraft.achievements.Messages.*;
+import static de.raidcraft.achievements.Messages.addError;
+import static de.raidcraft.achievements.Messages.addSuccess;
+import static de.raidcraft.achievements.Messages.createSuccess;
+import static de.raidcraft.achievements.Messages.removeSuccess;
+import static de.raidcraft.achievements.Messages.send;
+import static de.raidcraft.achievements.Messages.setSuccess;
 
 @CommandAlias("rca:admin|rcaa|rcachievements:admin")
 @CommandPermission(PERMISSION_PREFIX + "admin")
 public class AdminCommands extends BaseCommand {
 
+    public static final BiFunction<Integer, Integer, String> NEARBY = (page, radius) -> "/rca:admin nearby " + page + " " + radius;
     public static final String RELOAD = "/rca:admin reload";
     public static final String SET_NAME = "/rca:admin set name ";
     public static final String SET_DESC = "/rca:admin set desc ";
@@ -85,6 +99,32 @@ public class AdminCommands extends BaseCommand {
         achievement.removeFrom(player);
         plugin.achievementManager().active(achievement).ifPresent(AchievementContext::clearCache);
         send(getCurrentCommandIssuer(), removeSuccess(achievement, player));
+    }
+
+    @Subcommand("nearby|near")
+    @CommandCompletion("*")
+    @CommandPermission(PERMISSION_PREFIX + "admin.achievement.nearby")
+    @Description("Shows all location achievements near the current position.")
+    public void nearby(Player player, @Default("1") int page, @Default("100") int radius) {
+
+        List<Map.Entry<Achievement, Integer>> locations = Achievement.find.query()
+                .where().eq("type", LocationAchievement.TYPE)
+                .and().eq("enabled", true)
+                .findList().stream()
+                .flatMap(achievement -> plugin.achievementManager().active(achievement).stream())
+                .filter(AchievementContext::initialized)
+                .filter(context -> context.type() instanceof LocationAchievement)
+                .map(context -> (LocationAchievement) context.type())
+                .filter(achievement -> LocationUtil.isWithinRadius(player.getLocation(), achievement.getLocation().getLocation(), radius))
+                .sorted((o1, o2) -> LocationUtil.getBlockDistance(o2.getLocation().getLocation(), o1.getLocation().getLocation()))
+                .map(achievement -> Map.entry(achievement.achievement(), LocationUtil.getBlockDistance(player.getLocation(), achievement.getLocation().getLocation())))
+                .collect(Collectors.toList());
+
+        if (locations.isEmpty()) {
+            getCurrentCommandIssuer().sendMessage(ChatColor.RED + "In der Nähe wurden keine Erfolge gefunden.");
+        } else {
+            Messages.listNearby(AchievementPlayer.of(player), locations, page, radius);
+        }
     }
 
     @Subcommand("save")

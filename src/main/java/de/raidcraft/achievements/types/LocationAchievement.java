@@ -7,6 +7,7 @@ import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.util.ConfiguredLocation;
 import de.raidcraft.achievements.util.LocationUtil;
 import de.raidcraft.achievements.util.Locations;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -70,6 +71,7 @@ public class LocationAchievement extends AbstractAchievementType implements List
         }
     }
 
+    @Getter
     private ConfiguredLocation location;
     private final Map<UUID, Location> lastLocations = new HashMap<>();
 
