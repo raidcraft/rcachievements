@@ -9,6 +9,7 @@ import de.raidcraft.achievements.util.LocationUtil;
 import de.raidcraft.achievements.util.Locations;
 import lombok.Getter;
 import lombok.extern.java.Log;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
