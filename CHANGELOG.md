@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/raidcraft/rcachievements/compare/v1.9.3...v1.10.0) (2021-01-14)
+
+
+### Features
+
+* add art rewards ([897bd3b](https://github.com/raidcraft/rcachievements/commit/897bd3b2e278b2b130568237c956ba599ab2070e))
+
 ## [1.9.3](https://github.com/raidcraft/rcachievements/compare/v1.9.2...v1.9.3) (2021-01-14)
 
 
