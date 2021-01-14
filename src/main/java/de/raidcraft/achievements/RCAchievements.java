@@ -11,6 +11,11 @@ import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.listener.PlayerListener;
+import de.raidcraft.achievements.listener.RewardListener;
+import io.artframework.Scope;
+import io.artframework.annotations.ArtModule;
+import io.artframework.annotations.OnDisable;
+import io.artframework.annotations.OnEnable;
 import io.ebean.Database;
 import kr.entree.spigradle.annotations.PluginMain;
 import lombok.AccessLevel;
@@ -29,12 +34,14 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.SHOW_HIDDEN;
 
 @Accessors(fluent = true)
 @PluginMain
+@ArtModule("rcachievements")
 public class RCAchievements extends JavaPlugin {
 
     @Getter
@@ -50,6 +57,9 @@ public class RCAchievements extends JavaPlugin {
     @Getter
     private AchievementManager achievementManager;
     private PlayerListener playerListener;
+    private RewardListener rewardListener;
+    @Getter
+    private Scope art;
 
     @Getter
     private static boolean testing = false;
@@ -79,6 +89,32 @@ public class RCAchievements extends JavaPlugin {
     public void onDisable() {
 
         achievementManager().unload();
+    }
+
+    @OnEnable
+    public void onArtEnable(Scope scope) {
+
+        this.art = scope;
+        this.rewardListener = new RewardListener(scope);
+        getServer().getPluginManager().registerEvents(rewardListener, this);
+    }
+
+    @OnDisable
+    public void onArtDisable() {
+
+        this.art = null;
+    }
+
+    public void artPresent(Consumer<Scope> art) {
+
+        if (artEnabled()) {
+            art.accept(this.art);
+        }
+    }
+
+    public boolean artEnabled() {
+
+        return art != null;
     }
 
     public void reload() {
