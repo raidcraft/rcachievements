@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Setter
 @Accessors(fluent = true)
 @Table(name = Constants.TABLE_PREFIX + "players")
-public class AchievementPlayer extends BaseEntity {
+public class AchievementPlayer extends BaseEntity implements Comparable<AchievementPlayer> {
 
     public static final Finder<UUID, AchievementPlayer> find = new Finder<>(AchievementPlayer.class);
 
@@ -174,5 +174,11 @@ public class AchievementPlayer extends BaseEntity {
         boolean canViewSecret = !achievement.secret() || player.hasPermission(Constants.SHOW_SECRET);
 
         return canViewSecret && canView(achievement);
+    }
+
+    @Override
+    public int compareTo(AchievementPlayer o) {
+
+        return Integer.compare(unlockedAchievements().size(), o.unlockedAchievements().size());
     }
 }

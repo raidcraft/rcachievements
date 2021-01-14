@@ -216,6 +216,30 @@ public final class Messages {
                 .build();
     }
 
+    public static List<Component> topList(int page) {
+
+        List<AchievementPlayer> players = AchievementPlayer.find.all()
+                .stream().sorted()
+                .collect(Collectors.toList());
+
+        return Pagination.builder()
+                .resultsPerPage(RESULTS_PER_PAGE)
+                .width(PAGE_WIDTH)
+                .build(
+                        text("Erfolge Topliste", DARK_ACCENT),
+                        (Pagination.Renderer.RowRenderer<AchievementPlayer>) (value, index) -> {
+
+                            if (value == null) return Collections.singleton(empty());
+
+                            return Collections.singleton(text()
+                                    .append(text((index + 1) + ". ", SUCCESS))
+                                    .append(player(value))
+                                    .build()
+                            );
+                        }, PlayerCommands.TOP::apply
+                ).render(players, page);
+    }
+
     public static List<Component> list(@NonNull AchievementPlayer player, List<Achievement> achievements, int page) {
 
         achievements = achievements.stream()

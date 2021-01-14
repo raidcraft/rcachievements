@@ -21,6 +21,7 @@ public class PlayerCommands extends BaseCommand {
 
     public static final Function<Achievement, String> INFO = (achievement) -> "/rcachievements info " + achievement.id().toString();
     public static final Function<Integer, String> LIST = (page) -> "/rcachievements list " + page;
+    public static final Function<Integer, String> TOP = (page) -> "/rcachievements top " + page;
 
     private final RCAchievements plugin;
 
@@ -54,5 +55,13 @@ public class PlayerCommands extends BaseCommand {
                         .forEach(component -> send(getCurrentCommandIssuer(), component));
                 break;
         }
+    }
+
+    @Subcommand("top|toplist")
+    @CommandCompletion("*")
+    @CommandPermission(PERMISSION_PREFIX + "achievement.top")
+    public void top(@Default("1") int page) {
+
+        Messages.topList(page).forEach(component -> Messages.send(getCurrentCommandIssuer(), component));
     }
 }
