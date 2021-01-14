@@ -2,9 +2,7 @@ package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.TypeFactory;
-import de.raidcraft.achievements.entities.AchievementPlayer;
 import lombok.extern.java.Log;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,9 +15,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import static de.raidcraft.achievements.Messages.Colors.TEXT;
-import static net.kyori.adventure.text.Component.text;
 
 @Log(topic = "RCAchievements:block")
 public class BlockAchievement extends CountAchievement implements Listener {
@@ -54,14 +49,10 @@ public class BlockAchievement extends CountAchievement implements Listener {
     }
 
     @Override
-    public Component progress(AchievementPlayer player) {
-
-        return super.progress(player).append(text(" Blöcke ", TEXT))
-                .append(text(action == Action.BREAK ? "abgebaut" : "gesetzt", TEXT));
-    }
-
-    @Override
     public boolean load(ConfigurationSection config) {
+
+        super.load(config);
+        suffix(config.getString("suffix", "Blöcke " + (action == Action.BREAK ? "abgebaut" : "gesetzt")));
 
         blockTypes.clear();
 
@@ -86,7 +77,7 @@ public class BlockAchievement extends CountAchievement implements Listener {
             return false;
         }
 
-        return super.load(config);
+        return true;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

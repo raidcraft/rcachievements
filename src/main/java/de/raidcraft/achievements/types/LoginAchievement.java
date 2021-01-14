@@ -2,8 +2,6 @@ package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.TypeFactory;
-import de.raidcraft.achievements.entities.AchievementPlayer;
-import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,8 +14,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
-import static de.raidcraft.achievements.Messages.Colors.TEXT;
 
 public class LoginAchievement extends CountAchievement implements Listener {
 
@@ -56,15 +52,12 @@ public class LoginAchievement extends CountAchievement implements Listener {
     @Override
     public boolean load(ConfigurationSection config) {
 
+        super.load(config);
+
         reset = config.getBoolean("reset", true);
+        suffix(config.getString("suffix", "Tage"));
 
         return true;
-    }
-
-    @Override
-    public Component progress(AchievementPlayer player) {
-
-        return super.progress(player).append(Component.text(" Tage", TEXT));
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

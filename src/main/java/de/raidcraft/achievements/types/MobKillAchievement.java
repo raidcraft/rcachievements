@@ -48,6 +48,9 @@ public class MobKillAchievement extends CountAchievement implements Listener {
     @Override
     public boolean load(ConfigurationSection config) {
 
+        super.load(config);
+        prefix(config.getString("suffix", "Mobs getötet"));
+
         entities.clear();
 
         for (String entity : config.getStringList("entities")) {
@@ -64,7 +67,7 @@ public class MobKillAchievement extends CountAchievement implements Listener {
             return false;
         }
 
-        return super.load(config);
+        return true;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

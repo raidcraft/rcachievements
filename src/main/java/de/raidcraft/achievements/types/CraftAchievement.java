@@ -50,6 +50,9 @@ public class CraftAchievement extends CountAchievement implements Listener {
     @Override
     public boolean load(ConfigurationSection config) {
 
+        super.load(config);
+        suffix(config.getString("suffix", "Items hergestellt"));
+
         itemTypes.clear();
 
         for (String item : config.getStringList("items")) {
@@ -66,7 +69,7 @@ public class CraftAchievement extends CountAchievement implements Listener {
             return false;
         }
 
-        return super.load(config);
+        return true;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

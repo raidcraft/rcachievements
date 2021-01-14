@@ -1,5 +1,6 @@
 package de.raidcraft.achievements.types;
 
+import com.google.common.base.Strings;
 import de.raidcraft.achievements.AbstractAchievementType;
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.Progressable;
@@ -7,6 +8,7 @@ import de.raidcraft.achievements.entities.AchievementPlayer;
 import io.ebean.annotation.Transactional;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,6 +22,7 @@ import static de.raidcraft.achievements.Messages.Colors.ACCENT;
 import static de.raidcraft.achievements.Messages.Colors.DARK_HIGHLIGHT;
 import static de.raidcraft.achievements.Messages.Colors.HIGHLIGHT;
 import static de.raidcraft.achievements.Messages.Colors.TEXT;
+import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
 
 @Accessors(fluent = true)
@@ -34,6 +37,12 @@ public abstract class CountAchievement extends AbstractAchievementType implement
 
     @Getter
     private int count = 1;
+    @Getter
+    @Setter
+    private String prefix;
+    @Getter
+    @Setter
+    private String suffix;
 
     private final Map<UUID, Long> countCache = new HashMap<>();
 
@@ -41,6 +50,8 @@ public abstract class CountAchievement extends AbstractAchievementType implement
     public boolean load(ConfigurationSection config) {
 
         count = config.getInt("count", 1);
+        prefix = config.getString("prefix", "Fortschritt:");
+        suffix = config.getString("suffix");
 
         return true;
     }
@@ -64,10 +75,12 @@ public abstract class CountAchievement extends AbstractAchievementType implement
     @Override
     public Component progress(AchievementPlayer player) {
 
-        return text().append(text("Fortschritt: ", TEXT))
+        return text().append(text(prefix() + " ", TEXT))
                 .append(text(count(player), HIGHLIGHT))
                 .append(text("/", DARK_HIGHLIGHT))
                 .append(text(count, ACCENT))
+                .append(text(" "))
+                .append(Strings.isNullOrEmpty(suffix()) ? empty() : text(suffix(), TEXT))
                 .build();
     }
 

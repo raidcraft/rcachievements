@@ -18,6 +18,7 @@ RCAchievements ist das Achievement Plugin des [Raid-Craft](https://raid-craft.de
   * [kill-entity](#kill-entity)
   * [craft](#craft)
   * [login](#login)
+  * [statistic](#statistic)
 
 ## Configuration
 
@@ -102,6 +103,8 @@ A `counter` achievement that tracks placing and breaking blocks.
 | `count` | `1` | How many times must the action execute until the achievement is unlocked. |
 | `action` | `place` | The action that is tracked by the achievement. `place`, `break` |
 | `blocks` | `[]` | A list of block materials that increase the counter. Can be any valid [minecraft item](https://minecraft-ids.grahamedgecombe.com/). The counter is shared between all block types. |
+| `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
+| `suffix` | `Blöcke abgebaut/gesetzt` | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
 
 ### combined
 
@@ -110,6 +113,8 @@ Use the combined achievement to give the player an achievement when he unlocked 
 | Config | Default | Description |
 | ------ | ------- | ----------- |
 | `achievements` | `[]` | A list of achievements that the player needs to unlock this achievement. |
+| `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
+| `suffix` | `Erfolge` | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
 
 ### location
 
@@ -132,6 +137,8 @@ Counts the killing of entities.
 | ------ | ------- | ----------- |
 | `count` | `1` | How many times must the action execute until the achievement is unlocked. |
 | `entities` | `[]` | A list of entities that increase the counter. Can be any valid [minecraft entity](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html). The counter is shared between all entity types. |
+| `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
+| `suffix` | `Mobs getötet` | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
 
 ### craft
 
@@ -141,6 +148,8 @@ Counts the number of crafted items. The counter is always increased by the amoun
 | ------ | ------- | ----------- |
 | `count` | `1` | How many items must be crafted until the achievement is unlocked. |
 | `items` | `[]` | A list of items that increase the counter. Can be any valid [minecraft item](https://minecraft-ids.grahamedgecombe.com/). The counter is shared between all entity types. |
+| `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
+| `suffix` | `Items hergestellt` | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
 
 ### login
 
@@ -150,3 +159,20 @@ Counts daily login streaks. The counter increases if the player logged in the sa
 | ------ | ------- | ----------- |
 | `count` | `1` | How often the player must login in a row until the achievement is unlocked. |
 | `reset` | `true` | Resets the counter to `0` if the player misses a streak. |
+| `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
+| `suffix` | `Tage` | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
+
+### statistic
+
+Tracks any [minecraft statistic](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Statistic.html).  
+A `material` must be specified if the `statistic` is one of the following: `DROP`, `PICKUP`, `MINE_BLOCK`, `USE_ITEM`, `BREAK_ITEM`, `CRAFT_ITEM`.  
+A `entity` must be specified if the `statistic` is one of the following: `KILL_ENTITY`, `ENTITY_KILLED_BY`.
+
+| Config | Default | Description |
+| ------ | ------- | ----------- |
+| `count` | `1` | The statistic count until the achievement is unlocked. |
+| `statistic` | | One of the statistics listed [here](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Statistic.html). |
+| `material` | | Only required if `statistic` is one of the following: `DROP`, `PICKUP`, `MINE_BLOCK`, `USE_ITEM`, `BREAK_ITEM`, `CRAFT_ITEM` |
+| `entity` | | Only required if `statistic` is one of the following: `KILL_ENTITY`, `ENTITY_KILLED_BY` |
+| `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
+| `suffix` | | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |

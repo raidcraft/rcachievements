@@ -1,5 +1,6 @@
 package de.raidcraft.achievements.types;
 
+import com.google.common.base.Strings;
 import de.raidcraft.achievements.AbstractAchievementType;
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.Messages;
@@ -19,7 +20,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static de.raidcraft.achievements.Messages.Colors.ACCENT;
+import static de.raidcraft.achievements.Messages.Colors.DARK_HIGHLIGHT;
+import static de.raidcraft.achievements.Messages.Colors.HIGHLIGHT;
+import static de.raidcraft.achievements.Messages.Colors.TEXT;
+import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.join;
+import static net.kyori.adventure.text.Component.newline;
 import static net.kyori.adventure.text.Component.text;
 
 @Log(topic = "RCAchievements:combined")
@@ -46,7 +53,10 @@ public class CombinedAchievement extends AbstractAchievementType implements List
         }
 
     }
+
     private Set<Achievement> achievements = new HashSet<>();
+    private String prefix;
+    private String suffix;
 
     protected CombinedAchievement(AchievementContext context) {
 
@@ -55,6 +65,9 @@ public class CombinedAchievement extends AbstractAchievementType implements List
 
     @Override
     public boolean load(ConfigurationSection config) {
+
+        prefix = config.getString("prefix", "Fortschritt:");
+        suffix = config.getString("suffix", "Erfolge");
 
         for (String alias : config.getStringList("achievements")) {
             Achievement.byAlias(alias)
@@ -75,9 +88,22 @@ public class CombinedAchievement extends AbstractAchievementType implements List
     @Override
     public Component progress(AchievementPlayer player) {
 
-        return join(text(" "), achievements.stream()
-                .map(achievement -> Messages.achievement(achievement, player))
-                .collect(Collectors.toList()));
+        long count = player.unlockedAchievements().stream()
+                .map(PlayerAchievement::achievement)
+                .filter(achievement -> achievements.contains(achievement))
+                .count();
+
+        return text().append(text(prefix + " ", TEXT))
+                .append(text(count, HIGHLIGHT))
+                .append(text("/", DARK_HIGHLIGHT))
+                .append(text(achievements.size(), ACCENT))
+                .append(text(" "))
+                .append(Strings.isNullOrEmpty(suffix) ? empty() : text(suffix, TEXT))
+                .append(newline())
+                .append(join(text(" "), achievements.stream()
+                        .map(achievement -> Messages.achievement(achievement, player))
+                        .collect(Collectors.toList())))
+                .build();
     }
 
     @EventHandler(ignoreCancelled = true)

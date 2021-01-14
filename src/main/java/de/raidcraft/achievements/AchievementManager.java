@@ -9,6 +9,7 @@ import de.raidcraft.achievements.types.LocationAchievement;
 import de.raidcraft.achievements.types.LoginAchievement;
 import de.raidcraft.achievements.types.MobKillAchievement;
 import de.raidcraft.achievements.types.NoneAchievementType;
+import de.raidcraft.achievements.types.PlayerStatisticAchievement;
 import de.raidcraft.achievements.util.ConfigUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -59,6 +60,7 @@ public final class AchievementManager {
             register(new CombinedAchievement.Factory());
             register(new CraftAchievement.Factory());
             register(new LoginAchievement.Factory());
+            register(new PlayerStatisticAchievement.Factory());
         } catch (TypeRegistrationException e) {
             log.severe("failed to register default types: " + e.getMessage());
             e.printStackTrace();
