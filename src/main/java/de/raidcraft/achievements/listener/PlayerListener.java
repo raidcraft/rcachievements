@@ -53,6 +53,11 @@ public class PlayerListener implements Listener, PluginMessageListener {
 
     private void broadcast(PlayerAchievement achievement) {
 
+        Bukkit.getOnlinePlayers().stream()
+                .filter(player -> !player.getUniqueId().equals(achievement.player().id()))
+                .map(AchievementPlayer::of)
+                .forEach(player -> Messages.send(player, Messages.achievementUnlockedOther(achievement, player)));
+
         AchievementPlayer.find.query().where()
                 .in("name", onlinePlayers)
                 .ne("id", achievement.player().id())
