@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/raidcraft/rcachievements/compare/v1.10.0...v1.10.1) (2021-01-15)
+
+
+### Bug Fixes
+
+* achievement unlock not broadcasted ([d833021](https://github.com/raidcraft/rcachievements/commit/d83302186b13d5adcc700c503906f65fb61ae2c5))
+
 # [1.10.0](https://github.com/raidcraft/rcachievements/compare/v1.9.3...v1.10.0) (2021-01-14)
 
 
