@@ -330,9 +330,15 @@ public final class Messages {
             return text("Versteckter Erfolg", ERROR);
         }
 
-        TextComponent.Builder builder = text().append(text(achievement.name(), achievementColor(achievement, player)))
-                .append(text(" (" + achievement.alias() + ")", NOTE))
-                .append(newline());
+        TextComponent.Builder builder = text().append(text(achievement.name(), achievementColor(achievement, player)));
+
+        if (player != null
+                && player.offlinePlayer().getPlayer() != null
+                && player.offlinePlayer().getPlayer().hasPermission(Constants.SHOW_ALIAS)) {
+            builder.append(text(" (" + achievement.alias() + ")", NOTE));
+        }
+
+        builder.append(newline());
 
         if (player != null) {
             PlayerAchievement playerAchievement = PlayerAchievement.of(achievement, player);
