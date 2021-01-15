@@ -20,6 +20,11 @@ public class RewardListener implements Listener {
         this.scope = scope;
     }
 
+    public void reload() {
+
+        rewards.clear();
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onUnlocked(PlayerUnlockedAchievementEvent event) {
 
