@@ -1,3 +1,16 @@
+# [1.11.0](https://github.com/raidcraft/rcachievements/compare/v1.10.1...v1.11.0) (2021-01-15)
+
+
+### Bug Fixes
+
+* hide achievement alias to regular players ([bcca1c7](https://github.com/raidcraft/rcachievements/commit/bcca1c7084541e075cb778a9cf2b3e4f1758e48f))
+* rewards not updated when reload is called ([abca7be](https://github.com/raidcraft/rcachievements/commit/abca7beb4f7b10f6ddad53a3145d8a255af5aec7))
+
+
+### Features
+
+* delay broadcasting of secret achievements by 10min (configurable) ([ad000d3](https://github.com/raidcraft/rcachievements/commit/ad000d3f0cc56ab500a9195e1b719411c0b55739))
+
 ## [1.10.1](https://github.com/raidcraft/rcachievements/compare/v1.10.0...v1.10.1) (2021-01-15)
 
 
