@@ -47,7 +47,11 @@ public class PlayerListener implements Listener, PluginMessageListener {
         Messages.send(event.player().id(), Messages.achievementUnlockedTitle(event.playerAchievement()));
 
         if (plugin.pluginConfig().isBroadcast() && event.achievement().broadcast()) {
-            broadcast(event.playerAchievement());
+            if (event.achievement().secret()) {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> broadcast(event.playerAchievement()), plugin.pluginConfig().getSecretBroadcastDelay());
+            } else {
+                broadcast(event.playerAchievement());
+            }
         }
     }
 

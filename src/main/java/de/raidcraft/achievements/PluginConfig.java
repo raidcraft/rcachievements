@@ -22,6 +22,8 @@ public class PluginConfig extends BukkitYamlConfiguration {
     @Comment("Set to false to disable the global achievement broadcast.")
     private boolean broadcast = true;
     private long playerListUpdateInterval = 200L;
+    @Comment("The time in ticks how long secret achievement broadcast should be delayed.")
+    private long secretBroadcastDelay = 12000L;
     private DatabaseConfig database = new DatabaseConfig();
 
     public PluginConfig(Path path) {
