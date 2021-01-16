@@ -30,7 +30,7 @@ public class PlayerCommands extends BaseCommand {
     }
 
     @Subcommand("info")
-    @CommandCompletion("@achievements")
+    @CommandCompletion("@unlocked-achievements")
     @CommandPermission(PERMISSION_PREFIX + "achievements.info")
     @Description("Shows the information about an achievement.")
     public void info(@Conditions("visible") Achievement achievement) {

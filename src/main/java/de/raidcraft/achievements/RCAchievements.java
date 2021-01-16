@@ -167,6 +167,7 @@ public class RCAchievements extends JavaPlugin {
         // completions
         playersCompletion(commandManager);
         achievementsCompletion(commandManager);
+        achievementsUnlockedCompletion(commandManager);
 
         // conditions
         visibleCondition(commandManager);
@@ -178,10 +179,22 @@ public class RCAchievements extends JavaPlugin {
     private void achievementsCompletion(PaperCommandManager commandManager) {
 
         commandManager.getCommandCompletions().registerAsyncCompletion("achievements", context ->
-                Achievement.allEnabled()
+                Achievement.allEnabled(true)
                 .stream().map(Achievement::alias)
                 .collect(Collectors.toSet()));
     }
+
+    private void achievementsUnlockedCompletion(PaperCommandManager commandManager) {
+
+        commandManager.getCommandCompletions().registerAsyncCompletion("unlocked-achievements", context -> {
+            AchievementPlayer player = AchievementPlayer.of(context.getPlayer());
+            return player.unlockedAchievements().stream()
+                    .map(PlayerAchievement::achievement)
+                    .map(Achievement::alias)
+                    .collect(Collectors.toSet());
+        });
+    }
+
 
     private void achievementsContext(PaperCommandManager commandManager) {
 
