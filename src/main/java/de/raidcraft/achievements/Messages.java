@@ -19,10 +19,7 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -228,8 +225,10 @@ public final class Messages {
 
     public static List<Component> topList(int page) {
 
+        @SuppressWarnings("RedundantStreamOptionalCall")
         List<AchievementPlayer> players = AchievementPlayer.find.all()
                 .stream().sorted()
+                .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
 
         return Pagination.builder()
