@@ -53,6 +53,21 @@ public class AchievementPlayer extends BaseEntity implements Comparable<Achievem
     }
 
     /**
+     * Tries to find an achievement player with the given id.
+     * <p>The id is the same as the Minecraft's player id.
+     * <p>Returns an empty optional if no player by the id is found.
+     *
+     * @param uuid the unique id of the player
+     * @return the player or an empty optional
+     */
+    public static Optional<AchievementPlayer> byId(UUID uuid) {
+
+        if (uuid == null) return Optional.empty();
+
+        return Optional.ofNullable(find.byId(uuid));
+    }
+
+    /**
      * The name of the player.
      */
     @Setter(AccessLevel.PRIVATE)

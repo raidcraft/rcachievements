@@ -131,12 +131,14 @@ public class DefaultAchievementContext implements AchievementContext {
     }
 
     @Override
-    public boolean applicable(AchievementPlayer player) {
+    public boolean applicable(UUID uuid) {
 
-        if (player == null) return false;
+        if (uuid == null) return false;
 
-        return applicableCheckCache.computeIfAbsent(player.id(),
-                uuid -> player.canUnlock(achievement)
+        return applicableCheckCache.computeIfAbsent(uuid,
+                id -> AchievementPlayer.byId(id)
+                        .map(player -> player.canUnlock(achievement()))
+                .orElse(false)
         );
     }
 

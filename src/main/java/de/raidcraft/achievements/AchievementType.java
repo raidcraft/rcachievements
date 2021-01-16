@@ -158,11 +158,28 @@ public interface AchievementType {
      * @param player the player to check
      * @return true if the player is applicable and should be included in this achievement
      */
+    default boolean applicable(AchievementPlayer player) {
+
+        if (player == null) return false;
+
+        return context().applicable(player.id());
+    }
+
+    /**
+     * Checks if the given player can receive this achievement and should be checked.
+     * <p>Players that already obtained the achievement or do not have the permission
+     * are not applicable for obtaining the achievement.
+     * <p>Important: make sure to check the applicability of players in bukkit events
+     * before processing them inside your achievement type.
+     *
+     * @param player the player to check
+     * @return true if the player is applicable and should be included in this achievement
+     */
     default boolean applicable(OfflinePlayer player) {
 
         if (player == null) return false;
 
-        return context().applicable(player(player));
+        return context().applicable(player.getUniqueId());
     }
 
     /**
@@ -179,7 +196,7 @@ public interface AchievementType {
 
         if (player == null) return true;
 
-        return context().notApplicable(player(player));
+        return context().notApplicable(player.getUniqueId());
     }
 
     /**
@@ -194,7 +211,7 @@ public interface AchievementType {
      */
     default boolean notApplicable(AchievementPlayer player) {
 
-        return context().notApplicable(player);
+        return context().notApplicable(player.id());
     }
 
     /**
