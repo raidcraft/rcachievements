@@ -2,7 +2,9 @@ package de.raidcraft.achievements.listener;
 
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import io.artframework.ArtContext;
+import io.artframework.ParseException;
 import io.artframework.Scope;
+import lombok.extern.java.Log;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Log(topic = "RCAchievements")
 public class RewardListener implements Listener {
 
     private final Scope scope;
@@ -31,7 +34,14 @@ public class RewardListener implements Listener {
         if (event.achievement().rewards().isEmpty()) return;
 
         ArtContext context = rewards.computeIfAbsent(event.achievement().id(),
-                uuid -> scope.load(event.achievement().rewards())
+                uuid -> {
+                    try {
+                        return scope.load(uuid.toString(), event.achievement().rewards());
+                    } catch (ParseException e) {
+                        log.severe("failed to parse rewards of " + event.achievement().alias() + " (" + uuid + "): " + e.getMessage());
+                        return ArtContext.empty();
+                    }
+                }
         );
 
         context.execute(event.player().offlinePlayer().getPlayer());
