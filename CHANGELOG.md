@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/raidcraft/rcachievements/compare/v1.11.1...v1.11.2) (2021-01-16)
+
+
+### Bug Fixes
+
+* **db:** rename persistence columns ([d540fff](https://github.com/raidcraft/rcachievements/commit/d540fff9ef077e2c3773899a76fdfb54e2a4faa6))
+
 ## [1.11.1](https://github.com/raidcraft/rcachievements/compare/v1.11.0...v1.11.1) (2021-01-16)
 
 
