@@ -1,3 +1,10 @@
+## [1.11.4](https://github.com/raidcraft/rcachievements/compare/v1.11.3...v1.11.4) (2021-01-16)
+
+
+### Bug Fixes
+
+* **perf:** achievement applicable check cache performing costly database queries for each check ([530439c](https://github.com/raidcraft/rcachievements/commit/530439c6d88361d61cf191a8d1d9d4db03a426db)), closes [#11](https://github.com/raidcraft/rcachievements/issues/11)
+
 ## [1.11.3](https://github.com/raidcraft/rcachievements/compare/v1.11.2...v1.11.3) (2021-01-16)
 
 
