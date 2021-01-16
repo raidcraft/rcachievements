@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/raidcraft/rcachievements/compare/v1.11.2...v1.11.3) (2021-01-16)
+
+
+### Bug Fixes
+
+* hide not unlocked achievements from players in command completion ([c40fd16](https://github.com/raidcraft/rcachievements/commit/c40fd169fb62e6fc5bb83e80602db767f096971c))
+
 ## [1.11.2](https://github.com/raidcraft/rcachievements/compare/v1.11.1...v1.11.2) (2021-01-16)
 
 
