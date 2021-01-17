@@ -1,3 +1,10 @@
+## [1.11.6](https://github.com/raidcraft/rcachievements/compare/v1.11.5...v1.11.6) (2021-01-17)
+
+
+### Bug Fixes
+
+* **login:** login achievement not counting first login ([09348ab](https://github.com/raidcraft/rcachievements/commit/09348abde4896cd74ef9ee9c6f938a8ba659f6bc))
+
 ## [1.11.5](https://github.com/raidcraft/rcachievements/compare/v1.11.4...v1.11.5) (2021-01-17)
 
 
