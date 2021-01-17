@@ -1,3 +1,10 @@
+## [1.11.5](https://github.com/raidcraft/rcachievements/compare/v1.11.4...v1.11.5) (2021-01-17)
+
+
+### Bug Fixes
+
+* npe in reload command if reward listener is not present ([e75699f](https://github.com/raidcraft/rcachievements/commit/e75699fecc55ee58d33c7f42623e6fd3dfd502c2))
+
 ## [1.11.4](https://github.com/raidcraft/rcachievements/compare/v1.11.3...v1.11.4) (2021-01-16)
 
 
