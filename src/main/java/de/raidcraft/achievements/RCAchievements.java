@@ -121,7 +121,9 @@ public class RCAchievements extends JavaPlugin {
 
         loadConfig();
         achievementManager().reload();
-        rewardListener.reload();
+        if (rewardListener != null) {
+            rewardListener.reload();
+        }
     }
 
     private void loadConfig() {
