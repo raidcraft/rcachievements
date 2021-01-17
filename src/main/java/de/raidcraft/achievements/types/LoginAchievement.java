@@ -82,15 +82,19 @@ public class LoginAchievement extends CountAchievement implements Listener {
 
     private boolean today(Player player) {
 
-        return checkedToday.contains(player.getUniqueId())
-                || Instant.ofEpochMilli(store(player).get(LAST_LOGIN, long.class, Instant.EPOCH.toEpochMilli()))
-                .truncatedTo(ChronoUnit.DAYS).equals(Instant.now().truncatedTo(ChronoUnit.DAYS));
+        if (checkedToday.contains(player.getUniqueId())) return true;
+
+        return store(player).get(LAST_LOGIN, Long.class)
+                .map(Instant::ofEpochMilli)
+                .map(instant -> instant.truncatedTo(ChronoUnit.DAYS))
+                .map(instant -> instant.equals(Instant.now().truncatedTo(ChronoUnit.DAYS)))
+                .orElse(false);
 
     }
 
     private boolean streak(Player player) {
 
-        Instant lastLoginDay = Instant.ofEpochMilli(store(player).get(LAST_LOGIN, long.class, Instant.EPOCH.toEpochMilli()))
+        Instant lastLoginDay = Instant.ofEpochMilli(store(player).get(LAST_LOGIN, Long.class, Instant.EPOCH.toEpochMilli()))
                 .truncatedTo(ChronoUnit.DAYS);
 
         return lastLoginDay.plus(1, ChronoUnit.DAYS).equals(Instant.now().truncatedTo(ChronoUnit.DAYS));
