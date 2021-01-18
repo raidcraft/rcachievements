@@ -1,3 +1,16 @@
+# [1.13.0](https://github.com/raidcraft/rcachievements/compare/v1.12.0...v1.13.0) (2021-01-18)
+
+
+### Bug Fixes
+
+* **art:** allow empty requirements list in art-achievement ([75ae77d](https://github.com/raidcraft/rcachievements/commit/75ae77de99d20ec8a76b55504e9349eee36d7a0a))
+* count and login not stored in database ([cf06a7c](https://github.com/raidcraft/rcachievements/commit/cf06a7c5096590cf569cae0fb1c8510aec1b4ee5))
+
+
+### Features
+
+* add art achievement type ([8eba629](https://github.com/raidcraft/rcachievements/commit/8eba629d79c47f1c20be0de97c31114a0d7c8f28))
+
 # [1.12.0](https://github.com/raidcraft/rcachievements/compare/v1.11.6...v1.12.0) (2021-01-18)
 
 
