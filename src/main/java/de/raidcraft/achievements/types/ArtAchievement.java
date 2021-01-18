@@ -54,15 +54,17 @@ public class ArtAchievement extends AbstractAchievementType {
                 }
             });
         } catch (ParseException e) {
-            log.severe("failed to load art trigger config of " + alias() + " (" + id() + ")");
+            log.severe("failed to load art trigger config of " + alias() + " (" + id() + "): " + e.getMessage());
             return false;
         }
 
-        try {
-            requirements = ART.load("rcachievements:achievement:requirement:" + id(), config.getStringList("requirements"));
-        } catch (ParseException e) {
-            log.severe("failed to load art requirements config of " + alias() + " (" + id() + ")");
-            return false;
+        if (config.isSet("requirements")) {
+            try {
+                requirements = ART.load("rcachievements:achievement:requirement:" + id(), config.getStringList("requirements"));
+            } catch (ParseException e) {
+                log.severe("failed to load art requirements config of " + alias() + " (" + id() + "): " + e.getMessage());
+                return false;
+            }
         }
 
         return true;
