@@ -204,7 +204,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
     protected long save(AchievementPlayer player) {
 
         long count = count(player);
-        store(player).set(COUNT_KEY, count);
+        store(player).set(COUNT_KEY, count).save();
         return count;
     }
 }

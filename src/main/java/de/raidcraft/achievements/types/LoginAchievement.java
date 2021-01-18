@@ -77,7 +77,7 @@ public class LoginAchievement extends CountAchievement implements Listener {
 
         increaseAndCheck(player(event.getPlayer()));
         checkedToday.add(event.getPlayer().getUniqueId());
-        store(event.getPlayer()).set(LAST_LOGIN, Instant.now().toEpochMilli());
+        store(event.getPlayer()).set(LAST_LOGIN, Instant.now().toEpochMilli()).save();
     }
 
     private boolean today(Player player) {
