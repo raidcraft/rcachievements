@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.raidcraft.achievements.Constants.DEFAULT_TYPE;
 
@@ -24,6 +26,8 @@ public class PluginConfig extends BukkitYamlConfiguration {
     private long playerListUpdateInterval = 200L;
     @Comment("The time in ticks how long secret achievement broadcast should be delayed.")
     private long secretBroadcastDelay = 12000L;
+    @Comment("A list of actions that are executed for every achievement.")
+    private List<String> globalRewards = new ArrayList<>();
     private DatabaseConfig database = new DatabaseConfig();
 
     public PluginConfig(Path path) {

@@ -259,6 +259,11 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
      */
     private boolean restricted = false;
     /**
+     * If true the player will receive global rewards and the rewards of this achievement.
+     */
+    @DbDefault("true")
+    private boolean globalRewards = true;
+    /**
      * The path to the config file that loaded the achievement
      * or null if the achievement was created from code.
      */
@@ -390,6 +395,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.hidden(config.getBoolean("hidden", hidden()));
         this.broadcast(config.getBoolean("broadcast", broadcast()));
         this.restricted(config.getBoolean("restricted", restricted()));
+        this.globalRewards(config.getBoolean("global_rewards", globalRewards()));
         this.rewards(config.getStringList("rewards"));
     }
 

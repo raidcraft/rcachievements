@@ -35,6 +35,11 @@ default_type: none
 broadcast: true
 # how often (in ticks) should the global bungeecord player list update
 player_list_update_interval: 200
+# if the art-framework is enabled you can specify global rewards
+# that are applied to all achievements.
+# you can disable them in the individual achievment with the global_rewards: false flag.
+global_rewards:
+  - '!rcskills:exp.add 100'
 database:
   username: sa
   password: sa
@@ -80,6 +85,12 @@ secret: false
 broadcast: true
 # set to true to require the rcachievements.achievement.<alias> permission to unlock the achievement
 restricted: false
+# set to false to disable additional global rewards for the achievement
+global_rewards: true
+# a list of valid art-framework actions and requirement that are executed when the player gets the achievement
+rewards:
+  - '!money.add 100 "My Achievement"' # adds 100 coins to the player with the reason being the name of the achievement
+  - '!rcskills:exp.add 1000' # adds 1000 rc-exp to the player
 # the with section contains all config values required by the achievement type
 # see the list below for built in achievement types and their config values
 with:

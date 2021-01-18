@@ -95,7 +95,7 @@ public class RCAchievements extends JavaPlugin {
     public void onArtEnable(Scope scope) {
 
         this.art = scope;
-        this.rewardListener = new RewardListener(scope);
+        this.rewardListener = new RewardListener(this, scope);
         getServer().getPluginManager().registerEvents(rewardListener, this);
     }
 
