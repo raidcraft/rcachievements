@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/raidcraft/rcachievements/compare/v1.11.6...v1.12.0) (2021-01-18)
+
+
+### Features
+
+* **rewards:** add option for global rewards that can be disabled per achievement ([8471422](https://github.com/raidcraft/rcachievements/commit/8471422e0bf598f8b305b88a19184b526f3510ed))
+
 ## [1.11.6](https://github.com/raidcraft/rcachievements/compare/v1.11.5...v1.11.6) (2021-01-17)
 
 
