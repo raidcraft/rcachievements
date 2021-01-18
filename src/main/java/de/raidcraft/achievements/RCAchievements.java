@@ -12,6 +12,7 @@ import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.listener.PlayerListener;
 import de.raidcraft.achievements.listener.RewardListener;
+import de.raidcraft.achievements.types.ArtAchievement;
 import io.artframework.Scope;
 import io.artframework.annotations.ArtModule;
 import io.artframework.annotations.OnDisable;
@@ -97,11 +98,18 @@ public class RCAchievements extends JavaPlugin {
         this.art = scope;
         this.rewardListener = new RewardListener(this, scope);
         getServer().getPluginManager().registerEvents(rewardListener, this);
+        try {
+            achievementManager().register(new ArtAchievement.Factory());
+        } catch (TypeRegistrationException e) {
+            getLogger().severe("failed to register art-achievement: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @OnDisable
     public void onArtDisable() {
 
+        achievementManager().unregister(ArtAchievement.class);
         this.art = null;
     }
 

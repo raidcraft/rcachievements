@@ -147,6 +147,30 @@ public final class AchievementManager {
     }
 
     /**
+     * Unregisters the given achievement type and disables all active achievements.
+     * <p>Nothing happens if no achievement type with the given class is registered.
+     *
+     * @param typeClass the type class that should be disabled
+     * @param <TType> the type of the achievement
+     */
+    public <TType extends AchievementType> void unregister(Class<TType> typeClass) {
+
+        List<AchievementType.Registration<?>> registrations = types().values().stream()
+                .filter(registration -> registration.typeClass().equals(typeClass))
+                .collect(Collectors.toList());
+
+        List<AchievementContext> contexts = registrations.stream()
+                .flatMap(registration -> activeAchievements.values().stream()
+                        .filter(achievementContext -> achievementContext.achievement().type().equals(registration.identifier()))
+                ).collect(Collectors.toList());
+
+        for (AchievementContext context : contexts) {
+            context.disable();
+            activeAchievements.remove(context.achievement().id());
+        }
+    }
+
+    /**
      * Tries to get a registered type with the given type identifier.
      *
      * @param type the type identifier of the achievement type registration
