@@ -50,17 +50,20 @@ public class RewardListener implements Listener {
                 }
         );
 
-        ArtContext globalRewards = this.globalRewards.computeIfAbsent(event.achievement().id(), uuid -> {
-            try {
-                return scope.load("rcachievement:global-rewards:" + event.achievement().alias() + ":" + uuid, plugin.pluginConfig().getGlobalRewards());
-            } catch (ParseException e) {
-                log.severe("failed to parse global rewards of " + event.achievement().alias() + " (" + uuid + "): " + e.getMessage());
-                return ArtContext.empty();
-            }
-        });
-
         Player player = event.player().offlinePlayer().getPlayer();
+
+        if (!plugin.pluginConfig().getGlobalRewards().isEmpty()) {
+            ArtContext globalRewards = this.globalRewards.computeIfAbsent(event.achievement().id(), uuid -> {
+                try {
+                    return scope.load("rcachievement:global-rewards:" + event.achievement().alias() + ":" + uuid, plugin.pluginConfig().getGlobalRewards());
+                } catch (ParseException e) {
+                    log.severe("failed to parse global rewards of " + event.achievement().alias() + " (" + uuid + "): " + e.getMessage());
+                    return ArtContext.empty();
+                }
+            });
+            globalRewards.execute(player);
+        }
+
         context.execute(player);
-        globalRewards.execute(player);
     }
 }
