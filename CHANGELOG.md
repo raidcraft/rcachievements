@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/raidcraft/rcachievements/compare/v1.13.0...v1.13.1) (2021-01-19)
+
+
+### Bug Fixes
+
+* **rewards:** do no try to parse an empty global rewards list ([5a5c540](https://github.com/raidcraft/rcachievements/commit/5a5c540f49a8dd95e495c0864d8831816c4d4f0a))
+
 # [1.13.0](https://github.com/raidcraft/rcachievements/compare/v1.12.0...v1.13.0) (2021-01-18)
 
 
