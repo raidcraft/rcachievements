@@ -346,15 +346,16 @@ public final class Messages {
 
         TextComponent.Builder builder = text().append(text(achievement.name(), achievementColor(achievement, player)));
 
-        if (player != null
-                && player.offlinePlayer().getPlayer() != null
-                && player.offlinePlayer().getPlayer().hasPermission(Constants.SHOW_ALIAS)) {
-            builder.append(text(" (" + achievement.alias() + ")", NOTE));
-        }
-
-        builder.append(newline());
-
         if (player != null) {
+
+            Player bukkitPlayer = player.offlinePlayer().getPlayer();
+            if (bukkitPlayer != null
+                    && bukkitPlayer.hasPermission(Constants.SHOW_ALIAS)) {
+                builder.append(text(" (" + achievement.alias() + ")", NOTE));
+            }
+
+            builder.append(newline());
+
             PlayerAchievement playerAchievement = PlayerAchievement.of(achievement, player);
             builder.append(text(achievement.description(), NOTE, player.canViewDetails(achievement) ? ITALIC : OBFUSCATED))
                     .append(newline())
@@ -366,8 +367,36 @@ public final class Messages {
                     .filter(context -> context.type() instanceof Progressable)
                     .map(context -> (Progressable) context.type())
                     .ifPresent(context -> builder.append(newline()).append(context.progress(player)));
+
+            if (bukkitPlayer != null && bukkitPlayer.hasPermission(Constants.SHOW_ADMIN_DETAILS)) {
+                builder.append(newline())
+                        .append(text("type: ", TEXT)).append(text(achievement.type(), ACCENT))
+                        .append(newline())
+                        .append(text("secret: ", TEXT)).append(text(achievement.secret(), ACCENT))
+                        .append(newline())
+                        .append(text("hidden: ", TEXT)).append(text(achievement.hidden(), ACCENT))
+                        .append(newline())
+                        .append(text("restricted: ", TEXT)).append(text(achievement.restricted(), ACCENT))
+                        .append(newline())
+                        .append(text("broadcast: ", TEXT)).append(text(achievement.broadcast(), ACCENT))
+                        .append(newline())
+                        .append(text("enabled: ", TEXT)).append(text(achievement.broadcast(), ACCENT))
+                        .append(newline());
+
+                Set<Map.Entry<String, Object>> entries = achievement.achievementConfig().getValues(true).entrySet();
+                if (!entries.isEmpty()) {
+                    builder.append(text("Achievement Type Config: ", TEXT)).append(newline());
+                    for (Map.Entry<String, Object> entry : entries) {
+                        if (entry.getValue() == null) continue;
+                        builder.append(text(" - ", NOTE))
+                                .append(text(entry.getKey(), TEXT)).append(text(": ", NOTE))
+                                .append(text(entry.getValue().toString(), NOTE))
+                                .append(newline());
+                    }
+                }
+            }
         } else {
-            builder.append(text(achievement.description(), NOTE, achievement.secret() ? OBFUSCATED : ITALIC));
+            builder.append(newline()).append(text(achievement.description(), NOTE, achievement.secret() ? OBFUSCATED : ITALIC));
         }
 
         return builder.build();
