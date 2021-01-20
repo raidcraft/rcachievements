@@ -37,6 +37,7 @@ public class AdminCommands extends BaseCommand {
 
     public static final BiFunction<Integer, Integer, String> NEARBY = (page, radius) -> "/rca:admin nearby " + page + " " + radius;
     public static final String RELOAD = "/rca:admin reload";
+    public static final String SET_ALIAS = "/rca:admin set alias ";
     public static final String SET_NAME = "/rca:admin set name ";
     public static final String SET_DESC = "/rca:admin set desc ";
     public static final String SET_ENABLED = "/rca:admin set enabled ";
@@ -45,6 +46,7 @@ public class AdminCommands extends BaseCommand {
     public static final String SET_RESTRICTED = "/rca:admin set restricted ";
     public static final String SET_BROADCAST = "/rca:admin set broadcast ";
     public static final String[] SET_COMMANDS = new String[]{
+            SET_ALIAS,
             SET_NAME,
             SET_DESC,
             SET_SECRET,
@@ -185,6 +187,15 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("set")
     public class SetCommands extends BaseCommand {
+
+        @Subcommand("alias")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.alias")
+        @CommandCompletion("@achievements *")
+        public void alias(Achievement achievement, String alias) {
+
+            achievement.alias(alias).save();
+            send(getCurrentCommandIssuer(), setSuccess(achievement, "alias"));
+        }
 
         @Subcommand("name")
         @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.name")
