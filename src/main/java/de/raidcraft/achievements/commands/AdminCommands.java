@@ -17,6 +17,8 @@ import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.types.LocationAchievement;
 import de.raidcraft.achievements.util.LocationUtil;
+import lombok.Value;
+import lombok.experimental.Accessors;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -45,15 +47,15 @@ public class AdminCommands extends BaseCommand {
     public static final String SET_HIDDEN = "/rca:admin set hidden ";
     public static final String SET_RESTRICTED = "/rca:admin set restricted ";
     public static final String SET_BROADCAST = "/rca:admin set broadcast ";
-    public static final String[] SET_COMMANDS = new String[]{
-            SET_ALIAS,
-            SET_NAME,
-            SET_DESC,
-            SET_SECRET,
-            SET_BROADCAST,
-            SET_RESTRICTED,
-            SET_HIDDEN,
-            SET_ENABLED
+    public static final SetCommand[] SET_COMMANDS = new SetCommand[]{
+            new SetCommand(SET_ALIAS, "Setzt den Alias (eindeutigen Namen) des Achievements.\nDer Alias sollte nur aus Kleinbuchstaben, ohne Sonderzeichen und ohne Leerzeichen bestehen."),
+            new SetCommand(SET_NAME, "Setzt den für Spieler sichtbaren Namen des Achievements."),
+            new SetCommand(SET_DESC, "Setzt die Beschreibung des Achievements. Je nach der Einstellung von \"secret\" und \"hidden\" wird die Beschreibung den Spielern angezeigt."),
+            new SetCommand(SET_SECRET, "true/false. Wenn true sehen Spieler erst die Beschreibung wenn sie das Achievement freigeschaltet haben."),
+            new SetCommand(SET_HIDDEN, "true/false. Wenn true sehen Spieler nur ???? anstatt des Namens und der Beschreibung solange sie das Achievement nicht freigeschaltet haben."),
+            new SetCommand(SET_BROADCAST, "true/false. Wenn false wird nicht allen anderen Spielern mitgeteilt dass das Achievement errungen wurde.\nGenerell werden \"secret\" Achievements erst 10min nach der Freischaltung bekannt gegeben."),
+            new SetCommand(SET_RESTRICTED, "true/false. Wenn true können nur Spieler/Admins mit der rcachievements.achievement.<alias> Permission das Achievement freischalten."),
+            new SetCommand(SET_ENABLED, "true/false. Wenn false kann niemand mehr das Achievement freischalten.")
     };
 
     private final RCAchievements plugin;
@@ -280,5 +282,13 @@ public class AdminCommands extends BaseCommand {
 
             send(getCurrentCommandIssuer(), createSuccess(achievement));
         }
+    }
+
+    @Value
+    @Accessors(fluent = true)
+    public static class SetCommand {
+
+        String command;
+        String description;
     }
 }

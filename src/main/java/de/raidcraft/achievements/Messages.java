@@ -159,13 +159,20 @@ public final class Messages {
                 .append(text("Nutze die \"/rca:admin set\" Befehle um z.B. den Namen und die Beschreibung zu setzen. Und führe danach ", NOTE))
                 .append(text(AdminCommands.RELOAD, ACCENT).hoverEvent(text).clickEvent(runCommand(AdminCommands.RELOAD)))
                 .append(text(" aus.", NOTE))
+                .append(newline()).append(text("Tipp: ", TEXT))
+                .append(text("Alle Befehle lassen sich per Klick ausführen und haben eine Beschreibung beim hovern.", NOTE))
                 .append(newline());
 
-        for (String command : AdminCommands.SET_COMMANDS) {
+        for (AdminCommands.SetCommand command : AdminCommands.SET_COMMANDS) {
             builder.append(text("  - ", TEXT))
-                    .append(text(command, HIGHLIGHT)
-                            .hoverEvent(text.asHoverEvent())
-                            .clickEvent(suggestCommand(command + achievement.alias()))
+                    .append(text(command.command(), HIGHLIGHT)
+                            .hoverEvent(text()
+                                    .append(text(command.description(), NOTE))
+                                    .append(newline())
+                                    .append(text)
+                                    .build()
+                                    .asHoverEvent()
+                            ).clickEvent(suggestCommand(command + achievement.alias()))
                     ).append(newline());
         }
 
