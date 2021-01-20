@@ -131,7 +131,15 @@ public final class Messages {
                 .build();
     }
 
-    public static Component removeSuccess(Achievement achievement, AchievementPlayer player) {
+    public static Component deleteSuccess(Achievement achievement) {
+
+        return text().append(text("Der Erfolg ", SUCCESS))
+                .append(achievement(achievement))
+                .append(text(" wurde erfolgreich gelöscht."))
+                .build();
+    }
+
+    public static Component unassignSuccess(Achievement achievement, AchievementPlayer player) {
 
         return text().append(text("Der Erfolg ", SUCCESS))
                 .append(achievement(achievement))

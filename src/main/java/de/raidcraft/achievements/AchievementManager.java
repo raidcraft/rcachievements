@@ -171,6 +171,17 @@ public final class AchievementManager {
     }
 
     /**
+     * Unloads the given achievement disabling any active context and clears the cache.
+     *
+     * @param achievement the achievement that is unloaded
+     */
+    public void unload(@NonNull Achievement achievement) {
+
+        active(achievement).ifPresent(AchievementContext::disable);
+        activeAchievements.remove(achievement.id());
+    }
+
+    /**
      * Tries to get a registered type with the given type identifier.
      *
      * @param type the type identifier of the achievement type registration

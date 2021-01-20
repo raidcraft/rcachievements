@@ -81,11 +81,22 @@ public class AdminCommands extends BaseCommand {
         }
     }
 
-    @Subcommand("remove|delete|del")
-    @CommandPermission(PERMISSION_PREFIX + "admin.achievement.remove")
-    @CommandCompletion("@players @achievements")
-    @Description("Removes an achievement from a player.")
-    public void remove(AchievementPlayer player, Achievement achievement) {
+    @Subcommand("delete|del")
+    @CommandPermission(PERMISSION_PREFIX + "admin.achievement.delete")
+    @CommandCompletion("@achievements")
+    @Description("Deletes an achievement from the database.")
+    public void delete(Achievement achievement) {
+
+        plugin.achievementManager().unload(achievement);
+        achievement.delete();
+        send(getCurrentCommandIssuer(), deleteSuccess(achievement));
+    }
+
+    @Subcommand("unassign")
+    @CommandPermission(PERMISSION_PREFIX + "admin.achievement.unassign")
+    @CommandCompletion("@players @unlocked-achievements")
+    @Description("Unassigns an achievement from a player.")
+    public void unassign(AchievementPlayer player, Achievement achievement) {
 
         if (!player.unlocked(achievement)) {
             throw new ConditionFailedException("Der Spieler " + player.name() + " hat den Erfolg " + achievement.name() + " (" + achievement.alias() + ") nicht.");
@@ -93,7 +104,7 @@ public class AdminCommands extends BaseCommand {
 
         achievement.removeFrom(player);
         plugin.achievementManager().active(achievement).ifPresent(AchievementContext::clearCache);
-        send(getCurrentCommandIssuer(), removeSuccess(achievement, player));
+        send(getCurrentCommandIssuer(), unassignSuccess(achievement, player));
     }
 
     @Subcommand("nearby|near")

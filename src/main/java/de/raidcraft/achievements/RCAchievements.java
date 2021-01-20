@@ -197,7 +197,11 @@ public class RCAchievements extends JavaPlugin {
     private void achievementsUnlockedCompletion(PaperCommandManager commandManager) {
 
         commandManager.getCommandCompletions().registerAsyncCompletion("unlocked-achievements", context -> {
-            AchievementPlayer player = AchievementPlayer.of(context.getPlayer());
+            AchievementPlayer player = context.getContextValue(AchievementPlayer.class);
+            if (player == null) {
+                return Achievement.allEnabled().stream().map(Achievement::alias).collect(Collectors.toSet());
+            }
+
             return player.unlockedAchievements().stream()
                     .map(PlayerAchievement::achievement)
                     .map(Achievement::alias)
