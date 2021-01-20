@@ -11,6 +11,7 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.AchievementContext;
+import de.raidcraft.achievements.Constants;
 import de.raidcraft.achievements.Messages;
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
@@ -20,6 +21,7 @@ import de.raidcraft.achievements.util.LocationUtil;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -31,7 +33,13 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.PERMISSION_PREFIX;
-import static de.raidcraft.achievements.Messages.*;
+import static de.raidcraft.achievements.Messages.addError;
+import static de.raidcraft.achievements.Messages.addSuccess;
+import static de.raidcraft.achievements.Messages.createSuccess;
+import static de.raidcraft.achievements.Messages.deleteSuccess;
+import static de.raidcraft.achievements.Messages.send;
+import static de.raidcraft.achievements.Messages.setSuccess;
+import static de.raidcraft.achievements.Messages.unassignSuccess;
 
 @CommandAlias("rca:admin|rcaa|rcachievements:admin")
 @CommandPermission(PERMISSION_PREFIX + "admin")
@@ -282,6 +290,24 @@ public class AdminCommands extends BaseCommand {
 
             send(getCurrentCommandIssuer(), createSuccess(achievement));
         }
+
+        @Subcommand("default")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.create.default")
+        @CommandCompletion("*")
+        @Description("Creates a new default achievement.")
+        public void none(String alias) {
+
+            if (Achievement.byAlias(alias).isPresent()) {
+                throw new ConditionFailedException("Es gibt bereits einen Erfolg mit dem alias: " + alias);
+            }
+
+            Achievement achievement = Achievement.create(alias, new MemoryConfiguration())
+                    .type(Constants.DEFAULT_TYPE);
+            achievement.save();
+
+            send(getCurrentCommandIssuer(), createSuccess(achievement));
+        }
+
     }
 
     @Value
