@@ -1,3 +1,14 @@
+# [1.14.0](https://github.com/raidcraft/rcachievements/compare/v1.13.1...v1.14.0) (2021-01-20)
+
+
+### Features
+
+* **cmd:** add /rcaa delete command to delete achievements from the database ([1da29be](https://github.com/raidcraft/rcachievements/commit/1da29be0b4599e84301c9f7dea798875d9248cd5)), closes [#13](https://github.com/raidcraft/rcachievements/issues/13)
+* **cmd:** add /rcaa set alias command ([27c394f](https://github.com/raidcraft/rcachievements/commit/27c394fba0747223995454831a31c11bd745b440)), closes [#14](https://github.com/raidcraft/rcachievements/issues/14)
+* **cmd:** add /rcca create default <alias> command ([ba0d58f](https://github.com/raidcraft/rcachievements/commit/ba0d58f1ec2dc5e3a0f4b3744322ec18aa5572d0)), closes [#17](https://github.com/raidcraft/rcachievements/issues/17)
+* **cmd:** add description to /rcaa set commands ([0f62e1a](https://github.com/raidcraft/rcachievements/commit/0f62e1a0b7d25453c476d12e30e014a2be29beb4)), closes [#16](https://github.com/raidcraft/rcachievements/issues/16)
+* **cmd:** show detailed achievement info for admins ([60f36d2](https://github.com/raidcraft/rcachievements/commit/60f36d2e2288a4c8094a81988739318cf1b14556))
+
 ## [1.13.1](https://github.com/raidcraft/rcachievements/compare/v1.13.0...v1.13.1) (2021-01-19)
 
 
