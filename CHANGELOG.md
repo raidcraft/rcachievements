@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/raidcraft/rcachievements/compare/v1.14.0...v1.14.1) (2021-01-23)
+
+
+### Bug Fixes
+
+* **deps:** use correct art-framework dep ([0aa6093](https://github.com/raidcraft/rcachievements/commit/0aa609317c3d2481cb0522d25ddca92a0f330704))
+
 # [1.14.0](https://github.com/raidcraft/rcachievements/compare/v1.13.1...v1.14.0) (2021-01-20)
 
 
