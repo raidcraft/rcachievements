@@ -105,6 +105,15 @@ The achievement type controls how an achievement is executed and obtained by the
 
 The default achievement type that can only be unlocked when given via the `/rca:admin add <player> <achievement>` command.
 
+### ART-Framework
+
+One powerful feature of this achievement plugin is the ability to create achievements with the [art-framework](https://art-framework.io).
+
+| Config | Default | Description |
+| ------ | ------- | ----------- |
+| `trigger` | `[]` | A list of [art-trigger](https://art-framework.io/#/configuration/trigger) in flow syntax. |
+| `requirements` | `[]` | A list of [art-requirements](https://art-framework.io/#/configuration/requirements) that are checked after the trigger execution. |
+
 ### block
 
 A `counter` achievement that tracks placing and breaking blocks.
