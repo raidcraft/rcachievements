@@ -72,7 +72,7 @@ dependencies {
     implementation group: 'net.kyori', name: 'adventure-text-feature-pagination', version: '4.0.0-SNAPSHOT'
     implementation group: 'net.kyori', name: 'adventure-text-serializer-plain', version: '4.4.0'
 
-    implementation group: 'io.art-framework', name: 'core', version: '3.0.0'
+    implementation group: 'io.art-framework.core', name: 'api', version: '3.0.0'
 
     testImplementation 'io.ebean:ebean-test:12.6.5'
 
