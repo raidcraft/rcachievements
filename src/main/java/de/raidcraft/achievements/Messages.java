@@ -172,7 +172,7 @@ public final class Messages {
                                     .append(text)
                                     .build()
                                     .asHoverEvent()
-                            ).clickEvent(suggestCommand(command + achievement.alias()))
+                            ).clickEvent(suggestCommand(command.command() + achievement.alias()))
                     ).append(newline());
         }
 
