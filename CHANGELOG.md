@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/raidcraft/rcachievements/compare/v1.14.1...v1.14.2) (2021-01-30)
+
+
+### Bug Fixes
+
+* set command suggestion not working ([72129a2](https://github.com/raidcraft/rcachievements/commit/72129a298313be022b6055ab164c484f4805aa78))
+
 ## [1.14.1](https://github.com/raidcraft/rcachievements/compare/v1.14.0...v1.14.1) (2021-01-23)
 
 
