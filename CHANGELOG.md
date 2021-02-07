@@ -1,3 +1,10 @@
+## [1.14.3](https://github.com/raidcraft/rcachievements/compare/v1.14.2...v1.14.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **login:** first login not counted due to missing streak ([584328e](https://github.com/raidcraft/rcachievements/commit/584328eea256604f49a1e0b5a7f20c32f05b6064)), closes [#26](https://github.com/raidcraft/rcachievements/issues/26)
+
 ## [1.14.2](https://github.com/raidcraft/rcachievements/compare/v1.14.1...v1.14.2) (2021-01-30)
 
 
