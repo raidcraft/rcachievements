@@ -19,7 +19,7 @@ class DefaultAchievementContextTest extends TestBase {
 
     @Override
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
 
         super.setUp();
 

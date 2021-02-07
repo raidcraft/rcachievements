@@ -112,6 +112,19 @@ public abstract class CountAchievement extends AbstractAchievementType implement
     }
 
     /**
+     * Sets the counter of this achievement for the player to the given value
+     * and then checks if the counter has reached its configured threshold.
+     *
+     * @param player the player to set and check the counter for
+     * @param amount the amount of the count
+     */
+    protected void setCountAndCheck(AchievementPlayer player, long amount) {
+
+        count(player, amount);
+        check(player);
+    }
+
+    /**
      * Checks the current player count and gives the player the achievement if successful.
      *
      * @param player the player to check the counter for

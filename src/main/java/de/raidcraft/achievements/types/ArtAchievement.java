@@ -49,7 +49,7 @@ public class ArtAchievement extends AbstractAchievementType {
             trigger = ART.load("rcachievements:achievement:trigger:" + id(), config.getStringList("trigger"));
             trigger.onTrigger(Player.class, (target, context) -> {
                 if (notApplicable(target.source())) return;
-                if (requirements.test(target).success()) {
+                if (requirements == null || requirements.test(target).success()) {
                     addTo(AchievementPlayer.of(target.source()));
                 }
             });

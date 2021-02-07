@@ -33,7 +33,7 @@ public class TestBase {
 
     @SneakyThrows
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
 
         server = MockBukkit.mock();
         plugin = MockBukkit.load(RCAchievements.class);
@@ -46,7 +46,7 @@ public class TestBase {
     }
 
     @AfterEach
-    void tearDown() {
+    protected void tearDown() {
 
         Achievement.find.all().forEach(Model::delete);
         MockBukkit.unmock();

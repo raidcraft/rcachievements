@@ -12,12 +12,13 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 public class LoginAchievement extends CountAchievement implements Listener {
 
-    private static final String LAST_LOGIN = "last_login";
+    static final String LAST_LOGIN = "last_login";
 
     public static class Factory implements TypeFactory<LoginAchievement> {
 
@@ -40,9 +41,9 @@ public class LoginAchievement extends CountAchievement implements Listener {
         }
     }
 
-    private final Set<UUID> checkedToday = new HashSet<>();
-    private Instant lastCheck = Instant.now();
-    private boolean reset = true;
+    final Set<UUID> checkedToday = new HashSet<>();
+    Instant lastCheck = Instant.now();
+    boolean reset = true;
 
     protected LoginAchievement(AchievementContext context) {
 
@@ -69,7 +70,7 @@ public class LoginAchievement extends CountAchievement implements Listener {
         if (notApplicable(event.getPlayer())) return;
         if (today(event.getPlayer())) return;
         if (!streak(event.getPlayer())) {
-            count(player(event.getPlayer()), 0);
+            setCountAndCheck(player(event.getPlayer()), 1);
             return;
         }
 
@@ -80,7 +81,7 @@ public class LoginAchievement extends CountAchievement implements Listener {
         store(event.getPlayer()).set(LAST_LOGIN, Instant.now().toEpochMilli()).save();
     }
 
-    private boolean today(Player player) {
+    boolean today(Player player) {
 
         if (checkedToday.contains(player.getUniqueId())) return true;
 
@@ -92,11 +93,13 @@ public class LoginAchievement extends CountAchievement implements Listener {
 
     }
 
-    private boolean streak(Player player) {
+    boolean streak(Player player) {
 
-        Instant lastLoginDay = Instant.ofEpochMilli(store(player).get(LAST_LOGIN, Long.class, Instant.EPOCH.toEpochMilli()))
-                .truncatedTo(ChronoUnit.DAYS);
-
-        return lastLoginDay.plus(1, ChronoUnit.DAYS).equals(Instant.now().truncatedTo(ChronoUnit.DAYS));
+        return store(player).get(LAST_LOGIN, Long.class)
+                .map(Instant::ofEpochMilli)
+                .map(instant -> instant.truncatedTo(ChronoUnit.DAYS))
+                .map(instant -> instant.plus(1, ChronoUnit.DAYS))
+                .map(instant -> instant.equals(Instant.now().truncatedTo(ChronoUnit.DAYS)))
+                .orElse(true);
     }
 }
