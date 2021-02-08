@@ -52,7 +52,6 @@ public class BlockAchievement extends CountAchievement implements Listener {
     public boolean load(ConfigurationSection config) {
 
         super.load(config);
-        suffix(config.getString("suffix", "Blöcke " + (action == Action.BREAK ? "abgebaut" : "gesetzt")));
 
         blockTypes.clear();
 
@@ -76,6 +75,8 @@ public class BlockAchievement extends CountAchievement implements Listener {
             log.severe("unknown action " + config.getString("action") + " in config of: " + alias());
             return false;
         }
+
+        suffix(config.getString("suffix", "Blöcke " + (action == Action.BREAK ? "abgebaut" : "gesetzt")));
 
         return true;
     }
