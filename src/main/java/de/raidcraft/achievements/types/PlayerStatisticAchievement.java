@@ -3,6 +3,7 @@ package de.raidcraft.achievements.types;
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.AbstractAchievementType;
 import de.raidcraft.achievements.AchievementContext;
+import de.raidcraft.achievements.PeriodicAsync;
 import de.raidcraft.achievements.Progressable;
 import de.raidcraft.achievements.TypeFactory;
 import de.raidcraft.achievements.entities.AchievementPlayer;
@@ -12,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerStatisticIncrementEvent;
@@ -26,7 +28,7 @@ import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
 
 @Log(topic = "RCAchievements:statistic")
-public class PlayerStatisticAchievement extends AbstractAchievementType implements Progressable {
+public class PlayerStatisticAchievement extends AbstractAchievementType implements Progressable, PeriodicAsync {
 
     public static class Factory implements TypeFactory<PlayerStatisticAchievement> {
 
@@ -47,15 +49,15 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
 
             return new PlayerStatisticAchievement(context);
         }
-    }
 
+    }
     private Statistic statistic;
+
     private EntityType entityType;
     private Material material;
     private String prefix;
     private String suffix;
     private int count;
-
     protected PlayerStatisticAchievement(AchievementContext context) {
 
         super(context);
@@ -128,6 +130,30 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         }
 
         return true;
+    }
+
+    @Override
+    public void tickAsync(Player player) {
+
+        if (notApplicable(player)) return;
+
+        int count;
+        switch (statistic.getType()) {
+            case BLOCK:
+            case ITEM:
+                count = player.getStatistic(statistic, material);
+                break;
+            case ENTITY:
+                count = player.getStatistic(statistic, entityType);
+                break;
+            default:
+                count = player.getStatistic(statistic);
+                break;
+        }
+
+        if (count >= this.count) {
+            addTo(player(player));
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
