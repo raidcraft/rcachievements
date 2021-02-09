@@ -86,7 +86,7 @@ public class CombinedAchievement extends AbstractAchievementType implements List
     }
 
     @Override
-    public Component progress(AchievementPlayer player) {
+    public Component progressText(AchievementPlayer player) {
 
         long count = player.unlockedAchievements().stream()
                 .map(PlayerAchievement::achievement)

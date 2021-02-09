@@ -366,7 +366,7 @@ public final class Messages {
                     .active(achievement)
                     .filter(context -> context.type() instanceof Progressable)
                     .map(context -> (Progressable) context.type())
-                    .ifPresent(context -> builder.append(newline()).append(context.progress(player)));
+                    .ifPresent(context -> builder.append(newline()).append(context.progressText(player)));
 
             if (bukkitPlayer != null && bukkitPlayer.hasPermission(Constants.SHOW_ADMIN_DETAILS)) {
                 builder.append(newline())

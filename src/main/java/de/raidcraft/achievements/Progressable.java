@@ -15,5 +15,5 @@ public interface Progressable {
      * @param player the player to render the progress for
      * @return the rendered progress of the player
      */
-    Component progress(AchievementPlayer player);
+    Component progressText(AchievementPlayer player);
 }

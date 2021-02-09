@@ -73,7 +73,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
     }
 
     @Override
-    public Component progress(AchievementPlayer player) {
+    public Component progressText(AchievementPlayer player) {
 
         return text().append(text(prefix() + " ", TEXT))
                 .append(text(count(player), HIGHLIGHT))

@@ -64,7 +64,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
     }
 
     @Override
-    public Component progress(AchievementPlayer player) {
+    public Component progressText(AchievementPlayer player) {
 
         int value;
         switch (statistic.getType()) {
