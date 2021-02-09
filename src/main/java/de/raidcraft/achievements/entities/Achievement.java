@@ -16,6 +16,7 @@ import lombok.experimental.Accessors;
 import net.silthus.ebean.BaseEntity;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -368,6 +370,30 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         PlayerAchievement.of(this, player).delete();
     }
 
+    /**
+     * Serializes this achievement as a configuration that can be saved to disk.
+     *
+     * @return the new serialized configuration file. use {@link YamlConfiguration#save(File)} to save the config.
+     */
+    public YamlConfiguration toConfig() {
+
+        YamlConfiguration config = new YamlConfiguration();
+
+        config.set("id", id().toString());
+        config.set("type", type());
+        config.set("name", name());
+        config.set("description", description());
+        config.set("enabled", enabled());
+        config.set("secret", secret());
+        config.set("hidden", hidden());
+        config.set("broadcast", broadcast());
+        for (Map.Entry<String, Object> entry : config().getValues(true).entrySet()) {
+            config.set(entry.getKey(), entry.getValue());
+        }
+
+        return config;
+    }
+
     @PostLoad
     void onPostLoad() {
 
@@ -418,5 +444,11 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         if (o.equals(this)) return 0;
 
         return name().compareTo(o.name());
+    }
+
+    @Override
+    public String toString() {
+
+        return alias() + " (" + id() + ")";
     }
 }

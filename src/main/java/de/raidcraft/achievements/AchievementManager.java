@@ -292,7 +292,41 @@ public final class AchievementManager {
 
         List<Achievement> achievements = Achievement.unknownSource();
         achievements.forEach(this::initialize);
-        log.info("loaded " + achievements.size() + " achievements without a file config from the database");
+        log.info("loaded " + achievements.size() + " achievements without a file config from the database.");
+
+        if (plugin().pluginConfig().isAutoSave()) {
+            achievements.forEach(achievement -> {
+                File file = filePathOf(achievement);
+                if (file.exists()) {
+                    YamlConfiguration existingConfig = YamlConfiguration.loadConfiguration(file);
+                    String id = existingConfig.getString("id");
+                    if (Strings.isNullOrEmpty(id)) {
+                        if (!achievement.alias().equalsIgnoreCase(existingConfig.getString("alias"))) {
+                            log.warning("cannot save " + achievement + " to disk. A file already exists with an empty id but different alias: " + file.getAbsolutePath());
+                            return;
+                        }
+                    } else {
+                        try {
+                            if (!achievement.id().equals(UUID.fromString(id))) {
+                                log.warning("cannot save " + achievement + " to disk. A file already exists with a different id: " + file.getAbsolutePath());
+                                return;
+                            }
+                        } catch (Exception e) {
+                            log.warning("cannot save " + achievement + " to disk. A file already exists without a valid id: " + file.getAbsolutePath());
+                            return;
+                        }
+                    }
+
+                    try {
+                        achievement.toConfig().save(file);
+                        log.info("saved database achievement " + achievement + " to disk: " + file.getAbsolutePath());
+                    } catch (IOException e) {
+                        log.severe("failed to save achievement configuration of " + achievement + " to " + file.getAbsolutePath() + ": " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -440,6 +474,24 @@ public final class AchievementManager {
         config.set("id", achievement.id().toString());
 
         return Optional.of(achievement);
+    }
+
+    /**
+     * Finds the file that represents the location of the given achievement.
+     * <p>The config may or may not exist, but the path to it will always be created.
+     * <p>Use the {@link Achievement#toConfig()} and {@link YamlConfiguration#save(File)} methods
+     * to store the given achievement in the configuration returned from this.
+     *
+     * @param achievement the achievement to get the config file for
+     * @return the config file of the given achievement. may not exist yet.
+     */
+    public File filePathOf(Achievement achievement) {
+
+        File baseDir = new File(plugin.getDataFolder(), plugin.pluginConfig().getAchievements());
+        File file = new File(baseDir, achievement.alias() + ".yml");
+        file.getParentFile().mkdirs();
+
+        return file;
     }
 
     private void loadFailed(String alias, ConfigurationSection config) {

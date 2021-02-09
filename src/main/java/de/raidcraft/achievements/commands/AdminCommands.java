@@ -22,7 +22,6 @@ import lombok.Value;
 import lombok.experimental.Accessors;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -168,26 +167,14 @@ public class AdminCommands extends BaseCommand {
             }
             file = new File(baseDir, path);
         }
+        file.getParentFile().mkdirs();
 
         if (file.exists()) {
             throw new ConditionFailedException("Die Datei " + file.getAbsolutePath() + " existiert bereits. Bitte verwende einen anderen Speicherort.");
         }
 
         try {
-            file.getParentFile().mkdirs();
-            YamlConfiguration config = new YamlConfiguration();
-            config.set("id", achievement.id().toString());
-            config.set("type", achievement.type());
-            config.set("name", achievement.name());
-            config.set("description", achievement.description());
-            config.set("enabled", achievement.enabled());
-            config.set("secret", achievement.secret());
-            config.set("hidden", achievement.hidden());
-            config.set("broadcast", achievement.broadcast());
-            for (Map.Entry<String, Object> entry : achievement.config().getValues(true).entrySet()) {
-                config.set(entry.getKey(), entry.getValue());
-            }
-            config.save(file);
+            achievement.toConfig().save(file);
             getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Der Erfolg wurde erfolgreich als Datei gespeichert: " + file.getAbsolutePath());
         } catch (IOException e) {
             getCurrentCommandIssuer().sendMessage("Fehler beim Speichern der Datei: " + e.getMessage());
