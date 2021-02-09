@@ -6,7 +6,6 @@ import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import lombok.NonNull;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public interface AchievementContext {
      * @param achievement the achievement to create a context for
      * @return the created context
      */
-    static AchievementContext create(Plugin plugin, Achievement achievement, AchievementType.Registration<?> registration) {
+    static AchievementContext create(RCAchievements plugin, Achievement achievement, AchievementType.Registration<?> registration) {
 
         return new DefaultAchievementContext(plugin, achievement, registration);
     }

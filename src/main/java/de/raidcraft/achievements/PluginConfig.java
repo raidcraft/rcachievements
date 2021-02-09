@@ -28,6 +28,8 @@ public class PluginConfig extends BukkitYamlConfiguration {
     private long secretBroadcastDelay = 12000L;
     @Comment("Set to true to automatically save all achievements to disk if they only exist in the database.")
     private boolean autoSave = false;
+    @Comment("Set the interval how often periodic achievements should be checked.")
+    private long periodicAchievementInterval = 20L;
     @Comment("A list of actions that are executed for every achievement.")
     private List<String> globalRewards = new ArrayList<>();
     private DatabaseConfig database = new DatabaseConfig();

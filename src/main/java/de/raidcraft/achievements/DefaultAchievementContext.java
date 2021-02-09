@@ -1,5 +1,6 @@
 package de.raidcraft.achievements;
 
+import com.google.common.collect.ImmutableList;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import lombok.AccessLevel;
@@ -7,9 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,17 +25,18 @@ import java.util.UUID;
 @Accessors(fluent = true)
 public class DefaultAchievementContext implements AchievementContext {
 
-    private final Plugin plugin;
+    private final RCAchievements plugin;
     private final Achievement achievement;
     private final AchievementType.Registration<?> registration;
     private AchievementType type;
     private boolean initialized = false;
     private boolean loadFailed = false;
     private boolean enabled = false;
+    private BukkitTask tickTask;
 
     private final Map<UUID, Boolean> applicableCheckCache = new HashMap<>();
 
-    public DefaultAchievementContext(Plugin plugin, Achievement achievement, AchievementType.Registration<?> registration) {
+    public DefaultAchievementContext(RCAchievements plugin, Achievement achievement, AchievementType.Registration<?> registration) {
 
         this.plugin = plugin;
 
@@ -88,6 +93,27 @@ public class DefaultAchievementContext implements AchievementContext {
             type.enable();
             updateEventListener(true);
             enabled(true);
+            if (type instanceof Periodic) {
+                Periodic periodic = (Periodic) this.type;
+                Bukkit.getScheduler().runTaskTimer(plugin(), () ->
+                        Bukkit.getOnlinePlayers().forEach(periodic::tick),
+                        plugin().pluginConfig().getPeriodicAchievementInterval(),
+                        plugin().pluginConfig().getPeriodicAchievementInterval()
+                );
+            } else if (type instanceof PeriodicAsync) {
+                PeriodicAsync periodic = (PeriodicAsync) this.type;
+                Bukkit.getScheduler().runTaskTimer(plugin(), () ->
+                        {
+                            ImmutableList<? extends Player> players = ImmutableList.copyOf(Bukkit.getOnlinePlayers());
+                            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> players.stream()
+                                    .filter(OfflinePlayer::isOnline)
+                                    .forEach(periodic::tickAsync)
+                            );
+                        },
+                        plugin().pluginConfig().getPeriodicAchievementInterval(),
+                        plugin().pluginConfig().getPeriodicAchievementInterval()
+                );
+            }
         } catch (Exception e) {
             log.severe("failed to call enable() on achievement " + achievement().alias()
                     + " (" + achievement().id() + "): " + e.getMessage());
