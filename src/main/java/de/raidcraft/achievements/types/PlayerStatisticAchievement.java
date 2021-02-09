@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerStatisticIncrementEvent;
 
 import java.util.Objects;
 
-import static de.raidcraft.achievements.Constants.DEFAULT_TYPE;
 import static de.raidcraft.achievements.Messages.Colors.ACCENT;
 import static de.raidcraft.achievements.Messages.Colors.DARK_HIGHLIGHT;
 import static de.raidcraft.achievements.Messages.Colors.HIGHLIGHT;
@@ -90,7 +89,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
     public boolean load(ConfigurationSection config) {
 
         count = config.getInt("count", 1);
-        suffix = config.getString("prefix", "Fortschritt:");
+        prefix = config.getString("prefix", "Fortschritt:");
         suffix = config.getString("suffix");
 
         String stat = config.getString("statistic");
