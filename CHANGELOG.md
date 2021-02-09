@@ -1,3 +1,15 @@
+# [1.16.0](https://github.com/raidcraft/rcachievements/compare/v1.15.0...v1.16.0) (2021-02-09)
+
+
+### Bug Fixes
+
+* show last child achievement with full text ([63684bf](https://github.com/raidcraft/rcachievements/commit/63684bf70f69ace17afdddca305c91a92c55e99c)), closes [#37](https://github.com/raidcraft/rcachievements/issues/37)
+
+
+### Features
+
+* add parent -> child achievements ([f81a1c5](https://github.com/raidcraft/rcachievements/commit/f81a1c55dcecce4d40a0cf8be18d8458f98de464)), closes [#37](https://github.com/raidcraft/rcachievements/issues/37)
+
 # [1.15.0](https://github.com/raidcraft/rcachievements/compare/v1.14.4...v1.15.0) (2021-02-09)
 
 
