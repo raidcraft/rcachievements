@@ -1,3 +1,21 @@
+# [1.15.0](https://github.com/raidcraft/rcachievements/compare/v1.14.4...v1.15.0) (2021-02-09)
+
+
+### Bug Fixes
+
+* **stats:** high frequency statistic achievements not calculated ([c8f5e48](https://github.com/raidcraft/rcachievements/commit/c8f5e48a5878929b2a5de4e2659cda30ee59afa8)), closes [#39](https://github.com/raidcraft/rcachievements/issues/39)
+* **stats:** prefix not displayed ([2b61410](https://github.com/raidcraft/rcachievements/commit/2b61410efab25aebfc600586fad229bc1f14bc78))
+* get current command issuer before calling async task ([1215bf5](https://github.com/raidcraft/rcachievements/commit/1215bf559a3f6ca562203ebd48b7bbac8ac86d65))
+
+
+### Features
+
+* add auto saving of achievements to disk on load ([c2b0fa6](https://github.com/raidcraft/rcachievements/commit/c2b0fa6d5128781c42ae961344a7e50315bc6e38)), closes [#42](https://github.com/raidcraft/rcachievements/issues/42)
+* add periodic achievements ([2ec0eb3](https://github.com/raidcraft/rcachievements/commit/2ec0eb3b254f9ee91fe9639a785abe6e4ccfa868)), closes [#39](https://github.com/raidcraft/rcachievements/issues/39)
+* run io intensive commands async ([ec0be4a](https://github.com/raidcraft/rcachievements/commit/ec0be4a902d98bcde3da20386ff14205db8fd440))
+* show progress of achievements as action bar ([c07e60f](https://github.com/raidcraft/rcachievements/commit/c07e60f3a1257c56eea11248a39ee87a4d630e5b)), closes [#40](https://github.com/raidcraft/rcachievements/issues/40)
+* show progress of achievements as boss bar ([c151c91](https://github.com/raidcraft/rcachievements/commit/c151c917615ae445fa1b49ba4531072b19f0cebc)), closes [#40](https://github.com/raidcraft/rcachievements/issues/40)
+
 ## [1.14.4](https://github.com/raidcraft/rcachievements/compare/v1.14.3...v1.14.4) (2021-02-08)
 
 
