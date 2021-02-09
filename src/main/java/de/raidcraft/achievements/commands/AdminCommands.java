@@ -1,6 +1,7 @@
 package de.raidcraft.achievements.commands;
 
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
@@ -76,9 +77,10 @@ public class AdminCommands extends BaseCommand {
     @CommandPermission(PERMISSION_PREFIX + "admin.reload")
     public void reload() {
 
+        final CommandIssuer commandIssuer = getCurrentCommandIssuer();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             plugin.reload();
-            getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "RCAchievements wurde erfolgreich neu geladen.");
+            commandIssuer.sendMessage(ChatColor.GREEN + "RCAchievements wurde erfolgreich neu geladen.");
         });
     }
 
@@ -159,6 +161,7 @@ public class AdminCommands extends BaseCommand {
             throw new ConditionFailedException("Der Erfolg " + achievement.alias() + " existiert bereits als Datei unter: " + achievement.source());
         }
 
+        final CommandIssuer commandIssuer = getCurrentCommandIssuer();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             File baseDir = new File(plugin.getDataFolder(), plugin.pluginConfig().getAchievements());
             File file;
@@ -179,9 +182,9 @@ public class AdminCommands extends BaseCommand {
 
             try {
                 achievement.toConfig().save(file);
-                getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Der Erfolg wurde erfolgreich als Datei gespeichert: " + file.getAbsolutePath());
+                commandIssuer.sendMessage(ChatColor.GREEN + "Der Erfolg wurde erfolgreich als Datei gespeichert: " + file.getAbsolutePath());
             } catch (IOException e) {
-                getCurrentCommandIssuer().sendMessage("Fehler beim Speichern der Datei: " + e.getMessage());
+                commandIssuer.sendMessage("Fehler beim Speichern der Datei: " + e.getMessage());
                 e.printStackTrace();
             }
         });
