@@ -355,11 +355,14 @@ public final class Messages {
             if (playerAchievement.isActive()) {
                 builder.append(achievement(playerAchievement.achievement(), player));
             } else if (playerAchievement.isUnlocked()) {
-                builder.append(text("[", SUCCESS)
-                        .append(text("\u2713", ACCENT)) // ✓
-                        .append(text("]", SUCCESS))
-                        .hoverEvent(achievementInfo(playerAchievement.achievement(), player))
-                );
+                if (playerAchievement.achievement().isParent()) {
+                    builder.append(text("[", SUCCESS)
+                            .append(text("\u2713", ACCENT)) // ✓
+                            .append(text("]", SUCCESS))
+                            .hoverEvent(achievementInfo(playerAchievement.achievement(), player)));
+                } else {
+                    builder.append(achievement(playerAchievement.achievement(), player));
+                }
             } else {
                 builder.append(text("[", NOTE)
                         .append(text("?", ERROR))
