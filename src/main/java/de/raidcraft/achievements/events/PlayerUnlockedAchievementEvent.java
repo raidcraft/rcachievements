@@ -8,7 +8,6 @@ import org.bukkit.event.HandlerList;
 
 /**
  * The PlayerUnlockedAchievementEvent is fired after the player received an achievement.
- * <p>Use the {@link PlayerUnlockAchievementEvent} if you want to influence or cancel the process.
  */
 public class PlayerUnlockedAchievementEvent extends PlayerAchievementEvent {
 

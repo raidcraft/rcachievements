@@ -161,9 +161,6 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
                 break;
         }
 
-        Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
-                .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player(event.getPlayer())), this)));
-
         if (event.getNewValue() >= count) {
             addTo(player(event.getPlayer()));
         }

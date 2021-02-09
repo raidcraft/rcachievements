@@ -262,6 +262,8 @@ public final class AchievementManager {
      */
     public Optional<AchievementContext> initialize(@NonNull Achievement achievement) {
 
+        achievement.children().forEach(this::initialize);
+
         if (achievement.disabled()) return Optional.empty();
         if (activeAchievements.containsKey(achievement.id())) {
             return Optional.of(activeAchievements.get(achievement.id()));
@@ -472,6 +474,18 @@ public final class AchievementManager {
         }
 
         config.set("id", achievement.id().toString());
+
+        ConfigurationSection childs = config.getConfigurationSection("childs");
+        if (childs != null) {
+            for (String childKey : childs.getKeys(false)) {
+                ConfigurationSection section = childs.getConfigurationSection(childKey);
+                if (section != null) {
+                    section.set("parent", achievement.id().toString());
+                    section.set("type", section.getString("type", achievement.type()));
+                    loadAchievement(achievement.alias() + ":" + childKey, section).ifPresent(child -> achievement.children().add(child));
+                }
+            }
+        }
 
         return Optional.of(achievement);
     }

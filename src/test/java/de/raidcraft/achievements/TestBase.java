@@ -48,7 +48,7 @@ public class TestBase {
     @AfterEach
     protected void tearDown() {
 
-        Achievement.find.all().forEach(Model::delete);
+        Achievement.find.query().where().isNull("parent").findList().forEach(Model::delete);
         MockBukkit.unmock();
     }
 

@@ -3,6 +3,7 @@ package de.raidcraft.achievements.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.ConditionFailedException;
+import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
@@ -303,6 +304,23 @@ public class AdminCommands extends BaseCommand {
             send(getCurrentCommandIssuer(), createSuccess(achievement));
         }
 
+    }
+
+    @Subcommand("purge")
+    @CommandPermission(PERMISSION_PREFIX + "admin.purge")
+    @CommandCompletion("@players confirm")
+    public void purge(AchievementPlayer player, @Optional String confirm) {
+
+        if (Strings.isNullOrEmpty(confirm) || !confirm.equalsIgnoreCase("confirm")) {
+            throw new ConditionFailedException("Dieser Befehl löscht alle Achievements von " + player.name() + ". Führe den Befehl mit confirm aus zur Bestätigung.");
+        }
+
+        player.bukkitPlayer().ifPresent(p -> p.kickPlayer("Deine Erfolge werden zurückgesetzt. Bitte warte kurz."));
+        getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Alle Erfolge von " + player.name() + " wurden zurückgesetzt.");
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            player.delete();
+            plugin.reload();
+        });
     }
 
     @Value

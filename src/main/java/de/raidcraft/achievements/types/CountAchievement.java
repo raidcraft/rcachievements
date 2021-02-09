@@ -166,7 +166,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      */
     protected long increase(@NonNull AchievementPlayer player) {
 
-        return increase(player, count(player) + 1L);
+        return increase(player, 1L);
     }
 
     /**
@@ -201,14 +201,9 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      */
     protected long count(@NonNull AchievementPlayer player) {
 
-        long newCount = countCache.computeIfAbsent(player.id(),
+        return countCache.computeIfAbsent(player.id(),
                 uuid -> store(player).get(COUNT_KEY, Long.class, 0L)
         );
-
-        Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
-                .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player), this)));
-
-        return newCount;
     }
 
     /**
@@ -219,6 +214,9 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @return the given count value
      */
     protected long count(AchievementPlayer player, long count) {
+
+        Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
+                .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player), this)));
 
         return countCache.compute(player.id(), (uuid, integer) -> count);
     }

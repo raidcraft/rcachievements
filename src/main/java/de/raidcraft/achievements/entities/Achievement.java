@@ -13,19 +13,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.java.Log;
 import net.silthus.ebean.BaseEntity;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PostLoad;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +30,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
@@ -51,6 +46,7 @@ import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 @Getter
 @Setter
 @Accessors(fluent = true)
+@Log(topic = "RCAchievements")
 @Table(name = TABLE_PREFIX + "achievements")
 public class Achievement extends BaseEntity implements Comparable<Achievement> {
 
@@ -271,6 +267,18 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
      */
     private String source;
     /**
+     * The parent achievement of this achievement.
+     * May be null.
+     */
+    @ManyToOne
+    private Achievement parent;
+    /**
+     * A list of children achievements.
+     */
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Achievement> children = new ArrayList<>();
+
+    /**
      * The serialized configuration used to load the properties of this achievement.
      */
     @DbJson
@@ -314,6 +322,23 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     public boolean disabled() {
 
         return !enabled();
+    }
+
+    /**
+     * @return true if this achievement is a child of another achievement.
+     *         <p>True implies that {@link #parent()} is not null.
+     */
+    public boolean isChild() {
+
+        return parent() != null;
+    }
+
+    /**
+     * @return true if this achievement is the parent of at least one other achievement
+     */
+    public boolean isParent() {
+
+        return !children().isEmpty();
     }
 
     /**
@@ -413,16 +438,42 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
 
         if (!force && loaded()) return;
 
-        this.name(config.getString("name", name()));
-        this.type(config.getString("type", type()));
-        this.description(config.getString("description", description()));
-        this.enabled(config.getBoolean("enabled", enabled()));
-        this.secret(config.getBoolean("secret", secret()));
-        this.hidden(config.getBoolean("hidden", hidden()));
-        this.broadcast(config.getBoolean("broadcast", broadcast()));
-        this.restricted(config.getBoolean("restricted", restricted()));
-        this.globalRewards(config.getBoolean("global_rewards", globalRewards()));
-        this.rewards(config.getStringList("rewards"));
+        String parent = config.getString("parent");
+        if (!Strings.isNullOrEmpty(parent)) {
+            try {
+                Achievement parentAchievement = Achievement.byAlias(parent)
+                        .or(() -> Achievement.byId(UUID.fromString(parent)))
+                        .orElse(null);
+                parent(parentAchievement);
+
+                ConfigurationSection parentSkillConfig = parent().achievementConfig();
+                for (String key : parentSkillConfig.getKeys(true)) {
+                    if (!config.isSet("with." + key)) {
+                        config.set("with." + key, parentSkillConfig.get(key));
+                    }
+                }
+
+                updateConfig(config);
+            } catch (IllegalArgumentException e) {
+                log.severe("the parent of " + alias() + "(" + id() + ") was not found: " + parent);
+                e.printStackTrace();
+            }
+        }
+
+        this.name(config.getString("name", isChild() ? parent().name() : name()));
+        this.type(config.getString("type", isChild() ? parent().type() : type()));
+        this.description(config.getString("description", isChild() ? parent().description() : description()));
+        this.enabled(config.getBoolean("enabled", isChild() ? parent().enabled() : enabled()));
+        this.secret(config.getBoolean("secret", isChild() ? parent().secret() : secret()));
+        this.hidden(config.getBoolean("hidden", isChild() ? parent().hidden() : hidden()));
+        this.broadcast(config.getBoolean("broadcast", isChild() ? parent().broadcast() : broadcast()));
+        this.restricted(config.getBoolean("restricted", isChild() ? parent().restricted() : restricted()));
+        this.globalRewards(config.getBoolean("global_rewards", isChild() ? parent().globalRewards() : globalRewards()));
+        if (config.isSet("rewards")) {
+            rewards(config.getStringList("rewards"));
+        } else if (isChild()) {
+            rewards(parent().rewards());
+        }
     }
 
     private ConfigurationSection updateConfig(ConfigurationSection config) {

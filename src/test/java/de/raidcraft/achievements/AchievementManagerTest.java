@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static de.raidcraft.achievements.AchievementMockFactory.TYPE;
@@ -187,6 +188,30 @@ class AchievementManagerTest extends TestBase {
                     .isEqualTo(true);
 
             verify(factory().last(), times(1)).enable();
+        }
+
+        @Test
+        @DisplayName("should load nested child achievements")
+        void shouldLoadNestedChildAchievements() {
+
+            ConfigurationSection cfg = new MemoryConfiguration();
+            UUID id = UUID.randomUUID();
+            cfg.set("id", id.toString());
+            cfg.set("type", "mock");
+            cfg.set("name", "Foo Bar");
+            cfg.set("childs.child1.name", "Child 1");
+
+            Optional<Achievement> foobar = manager.loadAchievement("foobar", cfg);
+            assertThat(foobar)
+                    .isPresent().get()
+                    .extracting(BaseEntity::id, Achievement::alias, Achievement::name, Achievement::isParent)
+                    .contains(id, "foobar", "Foo Bar", true);
+
+            assertThat(foobar.get().children())
+                    .hasSize(1)
+                    .first()
+                    .extracting(Achievement::alias, Achievement::name, Achievement::type, Achievement::isChild)
+                    .contains("foobar:child1", "Child 1", "mock", true);
         }
     }
 }

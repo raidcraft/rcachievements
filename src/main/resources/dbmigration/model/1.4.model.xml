@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="rcachievements_achievements">
+            <column name="parent_id" type="uuid" references="rcachievements_achievements.id" foreignKeyName="fk_rcachievements_achievements_parent_id" foreignKeyIndex="ix_rcachievements_achievements_parent_id"/>
+        </addColumn>
+    </changeSet>
+</migration>

@@ -15,6 +15,7 @@ import net.kyori.adventure.text.feature.pagination.Pagination;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.title.Title;
+import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -295,6 +296,7 @@ public final class Messages {
     public static List<Component> list(@NonNull AchievementPlayer player, List<Achievement> achievements, int page) {
 
         achievements = achievements.stream()
+                .filter(achievement -> !achievement.isChild())
                 .sorted()
                 .sorted((o1, o2) -> Boolean.compare(player.unlocked(o1), player.unlocked(o2)))
                 .sorted((o1, o2) -> Boolean.compare(player.canView(o1), player.canView(o2)))
@@ -309,9 +311,7 @@ public final class Messages {
 
                             if (value == null) return Collections.singleton(empty());
 
-                            return Collections.singleton(text()
-                                    .append(text("|  ", DARK_ACCENT))
-                                    .append(achievement(value, player)).build());
+                            return Collections.singleton(achievementChain(PlayerAchievement.of(value, player)));
                         }, PlayerCommands.LIST::apply
                 ).render(achievements, page);
     }
@@ -337,6 +337,49 @@ public final class Messages {
                 )
                 .append(text("]", ACCENT))
                 .build();
+    }
+
+    public static Component achievementChain(PlayerAchievement playerAchievement) {
+
+        if (!playerAchievement.achievement().isParent() && !playerAchievement.achievement().isChild()) {
+            return achievement(playerAchievement.achievement(), playerAchievement.player());
+        }
+
+        AchievementPlayer player = playerAchievement.player();
+        while (playerAchievement.achievement().isChild()) {
+            playerAchievement = PlayerAchievement.of(playerAchievement.achievement().parent(), player);
+        }
+
+        TextComponent.Builder builder = text();
+        do {
+            if (playerAchievement.isActive()) {
+                builder.append(achievement(playerAchievement.achievement(), player));
+            } else if (playerAchievement.isUnlocked()) {
+                builder.append(text("[", SUCCESS)
+                        .append(text("\u2713", ACCENT)) // ✓
+                        .append(text("]", SUCCESS))
+                        .hoverEvent(achievementInfo(playerAchievement.achievement(), player))
+                );
+            } else {
+                builder.append(text("[", NOTE)
+                        .append(text("?", ERROR))
+                        .append(text("]", NOTE))
+                        .hoverEvent(achievementInfo(playerAchievement.achievement(), player))
+                );
+            }
+
+            playerAchievement = playerAchievement.achievement().children().stream()
+                    .findFirst()
+                    .map(achievement -> PlayerAchievement.of(achievement, player))
+                    .orElse(null);
+
+            if (playerAchievement != null) {
+                builder.append(text(" \u2192 ", NOTE)); // →
+            }
+
+        } while (playerAchievement != null);
+
+        return builder.build();
     }
 
     public static Component achievementInfo(Achievement achievement) {
@@ -375,6 +418,10 @@ public final class Messages {
                     .ifPresent(context -> builder.append(newline()).append(context.progressText(player)));
 
             if (bukkitPlayer != null && bukkitPlayer.hasPermission(Constants.SHOW_ADMIN_DETAILS)) {
+                if (achievement.isChild()) {
+                    builder.append(newline())
+                            .append(text("parent: ", TEXT)).append(text(achievement.parent().toString(), ACCENT));
+                }
                 builder.append(newline())
                         .append(text("type: ", TEXT)).append(text(achievement.type(), ACCENT))
                         .append(newline())
@@ -424,7 +471,7 @@ public final class Messages {
         return color;
     }
 
-    public static Component progressBar(float percent, int totalBars, char symbol, TextColor completedColor, TextColor notCompletedColor) {
+    public static Component progressBar(float percent, int totalBars, char symbol, ChatColor completedColor, ChatColor notCompletedColor) {
 
         int progressBars = (int) (totalBars * percent);
 

@@ -1,6 +1,6 @@
 package de.raidcraft.achievements.entities;
 
-import de.raidcraft.achievements.events.PlayerUnlockAchievementEvent;
+import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import io.ebean.Finder;
 import lombok.AccessLevel;
@@ -101,6 +101,24 @@ public class PlayerAchievement extends BaseEntity {
     }
 
     /**
+     * Checks if this achievement is active.
+     * <p>Active means the achievement is not unlocked and its
+     * parents have been unlocked.
+     *
+     * @return true if the achievement is active
+     */
+    public boolean isActive() {
+
+        if (isUnlocked()) return false;
+
+        if (achievement().isChild()) {
+            return PlayerAchievement.of(achievement().parent(), player()).isUnlocked();
+        }
+
+        return true;
+    }
+
+    /**
      * Unlocks the achievement for this player if it is not unlocked.
      * <p>Nothing will happen if the achievement is already unlocked.
      *
@@ -111,14 +129,10 @@ public class PlayerAchievement extends BaseEntity {
 
         if (unlocked() != null) return true;
 
-        PlayerUnlockAchievementEvent event = new PlayerUnlockAchievementEvent(this);
-        Bukkit.getPluginManager().callEvent(event);
-
-        if (event.isCancelled()) return false;
-
         unlocked(Instant.now()).save();
 
-        Bukkit.getPluginManager().callEvent(new PlayerUnlockedAchievementEvent(this));
+        Bukkit.getScheduler().runTask(RCAchievements.instance(), () ->
+            Bukkit.getPluginManager().callEvent(new PlayerUnlockedAchievementEvent(this)));
 
         return true;
     }
