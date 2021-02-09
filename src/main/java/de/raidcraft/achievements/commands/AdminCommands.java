@@ -20,6 +20,7 @@ import de.raidcraft.achievements.types.LocationAchievement;
 import de.raidcraft.achievements.util.LocationUtil;
 import lombok.Value;
 import lombok.experimental.Accessors;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
@@ -75,8 +76,10 @@ public class AdminCommands extends BaseCommand {
     @CommandPermission(PERMISSION_PREFIX + "admin.reload")
     public void reload() {
 
-        plugin.reload();
-        getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "RCAchievements wurde erfolgreich neu geladen.");
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            plugin.reload();
+            getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "RCAchievements wurde erfolgreich neu geladen.");
+        });
     }
 
     @Subcommand("add|give")
@@ -156,30 +159,32 @@ public class AdminCommands extends BaseCommand {
             throw new ConditionFailedException("Der Erfolg " + achievement.alias() + " existiert bereits als Datei unter: " + achievement.source());
         }
 
-        File baseDir = new File(plugin.getDataFolder(), plugin.pluginConfig().getAchievements());
-        File file;
-        if (Strings.isNullOrEmpty(path)) {
-            file = new File(baseDir, achievement.alias() + ".yml");
-        } else {
-            path = path.replace(".", "/");
-            if (!path.endsWith(".yml") && !path.endsWith(".yaml")) {
-                path += ".yml";
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            File baseDir = new File(plugin.getDataFolder(), plugin.pluginConfig().getAchievements());
+            File file;
+            if (Strings.isNullOrEmpty(path)) {
+                file = new File(baseDir, achievement.alias() + ".yml");
+            } else {
+                String fileName = path.replace(".", "/");
+                if (!fileName.endsWith(".yml") && !fileName.endsWith(".yaml")) {
+                    fileName += ".yml";
+                }
+                file = new File(baseDir, fileName);
             }
-            file = new File(baseDir, path);
-        }
-        file.getParentFile().mkdirs();
+            file.getParentFile().mkdirs();
 
-        if (file.exists()) {
-            throw new ConditionFailedException("Die Datei " + file.getAbsolutePath() + " existiert bereits. Bitte verwende einen anderen Speicherort.");
-        }
+            if (file.exists()) {
+                throw new ConditionFailedException("Die Datei " + file.getAbsolutePath() + " existiert bereits. Bitte verwende einen anderen Speicherort.");
+            }
 
-        try {
-            achievement.toConfig().save(file);
-            getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Der Erfolg wurde erfolgreich als Datei gespeichert: " + file.getAbsolutePath());
-        } catch (IOException e) {
-            getCurrentCommandIssuer().sendMessage("Fehler beim Speichern der Datei: " + e.getMessage());
-            e.printStackTrace();
-        }
+            try {
+                achievement.toConfig().save(file);
+                getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Der Erfolg wurde erfolgreich als Datei gespeichert: " + file.getAbsolutePath());
+            } catch (IOException e) {
+                getCurrentCommandIssuer().sendMessage("Fehler beim Speichern der Datei: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 
     @Subcommand("set")
