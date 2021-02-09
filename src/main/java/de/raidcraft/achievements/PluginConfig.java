@@ -31,6 +31,9 @@ public class PluginConfig extends BukkitYamlConfiguration {
     @Comment("Set the interval how often periodic achievements should be checked.")
     private long periodicAchievementInterval = 20L;
     @Comment("A list of actions that are executed for every achievement.")
+    private boolean progressBossBar = true;
+    private boolean progressActionBar = true;
+    private long bossBarDuration = 120L;
     private List<String> globalRewards = new ArrayList<>();
     private DatabaseConfig database = new DatabaseConfig();
 
