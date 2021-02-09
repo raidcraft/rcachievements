@@ -1,6 +1,7 @@
 package de.raidcraft.achievements;
 
 import co.aikar.commands.CommandIssuer;
+import com.google.common.base.Strings;
 import de.raidcraft.achievements.commands.AdminCommands;
 import de.raidcraft.achievements.commands.PlayerCommands;
 import de.raidcraft.achievements.entities.Achievement;
@@ -19,7 +20,12 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -416,6 +422,14 @@ public final class Messages {
         }
 
         return color;
+    }
+
+    public static Component progressBar(float percent, int totalBars, char symbol, TextColor completedColor, TextColor notCompletedColor) {
+
+        int progressBars = (int) (totalBars * percent);
+
+        return Component.text(Strings.repeat("" + completedColor + symbol, progressBars)
+                + Strings.repeat("" + notCompletedColor + symbol, totalBars - progressBars));
     }
 
     private Messages() {}

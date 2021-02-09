@@ -11,6 +11,7 @@ import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.listener.PlayerListener;
+import de.raidcraft.achievements.listener.ProgressListener;
 import de.raidcraft.achievements.listener.RewardListener;
 import de.raidcraft.achievements.types.ArtAchievement;
 import io.artframework.Scope;
@@ -59,6 +60,7 @@ public class RCAchievements extends JavaPlugin {
     private AchievementManager achievementManager;
     private PlayerListener playerListener;
     private RewardListener rewardListener;
+    private ProgressListener progressListener;
     @Getter
     private Scope art;
 
@@ -154,6 +156,8 @@ public class RCAchievements extends JavaPlugin {
 
         playerListener = new PlayerListener(this);
         getServer().getPluginManager().registerEvents(playerListener, this);
+        progressListener = new ProgressListener(this);
+        getServer().getPluginManager().registerEvents(progressListener, this);
 
         setupBungeecord();
     }

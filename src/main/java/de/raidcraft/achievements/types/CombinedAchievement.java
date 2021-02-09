@@ -9,9 +9,11 @@ import de.raidcraft.achievements.TypeFactory;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.events.AchievementProgressChangeEvent;
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import lombok.extern.java.Log;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -86,12 +88,15 @@ public class CombinedAchievement extends AbstractAchievementType implements List
     }
 
     @Override
+    public float progress(AchievementPlayer player) {
+
+        return unlockedAchievementCount(player) * 1.0f / achievements.size();
+    }
+
+    @Override
     public Component progressText(AchievementPlayer player) {
 
-        long count = player.unlockedAchievements().stream()
-                .map(PlayerAchievement::achievement)
-                .filter(achievement -> achievements.contains(achievement))
-                .count();
+        long count = unlockedAchievementCount(player);
 
         return text().append(text(prefix + " ", TEXT))
                 .append(text(count, HIGHLIGHT))
@@ -110,11 +115,22 @@ public class CombinedAchievement extends AbstractAchievementType implements List
     public void onAchievementUnlocked(PlayerUnlockedAchievementEvent event) {
 
         if (notApplicable(event.player())) return;
+        if (!achievements.contains(event.achievement())) return;
+
+        Bukkit.getPluginManager().callEvent(new AchievementProgressChangeEvent(playerAchievement(event.player()), this));
 
         if (event.player().unlockedAchievements()
                 .stream().map(PlayerAchievement::achievement)
                 .allMatch(achievement -> achievements.contains(achievement))) {
             addTo(event.player());
         }
+    }
+
+    private long unlockedAchievementCount(AchievementPlayer player) {
+
+        return player.unlockedAchievements().stream()
+                .map(PlayerAchievement::achievement)
+                .filter(achievement -> achievements.contains(achievement))
+                .count();
     }
 }

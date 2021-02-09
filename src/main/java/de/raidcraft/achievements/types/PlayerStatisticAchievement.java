@@ -5,11 +5,16 @@ import de.raidcraft.achievements.AbstractAchievementType;
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.PeriodicAsync;
 import de.raidcraft.achievements.Progressable;
+import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.TypeFactory;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.events.AchievementProgressChangeEvent;
 import lombok.extern.java.Log;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -64,21 +69,15 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
     }
 
     @Override
+    public float progress(AchievementPlayer player) {
+
+        return statisticValue(player.offlinePlayer()) * 1.0f / count;
+    }
+
+    @Override
     public Component progressText(AchievementPlayer player) {
 
-        int value;
-        switch (statistic.getType()) {
-            case BLOCK:
-            case ITEM:
-                value = player.offlinePlayer().getStatistic(statistic, material);
-                break;
-            case ENTITY:
-                value = player.offlinePlayer().getStatistic(statistic, entityType);
-                break;
-            default:
-                value = player.offlinePlayer().getStatistic(statistic);
-                break;
-        }
+        int value = statisticValue(player.offlinePlayer());
 
         return text(prefix + " ", TEXT)
                 .append(text(value, HIGHLIGHT))
@@ -137,21 +136,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
 
         if (notApplicable(player)) return;
 
-        int count;
-        switch (statistic.getType()) {
-            case BLOCK:
-            case ITEM:
-                count = player.getStatistic(statistic, material);
-                break;
-            case ENTITY:
-                count = player.getStatistic(statistic, entityType);
-                break;
-            default:
-                count = player.getStatistic(statistic);
-                break;
-        }
-
-        if (count >= this.count) {
+        if (statisticValue(player) >= this.count) {
             addTo(player(player));
         }
     }
@@ -176,8 +161,24 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
                 break;
         }
 
+        Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
+                .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player(event.getPlayer())), this)));
+
         if (event.getNewValue() >= count) {
             addTo(player(event.getPlayer()));
+        }
+    }
+
+    private int statisticValue(OfflinePlayer player) {
+
+        switch (statistic.getType()) {
+            case BLOCK:
+            case ITEM:
+                return player.getStatistic(statistic, material);
+            case ENTITY:
+                return player.getStatistic(statistic, entityType);
+            default:
+                return player.getStatistic(statistic);
         }
     }
 }

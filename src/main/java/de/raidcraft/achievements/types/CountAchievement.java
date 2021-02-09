@@ -4,13 +4,17 @@ import com.google.common.base.Strings;
 import de.raidcraft.achievements.AbstractAchievementType;
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.Progressable;
+import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.events.AchievementProgressChangeEvent;
 import io.ebean.annotation.Transactional;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -70,6 +74,12 @@ public abstract class CountAchievement extends AbstractAchievementType implement
                 .map(AchievementPlayer.find::byId)
                 .filter(Objects::nonNull)
                 .forEach(this::save);
+    }
+
+    @Override
+    public float progress(AchievementPlayer player) {
+
+        return count(player) * 1.0f / count;
     }
 
     @Override
@@ -154,9 +164,9 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to increase the counter for
      * @return the new count of the player. can be negative.
      */
-    protected long increase(AchievementPlayer player) {
+    protected long increase(@NonNull AchievementPlayer player) {
 
-        return countCache.compute(player.id(), (uuid, integer) -> integer != null ? ++integer : 1L);
+        return increase(player, count(player) + 1L);
     }
 
     /**
@@ -165,9 +175,9 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param amount the amount for which the counter is increased
      * @return the new count of the player. can be negative.
      */
-    protected long increase(AchievementPlayer player, long amount) {
+    protected long increase(@NonNull AchievementPlayer player, long amount) {
 
-        return countCache.compute(player.id(), (uuid, aLong) -> aLong != null ? aLong + amount : amount);
+        return count(player, count(player) + amount);
     }
 
     /**
@@ -177,9 +187,9 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to decrease the counter for
      * @return the new count of the player. can be negative.
      */
-    protected long decrease(AchievementPlayer player) {
+    protected long decrease(@NonNull AchievementPlayer player) {
 
-        return countCache.compute(player.id(), (uuid, integer) -> integer != null ? --integer : -1L);
+        return count(player, count(player) - 1);
     }
 
     /**
@@ -191,9 +201,14 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      */
     protected long count(@NonNull AchievementPlayer player) {
 
-        return countCache.computeIfAbsent(player.id(),
+        long newCount = countCache.computeIfAbsent(player.id(),
                 uuid -> store(player).get(COUNT_KEY, Long.class, 0L)
         );
+
+        Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
+                .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player), this)));
+
+        return newCount;
     }
 
     /**

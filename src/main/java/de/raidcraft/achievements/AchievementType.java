@@ -6,6 +6,7 @@ import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import org.bukkit.OfflinePlayer;
@@ -41,6 +42,17 @@ public interface AchievementType {
     default Achievement achievement() {
 
         return context().achievement();
+    }
+
+    /**
+     * Gets the player achievement of this achievement for the given player.
+     *
+     * @param player the player to get the player achievement for
+     * @return the player achievement for the given player and this achievement
+     */
+    default PlayerAchievement playerAchievement(@NonNull AchievementPlayer player) {
+
+        return PlayerAchievement.of(achievement(), player);
     }
 
     /**

@@ -94,6 +94,14 @@ public class AchievementPlayer extends BaseEntity implements Comparable<Achievem
     }
 
     /**
+     * @return the online player of this achievement player if it is online
+     */
+    public Optional<Player> bukkitPlayer() {
+
+        return Optional.ofNullable(Bukkit.getPlayer(id()));
+    }
+
+    /**
      * @return a list of all unlocked achievements of this player
      */
     public List<PlayerAchievement> unlockedAchievements() {
