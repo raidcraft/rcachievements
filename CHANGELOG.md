@@ -1,3 +1,10 @@
+## [1.16.3](https://github.com/raidcraft/rcachievements/compare/v1.16.2...v1.16.3) (2021-02-10)
+
+
+### Bug Fixes
+
+* add proper dependencies to spigot.yml ([8deb123](https://github.com/raidcraft/rcachievements/commit/8deb123fe47eb0c926b6356683504b63e81f293a))
+
 ## [1.16.2](https://github.com/raidcraft/rcachievements/compare/v1.16.1...v1.16.2) (2021-02-10)
 
 
