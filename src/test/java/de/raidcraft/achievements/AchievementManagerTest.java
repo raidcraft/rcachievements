@@ -212,7 +212,74 @@ class AchievementManagerTest extends TestBase {
                     .hasSize(1)
                     .first()
                     .extracting(Achievement::alias, Achievement::name, Achievement::type, Achievement::isChild)
-                    .contains("foobar:child1", "Child 1", "mock", true);
+                    .contains("child1", "Child 1", "mock", true);
+        }
+
+        @Test
+        @DisplayName("should activate nested child achievements on load")
+        void shouldActivateNestedChildAchievements() {
+
+            ConfigurationSection cfg = new MemoryConfiguration();
+            UUID id = UUID.randomUUID();
+            cfg.set("id", id.toString());
+            cfg.set("type", "mock");
+            cfg.set("name", "Foo Bar");
+            cfg.set("childs.child1.name", "Child 1");
+            cfg.set("childs.child1.alias", "child");
+
+            Optional<Achievement> foobar = manager.loadAchievement("foobar", cfg);
+            assertThat(foobar).isPresent();
+
+            manager.initialize(foobar.get());
+
+            assertThat(factory().mocks())
+                    .hasSize(2);
+
+            assertThat(manager.active("child"))
+                    .isPresent().get()
+                    .extracting(AchievementContext::enabled)
+                    .isEqualTo(true);
+        }
+
+        @Test
+        @DisplayName("should use nested key as alias")
+        void shouldUseNestedKeyAsAlias() {
+
+            ConfigurationSection cfg = new MemoryConfiguration();
+            UUID id = UUID.randomUUID();
+            cfg.set("id", id.toString());
+            cfg.set("type", "mock");
+            cfg.set("name", "Foo Bar");
+            cfg.set("childs.child1.name", "Child 1");
+
+            Optional<Achievement> foobar = manager.loadAchievement("foobar", cfg);
+
+            assertThat(foobar.get().children())
+                    .hasSize(1)
+                    .first()
+                    .extracting(Achievement::alias)
+                    .isEqualTo("child1");
+        }
+
+        @Test
+        @DisplayName("should use explicit child alias as alias")
+        void shouldUseExplicitAlias() {
+
+            ConfigurationSection cfg = new MemoryConfiguration();
+            UUID id = UUID.randomUUID();
+            cfg.set("id", id.toString());
+            cfg.set("type", "mock");
+            cfg.set("name", "Foo Bar");
+            cfg.set("childs.child1.name", "Child 1");
+            cfg.set("childs.child1.alias", "bar");
+
+            Optional<Achievement> foobar = manager.loadAchievement("foobar", cfg);
+
+            assertThat(foobar.get().children())
+                    .hasSize(1)
+                    .first()
+                    .extracting(Achievement::alias)
+                    .isEqualTo("bar");
         }
     }
 }
