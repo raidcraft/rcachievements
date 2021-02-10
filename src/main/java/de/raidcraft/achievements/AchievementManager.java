@@ -318,14 +318,14 @@ public final class AchievementManager {
                             return;
                         }
                     }
+                }
 
-                    try {
-                        achievement.toConfig().save(file);
-                        log.info("saved database achievement " + achievement + " to disk: " + file.getAbsolutePath());
-                    } catch (IOException e) {
-                        log.severe("failed to save achievement configuration of " + achievement + " to " + file.getAbsolutePath() + ": " + e.getMessage());
-                        e.printStackTrace();
-                    }
+                try {
+                    achievement.toConfig().save(file);
+                    log.info("saved database achievement " + achievement + " to disk: " + file.getAbsolutePath());
+                } catch (IOException e) {
+                    log.severe("failed to save achievement configuration of " + achievement + " to " + file.getAbsolutePath() + ": " + e.getMessage());
+                    e.printStackTrace();
                 }
             });
         }
