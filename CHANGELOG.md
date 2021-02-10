@@ -1,3 +1,10 @@
+## [1.16.5](https://github.com/raidcraft/rcachievements/compare/v1.16.4...v1.16.5) (2021-02-10)
+
+
+### Bug Fixes
+
+* allow usage of custom alias in child config ([ce51b40](https://github.com/raidcraft/rcachievements/commit/ce51b40f990febcd9b21a0c0178fe2156229777d))
+
 ## [1.16.4](https://github.com/raidcraft/rcachievements/compare/v1.16.3...v1.16.4) (2021-02-10)
 
 
