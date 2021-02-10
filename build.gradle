@@ -36,7 +36,7 @@ spigot {
     authors = [project.property("author")]
     apiVersion = project.property("apiVersion")
     load = STARTUP
-    softDepends = ['art-framework']
+    softDepends = ['art-framework', 'RCEconomy']
     depends = ['ebean-wrapper']
 }
 
