@@ -1,3 +1,11 @@
+## [1.16.1](https://github.com/raidcraft/rcachievements/compare/v1.16.0...v1.16.1) (2021-02-10)
+
+
+### Bug Fixes
+
+* achievements to saved to disk ([d391f1f](https://github.com/raidcraft/rcachievements/commit/d391f1f881725cfb582b2ef251df8271406c380b))
+* show unlocked achievements first ([0678992](https://github.com/raidcraft/rcachievements/commit/06789926739c4397070810ccebb0eacbd91ba478))
+
 # [1.16.0](https://github.com/raidcraft/rcachievements/compare/v1.15.0...v1.16.0) (2021-02-09)
 
 
