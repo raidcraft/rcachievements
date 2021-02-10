@@ -1,3 +1,10 @@
+## [1.16.2](https://github.com/raidcraft/rcachievements/compare/v1.16.1...v1.16.2) (2021-02-10)
+
+
+### Bug Fixes
+
+* loading and auto saving of achievements ([4585580](https://github.com/raidcraft/rcachievements/commit/4585580e41b7776e65cca32c57561f4c3bb4ac90))
+
 ## [1.16.1](https://github.com/raidcraft/rcachievements/compare/v1.16.0...v1.16.1) (2021-02-10)
 
 
