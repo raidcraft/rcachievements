@@ -202,6 +202,7 @@ class AchievementManagerTest extends TestBase {
             cfg.set("childs.child1.name", "Child 1");
 
             Optional<Achievement> foobar = manager.loadAchievement("foobar", cfg);
+            foobar.get().refresh();
             assertThat(foobar)
                     .isPresent().get()
                     .extracting(BaseEntity::id, Achievement::alias, Achievement::name, Achievement::isParent)

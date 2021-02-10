@@ -262,6 +262,7 @@ public final class AchievementManager {
      */
     public Optional<AchievementContext> initialize(@NonNull Achievement achievement) {
 
+        achievement.refresh();
         achievement.children().forEach(this::initialize);
 
         if (achievement.disabled()) return Optional.empty();
@@ -411,6 +412,7 @@ public final class AchievementManager {
             Optional<Achievement> achievement = loadAchievement(config.getString("alias", ConfigUtil.getFileIdentifier(path, file)), config);
             config.save(file);
             achievement.ifPresentOrElse(a -> {
+                        a.refresh();
                         a.source(file.getAbsolutePath()).save();
                         log.info("loaded achievement \"" + a.alias() + "\" (" + a.type() + ") from: " + file);
                     },
@@ -482,7 +484,7 @@ public final class AchievementManager {
                 if (section != null) {
                     section.set("parent", achievement.id().toString());
                     section.set("type", section.getString("type", achievement.type()));
-                    loadAchievement(achievement.alias() + ":" + childKey, section).ifPresent(child -> achievement.children().add(child));
+                    loadAchievement(achievement.alias() + ":" + childKey, section);
                 }
             }
         }
