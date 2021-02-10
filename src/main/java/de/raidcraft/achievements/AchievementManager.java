@@ -484,7 +484,7 @@ public final class AchievementManager {
                 if (section != null) {
                     section.set("parent", achievement.id().toString());
                     section.set("type", section.getString("type", achievement.type()));
-                    loadAchievement(achievement.alias() + ":" + childKey, section);
+                    loadAchievement(section.getString("alias", achievement.alias() + ":" + childKey), section);
                 }
             }
         }
