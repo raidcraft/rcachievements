@@ -444,16 +444,20 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
                 Achievement parentAchievement = Achievement.byAlias(parent)
                         .or(() -> Achievement.byId(UUID.fromString(parent)))
                         .orElse(null);
-                parent(parentAchievement);
+                if (!this.equals(parentAchievement)) {
+                    parent(parentAchievement);
 
-                ConfigurationSection parentSkillConfig = parent().achievementConfig();
-                for (String key : parentSkillConfig.getKeys(true)) {
-                    if (!config.isSet("with." + key)) {
-                        config.set("with." + key, parentSkillConfig.get(key));
+                    ConfigurationSection parentSkillConfig = parent().achievementConfig();
+                    for (String key : parentSkillConfig.getKeys(true)) {
+                        if (!config.isSet("with." + key)) {
+                            config.set("with." + key, parentSkillConfig.get(key));
+                        }
                     }
-                }
 
-                updateConfig(config);
+                    updateConfig(config);
+                } else {
+                    parent(null);
+                }
             } catch (IllegalArgumentException e) {
                 log.severe("the parent of " + alias() + "(" + id() + ") was not found: " + parent);
                 e.printStackTrace();
