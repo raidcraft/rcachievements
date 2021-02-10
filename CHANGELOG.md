@@ -1,3 +1,10 @@
+## [1.16.4](https://github.com/raidcraft/rcachievements/compare/v1.16.3...v1.16.4) (2021-02-10)
+
+
+### Bug Fixes
+
+* do not set self recursive parent achievements ([a0a3c39](https://github.com/raidcraft/rcachievements/commit/a0a3c391a8d78336f7fb8bccf0a677e5eb8b3703))
+
 ## [1.16.3](https://github.com/raidcraft/rcachievements/compare/v1.16.2...v1.16.3) (2021-02-10)
 
 
