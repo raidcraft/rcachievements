@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/raidcraft/rcachievements/compare/v1.17.1...v1.17.2) (2021-02-11)
+
+
+### Bug Fixes
+
+* show uncategorized achievements in list ([8731b2f](https://github.com/raidcraft/rcachievements/commit/8731b2f63fd67921cefdae79d2baf598552e3668))
+
 ## [1.17.1](https://github.com/raidcraft/rcachievements/compare/v1.17.0...v1.17.1) (2021-02-11)
 
 
