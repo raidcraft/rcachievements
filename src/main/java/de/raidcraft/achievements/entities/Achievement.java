@@ -424,9 +424,15 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         config.set("secret", secret());
         config.set("hidden", hidden());
         config.set("broadcast", broadcast());
+        if(parent() != null) config.set("parent", parent().id().toString());
         if (category() != null) config.set("category", category().alias());
         for (Map.Entry<String, Object> entry : config().getValues(true).entrySet()) {
             config.set(entry.getKey(), entry.getValue());
+        }
+
+        ConfigurationSection childs = config.createSection("childs");
+        for (Achievement child : children()) {
+            childs.set(child.alias(), child.toConfig());
         }
 
         return config;

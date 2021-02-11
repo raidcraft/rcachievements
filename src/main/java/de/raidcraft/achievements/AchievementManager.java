@@ -306,7 +306,9 @@ public final class AchievementManager {
         log.info("loaded " + achievements.size() + " achievements without a file config from the database.");
 
         if (plugin().pluginConfig().isAutoSave()) {
-            achievements.forEach(achievement -> {
+            achievements.stream()
+                    .filter(achievement -> !achievement.isChild())
+                    .forEach(achievement -> {
                 File file = filePathOf(achievement);
                 if (file.exists()) {
                     YamlConfiguration existingConfig = YamlConfiguration.loadConfiguration(file);
