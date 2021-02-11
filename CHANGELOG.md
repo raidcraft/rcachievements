@@ -1,3 +1,16 @@
+# [1.17.0](https://github.com/raidcraft/rcachievements/compare/v1.16.5...v1.17.0) (2021-02-11)
+
+
+### Bug Fixes
+
+* allow the usage of an explicit child alias ([2ef3d74](https://github.com/raidcraft/rcachievements/commit/2ef3d74fe136969bab41882e60c57a429965dbe5))
+
+
+### Features
+
+* add cyclic dependency detection ([76c16f9](https://github.com/raidcraft/rcachievements/commit/76c16f927dae8ad03e943d94e47f052962711902))
+* add new /rca categories command ([7626c90](https://github.com/raidcraft/rcachievements/commit/7626c90e4c9218e3e9649204467772c7a8f971f5)), closes [#20](https://github.com/raidcraft/rcachievements/issues/20)
+
 ## [1.16.5](https://github.com/raidcraft/rcachievements/compare/v1.16.4...v1.16.5) (2021-02-10)
 
 
