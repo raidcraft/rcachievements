@@ -8,6 +8,7 @@ import de.raidcraft.achievements.commands.AdminCommands;
 import de.raidcraft.achievements.commands.PlayerCommands;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.Category;
 import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.listener.PlayerListener;
@@ -177,17 +178,33 @@ public class RCAchievements extends JavaPlugin {
         // context resolver
         achievementPlayerContext(commandManager);
         achievementsContext(commandManager);
+        categoryContext(commandManager);
 
         // completions
         playersCompletion(commandManager);
         achievementsCompletion(commandManager);
         achievementsUnlockedCompletion(commandManager);
+        categoriesCompletion(commandManager);
 
         // conditions
         visibleCondition(commandManager);
+        selfCondition(commandManager);
 
         commandManager.registerCommand(new AdminCommands(this));
         commandManager.registerCommand(new PlayerCommands(this));
+    }
+
+    private void selfCondition(PaperCommandManager commandManager) {
+
+        commandManager.getCommandConditions().addCondition(AchievementPlayer.class, "self", (context, execContext, value) -> {
+            if (context.getIssuer().hasPermission(Constants.SHOW_OTHERS_PERMISSION)) {
+                return;
+            }
+            if (AchievementPlayer.of(execContext.getPlayer()).equals(value)) {
+                return;
+            }
+            throw new ConditionFailedException("Du kannst dir nicht die Erfolge von anderen Spielern anzeigen lassen.");
+        });
     }
 
     private void achievementsCompletion(PaperCommandManager commandManager) {
@@ -213,6 +230,23 @@ public class RCAchievements extends JavaPlugin {
         });
     }
 
+    private void categoriesCompletion(PaperCommandManager commandManager) {
+
+        commandManager.getCommandCompletions().registerAsyncCompletion("categories", context -> Category.
+                find.all().stream()
+                .map(Category::alias)
+                .collect(Collectors.toSet()));
+    }
+
+    private void categoryContext(PaperCommandManager commandManager) {
+
+        commandManager.getCommandContexts().registerContext(Category.class, context -> {
+            String arg = context.popFirstArg();
+            return Category.byAlias(arg).orElseThrow(
+                    () -> new InvalidCommandArgument("Es wurde keine Kategorie mit dem alias " + arg + " gefunden!")
+            );
+        });
+    }
 
     private void achievementsContext(PaperCommandManager commandManager) {
 
@@ -292,7 +326,8 @@ public class RCAchievements extends JavaPlugin {
                         AchievementPlayer.class,
                         Achievement.class,
                         PlayerAchievement.class,
-                        DataStore.class
+                        DataStore.class,
+                        Category.class
                 )
                 .build()).connect();
     }

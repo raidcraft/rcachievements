@@ -19,7 +19,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PostLoad;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +38,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
@@ -273,6 +280,11 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     @ManyToOne
     private Achievement parent;
     /**
+     * Every achievement can have an optional category to cluster the achievements.
+     */
+    @ManyToOne
+    private Category category;
+    /**
      * A list of children achievements.
      */
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -412,6 +424,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         config.set("secret", secret());
         config.set("hidden", hidden());
         config.set("broadcast", broadcast());
+        if (category() != null) config.set("category", category().alias());
         for (Map.Entry<String, Object> entry : config().getValues(true).entrySet()) {
             config.set(entry.getKey(), entry.getValue());
         }
@@ -473,6 +486,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.broadcast(config.getBoolean("broadcast", isChild() ? parent().broadcast() : broadcast()));
         this.restricted(config.getBoolean("restricted", isChild() ? parent().restricted() : restricted()));
         this.globalRewards(config.getBoolean("global_rewards", isChild() ? parent().globalRewards() : globalRewards()));
+        Category.byAliasOrId(config.getString("alias")).ifPresent(this::category);
         if (config.isSet("rewards")) {
             rewards(config.getStringList("rewards"));
         } else if (isChild()) {

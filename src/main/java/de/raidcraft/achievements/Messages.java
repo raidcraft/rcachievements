@@ -6,6 +6,7 @@ import de.raidcraft.achievements.commands.AdminCommands;
 import de.raidcraft.achievements.commands.PlayerCommands;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.Category;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.util.TimeUtil;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -49,6 +50,7 @@ public final class Messages {
     public static final class Colors {
 
         public static final TextColor BASE = YELLOW;
+
         public static final TextColor TEXT = BASE;
         public static final TextColor HIDDEN = GRAY;
         public static final TextColor DISABLED = DARK_GRAY;
@@ -65,7 +67,6 @@ public final class Messages {
         public static final TextColor WARNING = GOLD;
         public static final TextColor NOTE = GRAY;
     }
-
     public static void send(UUID playerId, Component message) {
 
         if (RCAchievements.testing()) return;
@@ -316,6 +317,21 @@ public final class Messages {
                 ).render(achievements, page);
     }
 
+    public static List<Component> listCategories(@NonNull AchievementPlayer player, List<Category> categories, int page) {
+
+        return Pagination.builder()
+                .resultsPerPage(RESULTS_PER_PAGE)
+                .width(PAGE_WIDTH)
+                .build(text("Kategorien", DARK_ACCENT),
+                        (Pagination.Renderer.RowRenderer<Category>) (value, index) -> {
+
+                            if (value == null) return Collections.singleton(empty());
+
+                            return Collections.singleton(category(value, player));
+                        }, PlayerCommands.CATEGORIES::apply
+                ).render(categories, page);
+    }
+
     public static Component achievement(Achievement achievement) {
 
         return achievement(achievement, null);
@@ -411,6 +427,9 @@ public final class Messages {
             PlayerAchievement playerAchievement = PlayerAchievement.of(achievement, player);
             builder.append(text(achievement.description(), NOTE, player.canViewDetails(achievement) ? ITALIC : OBFUSCATED))
                     .append(newline())
+                    .append(text("Kategorie: ", TEXT))
+                    .append(text(achievement.category() != null ? achievement.category().name() : "n/a", NOTE))
+                    .append(newline())
                     .append(text("Freigeschaltet: ", TEXT))
                     .append(text(playerAchievement.isUnlocked() ? TimeUtil.formatDateTime(playerAchievement.unlocked()) : "N/A", playerAchievement.isUnlocked() ? UNLOCKED : NOT_UNLOCKED));
 
@@ -456,6 +475,70 @@ public final class Messages {
         }
 
         return builder.build();
+    }
+
+    public static Component category(@NonNull Category category, @NonNull AchievementPlayer player) {
+
+        return text().append(text(category.name(), ACCENT)
+                .hoverEvent(categoryInfo(category, player).append(newline())
+                        .append(text("Klicken um alle Erfolge der Kategorie anzuzeigen.", NOTE))))
+                .append(text(" (", DARK_HIGHLIGHT))
+                .append(text(player.achievements().stream().filter(achievement -> category.equals(achievement.achievement().category())).count(), HIGHLIGHT))
+                .append(text("/", ACCENT))
+                .append(text(category.achievements().size(), HIGHLIGHT))
+                .append(text(")", NOTE))
+                .build()
+                .clickEvent(runCommand(PlayerCommands.LIST_CATEGORY.apply(1, category.alias())));
+    }
+
+    public static Component categoryInfo(@NonNull Category category, @NonNull AchievementPlayer player) {
+
+        List<Achievement> achievements = category.achievements();
+        List<Achievement> hidden = achievements.stream()
+                .filter(Achievement::hidden)
+                .collect(Collectors.toUnmodifiableList());
+        List<Achievement> secret = achievements.stream()
+                .filter(Achievement::secret)
+                .filter(achievement -> !hidden.contains(achievement))
+                .collect(Collectors.toUnmodifiableList());
+        achievements = achievements.stream()
+                .filter(achievement -> !hidden.contains(achievement))
+                .filter(achievement -> !secret.contains(achievement))
+                .collect(Collectors.toUnmodifiableList());
+
+        long unlockedHiddenCount = hidden.stream().filter(player::unlocked).count();
+        long unlockedSecretCount = secret.stream().filter(player::unlocked).count();
+        long unlockedCount = achievements.stream().filter(player::unlocked).count();
+
+        int total = achievements.size() + secret.size() + hidden.size();
+        long unlockedTotal = unlockedHiddenCount + unlockedSecretCount + unlockedCount;
+
+        TextComponent.Builder builder = text().append(text(category.name(), ACCENT, BOLD))
+                .append(text(" (" + category.alias() + ")", NOTE))
+                .append(newline())
+                .append(dividerCount("Gesamt: ", unlockedTotal, total))
+                .append(newline())
+                .append(dividerCount("Erfolge: ", unlockedCount, achievements.size()))
+                .append(newline())
+                .append(dividerCount("Geheime Erfolge: ", unlockedSecretCount, secret.size()))
+                .append(newline())
+                .append(dividerCount("Versteckte Erfolge: ", unlockedHiddenCount, hidden.size()))
+                .append(newline()).append(newline());
+
+        for (String desc : category.description()) {
+            builder.append(text(desc, NOTE, ITALIC));
+        }
+
+        return builder.build();
+    }
+
+    public static Component dividerCount(String text, long current, long total) {
+
+        return text().append(text(text, TEXT))
+                .append(text(current, DARK_HIGHLIGHT))
+                .append(text("/", ACCENT))
+                .append(text(total, HIGHLIGHT))
+                .build();
     }
 
     public static TextColor achievementColor(Achievement achievement, AchievementPlayer player) {

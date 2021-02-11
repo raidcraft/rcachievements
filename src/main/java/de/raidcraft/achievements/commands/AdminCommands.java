@@ -18,6 +18,7 @@ import de.raidcraft.achievements.Messages;
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.Category;
 import de.raidcraft.achievements.types.LocationAchievement;
 import de.raidcraft.achievements.util.LocationUtil;
 import lombok.Value;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -57,6 +59,8 @@ public class AdminCommands extends BaseCommand {
     public static final String SET_HIDDEN = "/rca:admin set hidden ";
     public static final String SET_RESTRICTED = "/rca:admin set restricted ";
     public static final String SET_BROADCAST = "/rca:admin set broadcast ";
+    public static final String SET_PARENT = "/rca:admin set parent ";
+    public static final String SET_CATEGORY = "/rca:admin set category ";
     public static final SetCommand[] SET_COMMANDS = new SetCommand[]{
             new SetCommand(SET_ALIAS, "Setzt den Alias (eindeutigen Namen) des Achievements.\nDer Alias sollte nur aus Kleinbuchstaben, ohne Sonderzeichen und ohne Leerzeichen bestehen."),
             new SetCommand(SET_NAME, "Setzt den für Spieler sichtbaren Namen des Achievements."),
@@ -65,7 +69,9 @@ public class AdminCommands extends BaseCommand {
             new SetCommand(SET_HIDDEN, "true/false. Wenn true sehen Spieler nur ???? anstatt des Namens und der Beschreibung solange sie das Achievement nicht freigeschaltet haben."),
             new SetCommand(SET_BROADCAST, "true/false. Wenn false wird nicht allen anderen Spielern mitgeteilt dass das Achievement errungen wurde.\nGenerell werden \"secret\" Achievements erst 10min nach der Freischaltung bekannt gegeben."),
             new SetCommand(SET_RESTRICTED, "true/false. Wenn true können nur Spieler/Admins mit der rcachievements.achievement.<alias> Permission das Achievement freischalten."),
-            new SetCommand(SET_ENABLED, "true/false. Wenn false kann niemand mehr das Achievement freischalten.")
+            new SetCommand(SET_ENABLED, "true/false. Wenn false kann niemand mehr das Achievement freischalten."),
+            new SetCommand(SET_PARENT, "Setzt das Parent Achievement des Achievements.\nAchievements werden in einer flachen Ansicht angezeigt."),
+            new SetCommand(SET_CATEGORY, "Setzt die Kategorie des Achievements.\nDie Kategorie gruppiert die Achievements in der Liste.")
     };
 
     private final RCAchievements plugin;
@@ -265,6 +271,28 @@ public class AdminCommands extends BaseCommand {
             achievement.restricted(restricted).save();
             send(getCurrentCommandIssuer(), setSuccess(achievement, "restricted"));
         }
+
+        @Subcommand("parent")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.parent")
+        @CommandCompletion("@achievements @achievements")
+        public void parent(Achievement achievement, Achievement parent) {
+
+            if (achievement.equals(parent)) {
+                throw new InvalidCommandArgument("Das Parent Achievement muss ein anderes sein!");
+            }
+
+            achievement.parent(parent).save();
+            send(getCurrentCommandIssuer(), setSuccess(achievement, "parent"));
+        }
+
+        @Subcommand("category")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.category")
+        @CommandCompletion("@achievements @categories")
+        public void restricted(Achievement achievement, Category category) {
+
+            achievement.category(category).save();
+            send(getCurrentCommandIssuer(), setSuccess(achievement, "category"));
+        }
     }
 
     @Subcommand("create")
@@ -304,6 +332,23 @@ public class AdminCommands extends BaseCommand {
             send(getCurrentCommandIssuer(), createSuccess(achievement));
         }
 
+        @Subcommand("category")
+        @CommandPermission(PERMISSION_PREFIX + "admin.category.create")
+        @CommandCompletion("* * *")
+        @Description("Creates a new achievement category.")
+        public void category(String alias, String name, String[] description) {
+
+            if (Category.byAlias(alias).isPresent()) {
+                throw new ConditionFailedException("Es gibt bereits eine Kategorie mit dem alias: " + alias);
+            }
+
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Category.create(alias)
+                    .name(name)
+                    .description(Arrays.asList(description))
+                    .save());
+
+            getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Die Kategorie: " + name + " (" + alias + ") wurde erstellt.");
+        }
     }
 
     @Subcommand("purge")

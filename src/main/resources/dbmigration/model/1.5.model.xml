@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="rcachievements_achievements">
+            <column name="category_id" type="uuid" references="rcachievements_categories.id" foreignKeyName="fk_rcachievements_achievements_category_id" foreignKeyIndex="ix_rcachievements_achievements_category_id"/>
+        </addColumn>
+        <createTable name="rcachievements_categories" identityType="external" pkName="pk_rcachievements_categories">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="alias" type="varchar"/>
+            <column name="name" type="varchar"/>
+            <column name="description" type="json"/>
+            <column name="version" type="bigint" notnull="true"/>
+            <column name="when_created" type="timestamp" notnull="true"/>
+            <column name="when_modified" type="timestamp" notnull="true"/>
+            <uniqueConstraint name="uq_rcachievements_categories_alias" columnNames="alias" oneToOne="false" nullableColumns="alias"/>
+        </createTable>
+    </changeSet>
+</migration>
