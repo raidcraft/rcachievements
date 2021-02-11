@@ -61,10 +61,12 @@ public class PlayerCommands extends BaseCommand {
                     List<Achievement> achievementList = Achievement.uncategorized();
                     if (!achievementList.isEmpty()) {
                         PluginConfig config = plugin.pluginConfig();
-                        categories.add(new Category(config.getUncategorizedAlias())
+                        Category defaultCategory = Category.create(config.getUncategorizedAlias())
                                 .name(config.getUncategorizedName())
                                 .description(Arrays.asList(config.getUncategorizedDesc().split("\\|")))
-                        );
+                                .achievements(achievementList);
+                        defaultCategory.save();
+                        categories.add(defaultCategory);
                     }
                     Messages.listCategories(player, categories, page)
                             .forEach(component -> send(issuer, component));
@@ -81,9 +83,6 @@ public class PlayerCommands extends BaseCommand {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             if (category.equalsIgnoreCase("all")) {
                 Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)), page)
-                        .forEach(component -> send(issuer, component));
-            } else if (category.equalsIgnoreCase(plugin.pluginConfig().getUncategorizedAlias())) {
-                Messages.list(player, Achievement.uncategorized(), page)
                         .forEach(component -> send(issuer, component));
             } else {
                 Category c = Category.byAlias(category).orElseThrow(() -> new InvalidCommandArgument("Es gibt keine Kategorie mit dem Namen " + category));

@@ -493,7 +493,7 @@ public final class Messages {
                 .hoverEvent(categoryInfo(category, player).append(newline())
                         .append(text("Klicken um alle Erfolge der Kategorie anzuzeigen.", NOTE))))
                 .append(text(" (", DARK_HIGHLIGHT))
-                .append(text(player.achievements().stream().filter(achievement -> category.equals(achievement.achievement().category())).count(), HIGHLIGHT))
+                .append(text(player.unlockedAchievements().stream().filter(achievement -> category.equals(achievement.achievement().category())).count(), HIGHLIGHT))
                 .append(text("/", ACCENT))
                 .append(text(category.achievements().size(), HIGHLIGHT))
                 .append(text(")", NOTE))
