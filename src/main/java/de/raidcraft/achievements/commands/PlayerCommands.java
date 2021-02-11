@@ -59,14 +59,16 @@ public class PlayerCommands extends BaseCommand {
                 () -> {
                     List<Category> categories = Category.find.query().orderBy("name").findList();
                     List<Achievement> achievementList = Achievement.uncategorized();
+                    PluginConfig config = plugin.pluginConfig();
                     if (!achievementList.isEmpty()) {
-                        PluginConfig config = plugin.pluginConfig();
                         Category defaultCategory = Category.create(config.getUncategorizedAlias())
                                 .name(config.getUncategorizedName())
                                 .description(Arrays.asList(config.getUncategorizedDesc().split("\\|")))
                                 .achievements(achievementList);
                         defaultCategory.save();
-                        categories.add(defaultCategory);
+                        if (!categories.contains(defaultCategory)) {
+                            categories.add(defaultCategory);
+                        }
                     }
                     Messages.listCategories(player, categories, page)
                             .forEach(component -> send(issuer, component));
