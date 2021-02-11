@@ -202,6 +202,16 @@ public final class Messages {
                 .build();
     }
 
+    public static Component setCategorySuccess(Category category, String property) {
+
+        return text().append(text("Die Eigenschaft ", SUCCESS))
+                .append(text(property, HIGHLIGHT))
+                .append(text(" der Kategorie ", SUCCESS))
+                .append(text(category.name() + " (" + category.alias() + ")", ACCENT))
+                .append(text(" wurde erfolgreich geändert.", SUCCESS))
+                .build();
+    }
+
     public static Component achievementUnlockedSelf(PlayerAchievement achievement) {
 
         return text().append(text("Du", ACCENT, BOLD)

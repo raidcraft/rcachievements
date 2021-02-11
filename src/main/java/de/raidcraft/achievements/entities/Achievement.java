@@ -287,7 +287,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     /**
      * A list of children achievements.
      */
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Achievement> children = new ArrayList<>();
 
     /**

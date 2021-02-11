@@ -212,7 +212,7 @@ class AchievementManagerTest extends TestBase {
                     .hasSize(1)
                     .first()
                     .extracting(Achievement::alias, Achievement::name, Achievement::type, Achievement::isChild)
-                    .contains("child1", "Child 1", "mock", true);
+                    .contains("foobar:child1", "Child 1", "mock", true);
         }
 
         @Test
@@ -254,11 +254,12 @@ class AchievementManagerTest extends TestBase {
 
             Optional<Achievement> foobar = manager.loadAchievement("foobar", cfg);
 
+            foobar.get().refresh();
             assertThat(foobar.get().children())
                     .hasSize(1)
                     .first()
                     .extracting(Achievement::alias)
-                    .isEqualTo("child1");
+                    .isEqualTo("foobar:child1");
         }
 
         @Test
@@ -275,6 +276,7 @@ class AchievementManagerTest extends TestBase {
 
             Optional<Achievement> foobar = manager.loadAchievement("foobar", cfg);
 
+            foobar.get().refresh();
             assertThat(foobar.get().children())
                     .hasSize(1)
                     .first()

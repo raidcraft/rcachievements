@@ -37,13 +37,7 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.PERMISSION_PREFIX;
-import static de.raidcraft.achievements.Messages.addError;
-import static de.raidcraft.achievements.Messages.addSuccess;
-import static de.raidcraft.achievements.Messages.createSuccess;
-import static de.raidcraft.achievements.Messages.deleteSuccess;
-import static de.raidcraft.achievements.Messages.send;
-import static de.raidcraft.achievements.Messages.setSuccess;
-import static de.raidcraft.achievements.Messages.unassignSuccess;
+import static de.raidcraft.achievements.Messages.*;
 
 @CommandAlias("rca:admin|rcaa|rcachievements:admin")
 @CommandPermission(PERMISSION_PREFIX + "admin")
@@ -288,10 +282,41 @@ public class AdminCommands extends BaseCommand {
         @Subcommand("category")
         @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.category")
         @CommandCompletion("@achievements @categories")
-        public void restricted(Achievement achievement, Category category) {
+        public void category(Achievement achievement, Category category) {
 
             achievement.category(category).save();
             send(getCurrentCommandIssuer(), setSuccess(achievement, "category"));
+        }
+    }
+
+    @Subcommand("setcategory")
+    public class SetCategory extends BaseCommand {
+
+        @Subcommand("name")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.setcategory.name")
+        @CommandCompletion("@categories *")
+        public void name(Category category, String name) {
+
+            category.name(name).save();
+            send(getCurrentCommandIssuer(), setCategorySuccess(category, "name"));
+        }
+
+        @Subcommand("alias")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.setcategory.alias")
+        @CommandCompletion("@categories *")
+        public void alias(Category category, String alias) {
+
+            category.alias(alias).save();
+            send(getCurrentCommandIssuer(), setCategorySuccess(category, "alias"));
+        }
+
+        @Subcommand("description")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.setcategory.description")
+        @CommandCompletion("@categories *")
+        public void description(Category category, String description) {
+
+            category.description(Arrays.asList(description.split("\\|"))).save();
+            send(getCurrentCommandIssuer(), setCategorySuccess(category, "description"));
         }
     }
 
@@ -336,7 +361,7 @@ public class AdminCommands extends BaseCommand {
         @CommandPermission(PERMISSION_PREFIX + "admin.category.create")
         @CommandCompletion("* * *")
         @Description("Creates a new achievement category.")
-        public void category(String alias, String name, String[] description) {
+        public void category(String alias, String name) {
 
             if (Category.byAlias(alias).isPresent()) {
                 throw new ConditionFailedException("Es gibt bereits eine Kategorie mit dem alias: " + alias);
@@ -344,7 +369,6 @@ public class AdminCommands extends BaseCommand {
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Category.create(alias)
                     .name(name)
-                    .description(Arrays.asList(description))
                     .save());
 
             getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Die Kategorie: " + name + " (" + alias + ") wurde erstellt.");

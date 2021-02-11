@@ -11,6 +11,7 @@ import de.raidcraft.achievements.types.MobKillAchievement;
 import de.raidcraft.achievements.types.NoneAchievementType;
 import de.raidcraft.achievements.types.PlayerStatisticAchievement;
 import de.raidcraft.achievements.util.ConfigUtil;
+import de.raidcraft.achievements.util.graphs.CycleSearch;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -290,8 +291,15 @@ public final class AchievementManager {
         File path = new File(plugin().getDataFolder(), plugin().pluginConfig().getAchievements());
         path.mkdirs();
 
-        loadAchievements(path.toPath())
-                .forEach(this::initialize);
+        List<Achievement> fileAchievements = loadAchievements(path.toPath());
+
+        for (List<Achievement> cycle : CycleSearch.of(Achievement.find.all()).getCycles()) {
+            log.severe("Found circular parent/child achievements: " + CycleSearch.dependencyGraphToString(cycle));
+            log.severe("Not enabling the achievements until the issue is resolved.");
+            return;
+        }
+
+        fileAchievements.forEach(this::initialize);
 
         List<Achievement> achievements = Achievement.unknownSource();
         achievements.forEach(this::initialize);
