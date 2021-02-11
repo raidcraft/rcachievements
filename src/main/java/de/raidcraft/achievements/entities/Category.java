@@ -100,7 +100,7 @@ public class Category extends BaseEntity {
     @OneToMany
     private List<Achievement> achievements = new ArrayList<>();
 
-    Category(String alias) {
+    public Category(String alias) {
 
         this.alias = alias;
     }

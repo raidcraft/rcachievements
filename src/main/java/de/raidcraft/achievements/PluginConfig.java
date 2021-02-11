@@ -34,6 +34,9 @@ public class PluginConfig extends BukkitYamlConfiguration {
     private boolean progressBossBar = true;
     private boolean progressActionBar = true;
     private long bossBarDuration = 120L;
+    private String uncategorizedAlias = "uncategorized";
+    private String uncategorizedName = "Unkategorisiert";
+    private String uncategorizedDesc = "Erfolge ohne eine eigene Kategorie.";
     private List<String> globalRewards = new ArrayList<>();
     private DatabaseConfig database = new DatabaseConfig();
 

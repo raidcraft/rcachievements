@@ -5,6 +5,7 @@ import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
 import de.raidcraft.achievements.Messages;
+import de.raidcraft.achievements.PluginConfig;
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
@@ -12,6 +13,8 @@ import de.raidcraft.achievements.entities.Category;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import org.bukkit.Bukkit;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -53,8 +56,19 @@ public class PlayerCommands extends BaseCommand {
 
         CommandIssuer issuer = getCurrentCommandIssuer();
         Bukkit.getScheduler().runTaskAsynchronously(plugin,
-                () -> Messages.listCategories(player, Category.find.query().orderBy("name").findList(), page)
-                        .forEach(component -> send(issuer, component))
+                () -> {
+                    List<Category> categories = Category.find.query().orderBy("name").findList();
+                    List<Achievement> achievementList = Achievement.uncategorized();
+                    if (!achievementList.isEmpty()) {
+                        PluginConfig config = plugin.pluginConfig();
+                        categories.add(new Category(config.getUncategorizedAlias())
+                                .name(config.getUncategorizedName())
+                                .description(Arrays.asList(config.getUncategorizedDesc().split("\\|")))
+                        );
+                    }
+                    Messages.listCategories(player, categories, page)
+                            .forEach(component -> send(issuer, component));
+                }
         );
     }
 
@@ -68,14 +82,16 @@ public class PlayerCommands extends BaseCommand {
             if (category.equalsIgnoreCase("all")) {
                 Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)), page)
                         .forEach(component -> send(issuer, component));
-                return;
+            } else if (category.equalsIgnoreCase(plugin.pluginConfig().getUncategorizedAlias())) {
+                Messages.list(player, Achievement.uncategorized(), page)
+                        .forEach(component -> send(issuer, component));
+            } else {
+                Category c = Category.byAlias(category).orElseThrow(() -> new InvalidCommandArgument("Es gibt keine Kategorie mit dem Namen " + category));
+                Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)).stream()
+                        .filter(achievement -> c.equals(achievement.category()))
+                        .collect(Collectors.toUnmodifiableList()), page)
+                        .forEach(component -> send(issuer, component));
             }
-
-            Category c = Category.byAlias(category).orElseThrow(() -> new InvalidCommandArgument("Es gibt keine Kategorie mit dem Namen " + category));
-            Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)).stream()
-                    .filter(achievement -> c.equals(achievement.category()))
-                    .collect(Collectors.toUnmodifiableList()), page)
-                    .forEach(component -> send(issuer, component));
         });
     }
 

@@ -105,6 +105,13 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
                 .findList();
     }
 
+    public static List<Achievement> uncategorized() {
+
+        return find.query()
+                .where().isNull("category")
+                .findList();
+    }
+
     /**
      * @return a list of all enabled and non hidden achievements
      */
