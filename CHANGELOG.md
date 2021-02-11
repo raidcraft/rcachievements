@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/raidcraft/rcachievements/compare/v1.17.0...v1.17.1) (2021-02-11)
+
+
+### Bug Fixes
+
+* save childs into same config file ([68ed2c4](https://github.com/raidcraft/rcachievements/commit/68ed2c48aea1566d6e4e24cfac7a724496832120))
+
 # [1.17.0](https://github.com/raidcraft/rcachievements/compare/v1.16.5...v1.17.0) (2021-02-11)
 
 
