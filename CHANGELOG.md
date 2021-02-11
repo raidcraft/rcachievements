@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/raidcraft/rcachievements/compare/v1.17.2...v1.17.3) (2021-02-11)
+
+
+### Bug Fixes
+
+* automatically create default category ([b6203bf](https://github.com/raidcraft/rcachievements/commit/b6203bf63bc7953591e7cc77662291022a9410d4))
+
 ## [1.17.2](https://github.com/raidcraft/rcachievements/compare/v1.17.1...v1.17.2) (2021-02-11)
 
 
