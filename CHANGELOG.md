@@ -1,3 +1,10 @@
+## [1.17.4](https://github.com/raidcraft/rcachievements/compare/v1.17.3...v1.17.4) (2021-02-11)
+
+
+### Bug Fixes
+
+* do not show duplicate default category ([2d35f19](https://github.com/raidcraft/rcachievements/commit/2d35f19d6c0f260eb2b5da7370bb100de50cae11))
+
 ## [1.17.3](https://github.com/raidcraft/rcachievements/compare/v1.17.2...v1.17.3) (2021-02-11)
 
 
