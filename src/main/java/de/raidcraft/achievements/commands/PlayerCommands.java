@@ -77,20 +77,17 @@ public class PlayerCommands extends BaseCommand {
     }
 
     @Subcommand("list")
-    @CommandCompletion("* all|@categories @players")
+    @CommandCompletion("* @categories @players")
     @CommandPermission(PERMISSION_PREFIX + "achievements.list.all")
-    public void list(@Default("1") int page, @Default("all") String category, @Conditions("self") AchievementPlayer player) {
+    public void list(@Default("1") int page, @Optional Category category, @Conditions("self") AchievementPlayer player) {
 
         CommandIssuer issuer = getCurrentCommandIssuer();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            if (category.equalsIgnoreCase("all")) {
+            if (category == null) {
                 Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)), page)
                         .forEach(component -> send(issuer, component));
             } else {
-                Category c = Category.byAlias(category).orElseThrow(() -> new InvalidCommandArgument("Es gibt keine Kategorie mit dem Namen " + category));
-                Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)).stream()
-                        .filter(achievement -> c.equals(achievement.category()))
-                        .collect(Collectors.toUnmodifiableList()), page)
+                Messages.list(player, category.achievements(), page)
                         .forEach(component -> send(issuer, component));
             }
         });

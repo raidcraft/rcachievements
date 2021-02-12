@@ -307,6 +307,7 @@ public final class Messages {
     public static List<Component> list(@NonNull AchievementPlayer player, List<Achievement> achievements, int page) {
 
         achievements = achievements.stream()
+                .filter(Achievement::enabled)
                 .filter(achievement -> !achievement.isChild())
                 .sorted((o1, o2) -> Boolean.compare(player.unlocked(o1), player.unlocked(o2)))
                 .sorted((o1, o2) -> Boolean.compare(player.canView(o1), player.canView(o2)))
