@@ -84,8 +84,8 @@ public class BiomeAchievement extends CountAchievement implements Listener {
     @Override
     public void enable() {
 
-        Map<String, Set<String>> entry = store().get(VISITED_BIOMES, Map.class, new HashMap<String, Set<String>>());
-        for (Map.Entry<String, Set<String>> playerEntry : entry.entrySet()) {
+        Map<String, Collection<String>> entry = store().get(VISITED_BIOMES, Map.class, new HashMap<String, Collection<String>>());
+        for (Map.Entry<String, Collection<String>> playerEntry : entry.entrySet()) {
             playerVisitedBiomesMap.put(UUID.fromString(playerEntry.getKey()), playerEntry.getValue().stream()
                     .map(s -> EnumUtil.searchEnum(Biome.class, s))
                     .filter(Objects::nonNull)
