@@ -2,14 +2,7 @@ package de.raidcraft.achievements;
 
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.entities.Achievement;
-import de.raidcraft.achievements.types.BlockAchievement;
-import de.raidcraft.achievements.types.CombinedAchievement;
-import de.raidcraft.achievements.types.CraftAchievement;
-import de.raidcraft.achievements.types.LocationAchievement;
-import de.raidcraft.achievements.types.LoginAchievement;
-import de.raidcraft.achievements.types.MobKillAchievement;
-import de.raidcraft.achievements.types.NoneAchievementType;
-import de.raidcraft.achievements.types.PlayerStatisticAchievement;
+import de.raidcraft.achievements.types.*;
 import de.raidcraft.achievements.util.ConfigUtil;
 import de.raidcraft.achievements.util.graphs.CycleSearch;
 import lombok.AccessLevel;
@@ -62,6 +55,7 @@ public final class AchievementManager {
             register(new CraftAchievement.Factory());
             register(new LoginAchievement.Factory());
             register(new PlayerStatisticAchievement.Factory());
+            register(new BiomeAchievement.Factory());
         } catch (TypeRegistrationException e) {
             log.severe("failed to register default types: " + e.getMessage());
             e.printStackTrace();
@@ -460,6 +454,7 @@ public final class AchievementManager {
         if (config == null) return Optional.empty();
         String type = registration(config);
         if (!hasType(type)) {
+            log.warning("uknown achievement type \"" + type + "\" in achievement config of: " + alias);
             loadFailed(alias, config);
             return Optional.empty();
         }
@@ -476,6 +471,7 @@ public final class AchievementManager {
                     return Optional.empty();
                 }
 
+                config.set("category", config.getString("category", plugin.pluginConfig().getUncategorizedAlias()));
                 achievement = Achievement.load(id, alias, config);
             } catch (IllegalArgumentException e) {
                 log.severe(idString + " is not a valid UUID inside achievement config of: " + alias);

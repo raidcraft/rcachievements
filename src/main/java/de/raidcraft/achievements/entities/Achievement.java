@@ -18,6 +18,7 @@ import net.silthus.ebean.BaseEntity;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Cat;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -512,7 +513,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.broadcast(config.getBoolean("broadcast", isChild() ? parent().broadcast() : broadcast()));
         this.restricted(config.getBoolean("restricted", isChild() ? parent().restricted() : restricted()));
         this.globalRewards(config.getBoolean("global_rewards", isChild() ? parent().globalRewards() : globalRewards()));
-        Category.byAliasOrId(config.getString("alias")).ifPresent(this::category);
+        Category.byAliasOrId(config.getString("category")).ifPresent(this::category);
         if (config.isSet("rewards")) {
             rewards(config.getStringList("rewards"));
         } else if (isChild()) {

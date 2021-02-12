@@ -6,6 +6,7 @@ import de.raidcraft.achievements.entities.AchievementPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Synchronized;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
