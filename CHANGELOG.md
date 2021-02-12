@@ -1,3 +1,18 @@
+# [1.18.0](https://github.com/raidcraft/rcachievements/compare/v1.17.4...v1.18.0) (2021-02-12)
+
+
+### Bug Fixes
+
+* progress percentage is always 0% ([066f896](https://github.com/raidcraft/rcachievements/commit/066f896ab2b0e6c8763119092f23c523d7f0b4d1)), closes [#46](https://github.com/raidcraft/rcachievements/issues/46)
+* show achievements of default category ([f4eed0a](https://github.com/raidcraft/rcachievements/commit/f4eed0acdbc139b67b98a14b984a75b9d0e55275)), closes [#48](https://github.com/raidcraft/rcachievements/issues/48)
+
+
+### Features
+
+* add new biome achievement type ([231b2a1](https://github.com/raidcraft/rcachievements/commit/231b2a1ac315ca9aed61d58a65e96fb818e2fdb0))
+* add option to obtain achievement only in certain worlds ([416fb30](https://github.com/raidcraft/rcachievements/commit/416fb3068eda57f3c380c6a2413ad2824da8725e))
+* show achievement progress simultaneously ([81da215](https://github.com/raidcraft/rcachievements/commit/81da215f2ed4cd047640a29ca4de5e71ec1d2c6a))
+
 ## [1.17.4](https://github.com/raidcraft/rcachievements/compare/v1.17.3...v1.17.4) (2021-02-11)
 
 
