@@ -12,6 +12,7 @@ RCAchievements ist das Achievement Plugin des [Raid-Craft](https://raid-craft.de
 * [Achievement Configuration](#achievement-configuration)
 * [Achievement Types](#achievement-types)
   * [none](#none)
+  * [ART-Framework](#art-framework)
   * [block](#block)
   * [combined](#combined)
   * [location](#location)
@@ -19,6 +20,7 @@ RCAchievements ist das Achievement Plugin des [Raid-Craft](https://raid-craft.de
   * [craft](#craft)
   * [login](#login)
   * [statistic](#statistic)
+  * [biomes](#biomes)
 
 ## Configuration
 
@@ -196,3 +198,14 @@ A `entity` must be specified if the `statistic` is one of the following: `KILL_E
 | `entity` | | Only required if `statistic` is one of the following: `KILL_ENTITY`, `ENTITY_KILLED_BY` |
 | `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
 | `suffix` | | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
+
+### biomes
+
+Keeps track of biomes the player visited. Defaults to all biomes if none are listed.
+
+| Config | Default | Description |
+| ------ | ------- | ----------- |
+| `count` | `size of biome list` | How many biomes from the list below must the player visit. |
+| `biomes` | `[]` | A list of biomes the player must visit. Defaults to all biomes in the game. |
+| `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
+| `suffix` | `Biome besucht` | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
