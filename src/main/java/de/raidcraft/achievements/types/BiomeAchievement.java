@@ -2,6 +2,7 @@ package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.TypeFactory;
+import de.raidcraft.achievements.util.EnumUtil;
 import de.raidcraft.achievements.util.LocationUtil;
 import lombok.extern.java.Log;
 import org.bukkit.Location;
@@ -58,11 +59,12 @@ public class BiomeAchievement extends CountAchievement implements Listener {
 
         biomeTypes.clear();
 
-        for (String biome : config.getStringList("biomes")) {
-            try {
-                biomeTypes.add(Biome.valueOf(biome.toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                log.warning("invalid biome name " + biome + " in config of: " + achievement());
+        for (String biomeName : config.getStringList("biomes")) {
+            Biome biome = EnumUtil.searchEnum(Biome.class, biomeName);
+            if (biome != null) {
+                biomeTypes.add(biome);
+            } else {
+                log.warning("invalid biome name " + biomeName + " in config of: " + achievement());
             }
         }
 
@@ -71,19 +73,22 @@ public class BiomeAchievement extends CountAchievement implements Listener {
         }
 
         config.set("count", config.getInt("count", biomeTypes.size()));
+        super.load(config);
+
         suffix(config.getString("suffix", "Biome besucht"));
 
-        return super.load(config);
+        return true;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void enable() {
 
-        Map<UUID, Set<String>> entry = store().get(VISITED_BIOMES, Map.class, new HashMap<UUID, Set<String>>());
-        for (Map.Entry<UUID, Set<String>> playerEntry : entry.entrySet()) {
-            playerVisitedBiomesMap.put(playerEntry.getKey(), playerEntry.getValue().stream()
-                    .map(Biome::valueOf)
+        Map<String, Set<String>> entry = store().get(VISITED_BIOMES, Map.class, new HashMap<String, Set<String>>());
+        for (Map.Entry<String, Set<String>> playerEntry : entry.entrySet()) {
+            playerVisitedBiomesMap.put(UUID.fromString(playerEntry.getKey()), playerEntry.getValue().stream()
+                    .map(s -> EnumUtil.searchEnum(Biome.class, s))
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toSet())
             );
         }
@@ -95,8 +100,8 @@ public class BiomeAchievement extends CountAchievement implements Listener {
     public void disable() {
 
         store().set(VISITED_BIOMES, playerVisitedBiomesMap.entrySet().stream()
-                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().stream()
-                        .map(Enum::name)
+                .collect(toMap(t -> t.getKey().toString(), entry -> entry.getValue().stream()
+                        .map(biome -> biome.getKey().toString())
                         .collect(toSet())
                 ))).save();
 
