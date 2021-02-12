@@ -499,6 +499,8 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
                 log.severe("the parent of " + alias() + "(" + id() + ") was not found: " + parent);
                 e.printStackTrace();
             }
+        } else {
+            parent(null);
         }
 
         this.name(config.getString("name", isChild() ? parent().name() : name()));
