@@ -1,3 +1,10 @@
+## [1.18.2](https://github.com/raidcraft/rcachievements/compare/v1.18.1...v1.18.2) (2021-02-12)
+
+
+### Bug Fixes
+
+* **biome:** cast stored list or set to collection and then convert ([1c48a4a](https://github.com/raidcraft/rcachievements/commit/1c48a4ab62386b801b32c4e6169b144c772276be))
+
 ## [1.18.1](https://github.com/raidcraft/rcachievements/compare/v1.18.0...v1.18.1) (2021-02-12)
 
 
