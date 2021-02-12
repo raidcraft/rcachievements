@@ -1,3 +1,12 @@
+## [1.18.1](https://github.com/raidcraft/rcachievements/compare/v1.18.0...v1.18.1) (2021-02-12)
+
+
+### Bug Fixes
+
+* achievement category not set correctly ([bb32ae3](https://github.com/raidcraft/rcachievements/commit/bb32ae3e1ffefd6e4193cc7d7563e1b0d8d9d972))
+* biome achievement cannot restore stored data ([7a616ad](https://github.com/raidcraft/rcachievements/commit/7a616ada4364dd2c289869a905e4ee1d66c46d57))
+* set parent to null if not set in config ([bdfb902](https://github.com/raidcraft/rcachievements/commit/bdfb9021c8415c39720fb502760c93d53fd3dc52))
+
 # [1.18.0](https://github.com/raidcraft/rcachievements/compare/v1.17.4...v1.18.0) (2021-02-12)
 
 
