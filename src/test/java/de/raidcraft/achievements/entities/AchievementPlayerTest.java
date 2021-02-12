@@ -1,10 +1,15 @@
 package de.raidcraft.achievements.entities;
 
+import be.seeseemelk.mockbukkit.WorldMock;
 import de.raidcraft.achievements.Constants;
 import de.raidcraft.achievements.TestBase;
+import org.bukkit.Location;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -101,6 +106,67 @@ class AchievementPlayerTest extends TestBase {
             Achievement achievement = loadAchievement().secret(false).hidden(true);
 
             assertThat(player().canViewDetails(achievement)).isFalse();
+        }
+    }
+    
+    @Nested
+    @DisplayName("canUnlock(...)")
+    class CanUnlock {
+
+        @Test
+        @DisplayName("should allow unlocking default achievement")
+        void shouldAllowUnlockingDefaultAchievement() {
+
+            assertThat(player().canUnlock(loadAchievement())).isTrue();
+        }
+
+        @Test
+        @DisplayName("should not allow unlocking unlocked achievements")
+        void shouldNotUnlockUnlockedAchievements() {
+
+            Achievement achievement = loadAchievement();
+            player().add(achievement);
+
+            assertThat(player().canUnlock(achievement)).isFalse();
+        }
+
+        @Test
+        @DisplayName("should not allow unlocking restricted achievements")
+        void shouldNotAllowUnlockingRestrictedAchievements() {
+
+            Achievement achievement = loadAchievement().restricted(true);
+
+            assertThat(player().canUnlock(achievement)).isFalse();
+        }
+
+        @Test
+        @DisplayName("should allow unlocking restricted achievement with permission")
+        void shouldAllowUnlockingRestrictedAchievementWithPermission() {
+
+            bukkitPlayer().addAttachment(plugin(), Constants.ACHIEVEMENT_PERMISSION_PREFIX + "foobar", true);
+            Achievement achievement = loadAchievement("foobar").get().restricted(true);
+
+            assertThat(player().canUnlock(achievement)).isTrue();
+        }
+
+        @Test
+        @DisplayName("should not allow unlocking achievement in different world")
+        void shouldNotAllowUnlockingAchievementsInDifferentWorld() {
+
+            Achievement achievement = loadAchievement().worlds(Collections.singletonList("foobar"));
+
+            assertThat(player().canUnlock(achievement)).isFalse();
+        }
+
+        @Test
+        @DisplayName("should allow unlocking achievement if player is in world")
+        void shouldAllowUnlockingAchievementIfPlayerIsInWorld() {
+
+            Achievement achievement = loadAchievement().worlds(Collections.singletonList("foobar"));
+            WorldMock foobar = server().addSimpleWorld("foobar");
+            bukkitPlayer().setLocation(new Location(foobar, 0, 64, 0));
+
+            assertThat(player().canUnlock(achievement)).isTrue();
         }
     }
 }

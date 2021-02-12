@@ -299,6 +299,14 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     private List<Achievement> children = new ArrayList<>();
 
     /**
+     * A list of worlds this achievement is applicable in.
+     * <p>If the list is empty the achievement can be obtained in every world.
+     */
+    @DbJson
+    @DbDefault("[]")
+    private List<String> worlds = new ArrayList<>();
+
+    /**
      * The serialized configuration used to load the properties of this achievement.
      */
     @DbJson
@@ -434,13 +442,15 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         config.set("broadcast", broadcast());
         if(parent() != null) config.set("parent", parent().id().toString());
         if (category() != null) config.set("category", category().alias());
-        for (Map.Entry<String, Object> entry : config().getValues(true).entrySet()) {
-            config.set(entry.getKey(), entry.getValue());
-        }
+        if (worlds() != null) config.set("worlds", worlds());
 
         ConfigurationSection childs = config.createSection("childs");
         for (Achievement child : children()) {
             childs.set(child.alias(), child.toConfig());
+        }
+
+        for (Map.Entry<String, Object> entry : config().getValues(true).entrySet()) {
+            config.set(entry.getKey(), entry.getValue());
         }
 
         return config;
@@ -505,6 +515,11 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
             rewards(config.getStringList("rewards"));
         } else if (isChild()) {
             rewards(parent().rewards());
+        }
+        if (config.isSet("worlds")) {
+            worlds(config.getStringList("worlds"));
+        } else if (isChild()) {
+            worlds(parent().worlds());
         }
     }
 
