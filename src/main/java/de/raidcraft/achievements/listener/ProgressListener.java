@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 
 import javax.swing.border.AbstractBorder;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public class ProgressListener implements Listener {
                         .append(text("[", ACCENT))
                         .append(progressBar)
                         .append(text("] ", ACCENT))
-                        .append(text((int) progress * 100 + "%", TEXT));
+                        .append(text(String.format(Locale.GERMANY, "%.2f", progress * 100f) + "%", TEXT));
 
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, BungeeComponentSerializer.get().serialize(builder.build()));
             }
