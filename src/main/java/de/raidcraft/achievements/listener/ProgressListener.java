@@ -31,6 +31,7 @@ import static net.kyori.adventure.text.format.TextDecoration.BOLD;
 public class ProgressListener implements Listener {
 
     private final RCAchievements plugin;
+    // player achievement -> bossbar
     private final Map<UUID, BossBar> activeBossBars = new HashMap<>();
 
     public ProgressListener(RCAchievements plugin) {
@@ -63,14 +64,14 @@ public class ProgressListener implements Listener {
 
                 Audience audience = BukkitAudiences.create(plugin).player(player);
                 BossBar bossBar = BossBar.bossBar(event.progressText(), progress, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS);
-                BossBar activeBossBar = activeBossBars.remove(player.getUniqueId());
+                BossBar activeBossBar = activeBossBars.remove(event.playerAchievement().id());
                 if (activeBossBar != null) {
                     audience.hideBossBar(activeBossBar);
                 }
                 audience.showBossBar(bossBar);
-                activeBossBars.put(player.getUniqueId(), bossBar);
+                activeBossBars.put(event.playerAchievement().id(), bossBar);
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    BossBar activeBar = activeBossBars.remove(player.getUniqueId());
+                    BossBar activeBar = activeBossBars.remove(event.playerAchievement().id());
                     if (player.isOnline() && activeBar != null) {
                         BukkitAudiences.create(plugin).player(player).hideBossBar(activeBar);
                     }
