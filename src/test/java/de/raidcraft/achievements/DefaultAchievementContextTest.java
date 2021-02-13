@@ -1,10 +1,14 @@
 package de.raidcraft.achievements;
 
+import be.seeseemelk.mockbukkit.WorldMock;
 import de.raidcraft.achievements.entities.Achievement;
+import org.bukkit.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -147,5 +151,32 @@ class DefaultAchievementContextTest extends TestBase {
 
             verify(factory().last(), times(1)).disable();
         }
+    }
+
+    @Nested
+    @DisplayName("applicable(...)")
+    class ApplicableCheck {
+
+        @Test
+        @DisplayName("should not allow unlocking achievement in different world")
+        void shouldNotAllowUnlockingAchievementsInDifferentWorld() {
+
+            achievement = loadAchievement().worlds(Collections.singletonList("foobar"));
+            context = context(achievement);
+
+            assertThat(context.applicable(bukkitPlayer.getUniqueId())).isFalse();
+        }
+
+        @Test
+        @DisplayName("should allow unlocking achievement if player is in world")
+        void shouldAllowUnlockingAchievementIfPlayerIsInWorld() {
+
+            achievement = loadAchievement().worlds(Collections.singletonList("foobar"));
+            WorldMock foobar = server().addSimpleWorld("foobar");
+            bukkitPlayer().setLocation(new Location(foobar, 0, 64, 0));
+
+            assertThat(context.applicable(bukkitPlayer().getUniqueId())).isTrue();
+        }
+
     }
 }

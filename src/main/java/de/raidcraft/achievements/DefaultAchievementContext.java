@@ -17,9 +17,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Log(topic = "RCAchievements")
@@ -36,7 +34,7 @@ public class DefaultAchievementContext implements AchievementContext {
     private boolean enabled = false;
     private BukkitTask tickTask;
 
-    private final Map<UUID, Boolean> applicableCheckCache = new HashMap<>();
+    private final Map<UUID, Boolean> applicableCheckCache = Collections.synchronizedMap(new HashMap<>());
 
     public DefaultAchievementContext(RCAchievements plugin, Achievement achievement, AchievementType.Registration<?> registration) {
 
@@ -163,11 +161,21 @@ public class DefaultAchievementContext implements AchievementContext {
 
         if (uuid == null) return false;
 
-        return applicableCheckCache.computeIfAbsent(uuid,
-                id -> AchievementPlayer.byId(id)
-                        .map(player -> player.canUnlock(achievement()))
-                .orElse(false)
-        );
+        synchronized (applicableCheckCache) {
+            boolean check = applicableCheckCache.computeIfAbsent(uuid,
+                    id -> AchievementPlayer.byId(id)
+                            .map(player -> player.canUnlock(achievement()))
+                            .orElse(false)
+            );
+            if (!check || achievement.worlds().isEmpty()) return check;
+
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                return achievement.worlds().contains(player.getWorld().getName());
+            }
+
+            return true;
+        }
     }
 
     @Override
@@ -179,7 +187,9 @@ public class DefaultAchievementContext implements AchievementContext {
     @Override
     public boolean addTo(AchievementPlayer player) {
 
-        applicableCheckCache.remove(player.id());
+        synchronized (applicableCheckCache) {
+            applicableCheckCache.remove(player.id());
+        }
 
         return achievement().addTo(player);
     }
@@ -187,7 +197,9 @@ public class DefaultAchievementContext implements AchievementContext {
     @Override
     public void removeFrom(AchievementPlayer player) {
 
-        applicableCheckCache.remove(player.id());
+        synchronized (applicableCheckCache) {
+            applicableCheckCache.remove(player.id());
+        }
 
         achievement().removeFrom(player);
     }

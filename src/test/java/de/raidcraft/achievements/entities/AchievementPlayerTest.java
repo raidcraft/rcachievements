@@ -148,25 +148,5 @@ class AchievementPlayerTest extends TestBase {
 
             assertThat(player().canUnlock(achievement)).isTrue();
         }
-
-        @Test
-        @DisplayName("should not allow unlocking achievement in different world")
-        void shouldNotAllowUnlockingAchievementsInDifferentWorld() {
-
-            Achievement achievement = loadAchievement().worlds(Collections.singletonList("foobar"));
-
-            assertThat(player().canUnlock(achievement)).isFalse();
-        }
-
-        @Test
-        @DisplayName("should allow unlocking achievement if player is in world")
-        void shouldAllowUnlockingAchievementIfPlayerIsInWorld() {
-
-            Achievement achievement = loadAchievement().worlds(Collections.singletonList("foobar"));
-            WorldMock foobar = server().addSimpleWorld("foobar");
-            bukkitPlayer().setLocation(new Location(foobar, 0, 64, 0));
-
-            assertThat(player().canUnlock(achievement)).isTrue();
-        }
     }
 }

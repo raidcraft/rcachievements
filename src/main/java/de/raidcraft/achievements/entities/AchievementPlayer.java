@@ -161,11 +161,8 @@ public class AchievementPlayer extends BaseEntity implements Comparable<Achievem
         Player player = Bukkit.getPlayer(id());
         if (player == null) return false;
 
-        return (!achievement.restricted()
-                || player.hasPermission(Constants.ACHIEVEMENT_PERMISSION_PREFIX + achievement.alias())
-        ) && (achievement.worlds().isEmpty()
-                || achievement.worlds().contains(player.getWorld().getName())
-        );
+        return !achievement.restricted()
+                || player.hasPermission(Constants.ACHIEVEMENT_PERMISSION_PREFIX + achievement.alias());
     }
 
     /**
