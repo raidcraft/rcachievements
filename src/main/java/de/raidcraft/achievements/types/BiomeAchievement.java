@@ -111,8 +111,8 @@ public class BiomeAchievement extends CountAchievement implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if (notApplicable(event.getPlayer())) return;
         if (!moved(event.getPlayer())) return;
+        if (notApplicable(event.getPlayer())) return;
         Biome biome = event.getPlayer().getLocation().getBlock().getBiome();
         if (!biomeTypes.contains(biome)) return;
 

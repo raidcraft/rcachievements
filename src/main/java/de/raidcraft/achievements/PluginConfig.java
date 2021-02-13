@@ -30,6 +30,10 @@ public class PluginConfig extends BukkitYamlConfiguration {
     private boolean autoSave = false;
     @Comment("Set the interval how often periodic achievements should be checked.")
     private long periodicAchievementInterval = 20L;
+    @Comment("How often in ticks should placed blocks be saved to the database.")
+    private long saveBlockPlacementsInterval = 200L;
+    @Comment("How long should block placements be tracked.")
+    private String blockPlacementCacheTime = "60d";
     @Comment("A list of actions that are executed for every achievement.")
     private boolean progressBossBar = true;
     private boolean progressActionBar = true;

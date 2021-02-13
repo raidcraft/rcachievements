@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="rcachievements_placed_blocks" identityType="external" pkName="pk_rcachievements_placed_blocks">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="world" type="uuid"/>
+            <column name="x" type="integer" notnull="true"/>
+            <column name="y" type="integer" notnull="true"/>
+            <column name="z" type="integer" notnull="true"/>
+            <column name="type" type="varchar"/>
+            <column name="placed_by" type="uuid"/>
+            <column name="version" type="bigint" notnull="true"/>
+            <column name="when_created" type="timestamp" notnull="true"/>
+            <column name="when_modified" type="timestamp" notnull="true"/>
+            <uniqueConstraint name="uq_rcachievements_placed_blocks_world_x_y_z" columnNames="world,x,y,z" oneToOne="false" nullableColumns="world"/>
+        </createTable>
+        <createIndex indexName="ix_rcachievements_placed_blocks_world" tableName="rcachievements_placed_blocks" columns="world"/>
+        <createIndex indexName="ix_rcachievements_placed_blocks_x" tableName="rcachievements_placed_blocks" columns="x"/>
+        <createIndex indexName="ix_rcachievements_placed_blocks_y" tableName="rcachievements_placed_blocks" columns="y"/>
+        <createIndex indexName="ix_rcachievements_placed_blocks_z" tableName="rcachievements_placed_blocks" columns="z"/>
+    </changeSet>
+</migration>

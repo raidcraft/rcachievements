@@ -81,7 +81,7 @@ public class BlockAchievement extends CountAchievement implements Listener {
         return true;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
 
         if (action != Action.PLACE) return;
@@ -89,7 +89,7 @@ public class BlockAchievement extends CountAchievement implements Listener {
         process(event.getPlayer(), event.getBlockPlaced());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if (action != Action.BREAK) return;
@@ -101,6 +101,7 @@ public class BlockAchievement extends CountAchievement implements Listener {
 
         if (notApplicable(player)) return;
         if (!blockTypes.contains(block.getType())) return;
+        if (context().isPlayerPlaced(block)) return;
 
         increaseAndCheck(player(player));
     }

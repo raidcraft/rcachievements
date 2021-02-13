@@ -6,6 +6,7 @@ import de.raidcraft.achievements.entities.DataStore;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import lombok.NonNull;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 
 import java.util.UUID;
 
@@ -170,4 +171,12 @@ public interface AchievementContext {
 
         return !applicable(uuid);
     }
+
+    /**
+     * Checks if the given block was placed by a player.
+     *
+     * @param block the block to check
+     * @return true if the block was placed by a player
+     */
+    boolean isPlayerPlaced(Block block);
 }

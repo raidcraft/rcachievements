@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -167,6 +168,12 @@ public class DefaultAchievementContext implements AchievementContext {
                         .map(player -> player.canUnlock(achievement()))
                 .orElse(false)
         );
+    }
+
+    @Override
+    public boolean isPlayerPlaced(Block block) {
+
+        return plugin.blockTracker().isPlayerPlacedBlock(block);
     }
 
     @Override

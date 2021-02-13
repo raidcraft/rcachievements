@@ -6,11 +6,7 @@ import co.aikar.commands.PaperCommandManager;
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.commands.AdminCommands;
 import de.raidcraft.achievements.commands.PlayerCommands;
-import de.raidcraft.achievements.entities.Achievement;
-import de.raidcraft.achievements.entities.AchievementPlayer;
-import de.raidcraft.achievements.entities.Category;
-import de.raidcraft.achievements.entities.DataStore;
-import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.entities.*;
 import de.raidcraft.achievements.listener.PlayerListener;
 import de.raidcraft.achievements.listener.ProgressListener;
 import de.raidcraft.achievements.listener.RewardListener;
@@ -51,6 +47,7 @@ public class RCAchievements extends JavaPlugin {
     @Accessors(fluent = true)
     private static RCAchievements instance;
 
+    @Getter(AccessLevel.PACKAGE)
     private Database database;
     @Getter
     @Setter(AccessLevel.PACKAGE)
@@ -62,6 +59,8 @@ public class RCAchievements extends JavaPlugin {
     private PlayerListener playerListener;
     private RewardListener rewardListener;
     private ProgressListener progressListener;
+    @Getter
+    private BlockTracker blockTracker;
     @Getter
     private Scope art;
 
@@ -93,6 +92,7 @@ public class RCAchievements extends JavaPlugin {
     public void onDisable() {
 
         achievementManager().unload();
+        blockTracker.disable();
     }
 
     @OnEnable
@@ -159,6 +159,9 @@ public class RCAchievements extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerListener, this);
         progressListener = new ProgressListener(this);
         getServer().getPluginManager().registerEvents(progressListener, this);
+        blockTracker = new BlockTracker(this);
+        blockTracker.enable();
+        getServer().getPluginManager().registerEvents(blockTracker, this);
 
         setupBungeecord();
     }
@@ -327,7 +330,8 @@ public class RCAchievements extends JavaPlugin {
                         Achievement.class,
                         PlayerAchievement.class,
                         DataStore.class,
-                        Category.class
+                        Category.class,
+                        PlacedBlock.class
                 )
                 .build()).connect();
     }
