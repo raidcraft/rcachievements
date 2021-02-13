@@ -1,3 +1,10 @@
+## [1.18.4](https://github.com/raidcraft/rcachievements/compare/v1.18.3...v1.18.4) (2021-02-13)
+
+
+### Bug Fixes
+
+* achievement worlds are ignored ([b706b3f](https://github.com/raidcraft/rcachievements/commit/b706b3f01c3d623b7227eb1c053c237179c7bcb9)), closes [#51](https://github.com/raidcraft/rcachievements/issues/51)
+
 ## [1.18.3](https://github.com/raidcraft/rcachievements/compare/v1.18.2...v1.18.3) (2021-02-13)
 
 
