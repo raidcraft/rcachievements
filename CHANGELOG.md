@@ -1,3 +1,10 @@
+## [1.18.3](https://github.com/raidcraft/rcachievements/compare/v1.18.2...v1.18.3) (2021-02-13)
+
+
+### Bug Fixes
+
+* track block placement for certain achievements ([33f4210](https://github.com/raidcraft/rcachievements/commit/33f42109e1b227c5e0d1a155cf60cfd7eef4d9bf)), closes [#50](https://github.com/raidcraft/rcachievements/issues/50)
+
 ## [1.18.2](https://github.com/raidcraft/rcachievements/compare/v1.18.1...v1.18.2) (2021-02-12)
 
 
