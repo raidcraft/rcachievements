@@ -1,3 +1,11 @@
+## [1.18.5](https://github.com/raidcraft/rcachievements/compare/v1.18.4...v1.18.5) (2021-02-14)
+
+
+### Bug Fixes
+
+* allow commands on offline players ([e046aef](https://github.com/raidcraft/rcachievements/commit/e046aefad59984831464e321b25003965c5f9d81)), closes [#49](https://github.com/raidcraft/rcachievements/issues/49)
+* fallback to online player if player does not exist yet ([9b22c36](https://github.com/raidcraft/rcachievements/commit/9b22c3636debe14859327d81e6e5836c059c2480))
+
 ## [1.18.4](https://github.com/raidcraft/rcachievements/compare/v1.18.3...v1.18.4) (2021-02-13)
 
 
