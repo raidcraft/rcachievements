@@ -32,6 +32,7 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -310,8 +311,9 @@ public class RCAchievements extends JavaPlugin {
                     UUID uuid = UUID.fromString(arg);
                     return AchievementPlayer.find.byId(uuid);
                 } catch (Exception e) {
-                    return AchievementPlayer.byName(arg)
-                            .orElseThrow(() -> new InvalidCommandArgument("Der Spieler " + arg + " wurde nicht gefunden."));
+                    Optional<AchievementPlayer> achievementPlayer = AchievementPlayer.byName(arg);
+                    if (achievementPlayer.isPresent()) return achievementPlayer.get();
+                    player = Bukkit.getPlayerExact(arg);
                 }
             }
 
