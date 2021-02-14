@@ -1,5 +1,6 @@
 package de.raidcraft.achievements.entities;
 
+import com.google.common.base.Strings;
 import de.raidcraft.achievements.Constants;
 import io.ebean.Finder;
 import lombok.AccessLevel;
@@ -50,6 +51,22 @@ public class AchievementPlayer extends BaseEntity implements Comparable<Achievem
                     achievementPlayer.insert();
                     return achievementPlayer;
                 });
+    }
+
+    /**
+     * Tries to find a player with the given name.
+     * <p>The name can be case insensitive.
+     *
+     * @param name the name of the player. can be case insensitive.
+     * @return the player if found
+     */
+    public static Optional<AchievementPlayer> byName(String name) {
+
+        if (Strings.isNullOrEmpty(name)) return Optional.empty();
+
+        return find.query().where()
+                .ieq("name", name)
+                .findOneOrEmpty();
     }
 
     /**

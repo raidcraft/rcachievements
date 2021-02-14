@@ -310,12 +310,13 @@ public class RCAchievements extends JavaPlugin {
                     UUID uuid = UUID.fromString(arg);
                     return AchievementPlayer.find.byId(uuid);
                 } catch (Exception e) {
-                    player = Bukkit.getPlayerExact(arg);
+                    return AchievementPlayer.byName(arg)
+                            .orElseThrow(() -> new InvalidCommandArgument("Der Spieler " + arg + " wurde nicht gefunden."));
                 }
             }
 
             if (player == null) {
-                throw new InvalidCommandArgument("No player by the name \"" + arg + "\" was not found.");
+                throw new InvalidCommandArgument("Der Spieler " + arg + " wurde nicht gefunden.");
             }
 
             return AchievementPlayer.of(player);
