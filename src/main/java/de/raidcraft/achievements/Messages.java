@@ -14,6 +14,7 @@ import de.raidcraft.achievements.util.TimeUtil;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.feature.pagination.Pagination;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
@@ -315,12 +316,6 @@ public final class Messages {
 
                             if (value == null) return Collections.singleton(empty());
 
-                            Optional<ConfiguredLocation> location = RCAchievements.instance().achievementManager().active(value.getKey())
-                                    .map(AchievementContext::type)
-                                    .filter(type -> type instanceof LocationAchievement)
-                                    .map(type -> (LocationAchievement) type)
-                                    .map(LocationAchievement::getLocation);
-
                             TextComponent.Builder builder = text()
                                     .append(text("|  ", DARK_ACCENT))
                                     .append(achievement(value.getKey(), player))
@@ -328,13 +323,10 @@ public final class Messages {
                                     .append(text(value.getValue() + "m", NOTE))
                                     .append(text(")", NOTE));
 
-                            if (location.isPresent()) {
-                                Location loc = location.get().getLocation();
-                                World world = loc.getWorld();
-                                builder.append(text(" - ", NOTE))
-                                        .append(text("[Teleport]", ACCENT, ITALIC)
-                                                .clickEvent(runCommand("tp " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ() + " " + (world != null ? world.getName() : ""))));
-                            }
+                            Optional<Location> location = getLocation(value.getKey());
+                            location.ifPresent(location1 -> builder.append(text(" - ", NOTE))
+                                    .append(text("[Teleport]", ACCENT, ITALIC)
+                                            .clickEvent(tpCommand(location1))));
 
                             return Collections.singleton(builder.build());
                         }, p -> AdminCommands.NEARBY.apply(p, radius)
@@ -394,11 +386,16 @@ public final class Messages {
                     .build();
         }
 
+        TextComponent textComponent = text(achievement.name(), achievementColor(achievement, player))
+                .hoverEvent(achievementInfo(achievement, player));
+
+        Optional<Location> location = getLocation(achievement);
+        if (location.isPresent() && player != null && player.canViewDetails(achievement)) {
+            textComponent = textComponent.clickEvent(tpCommand(location.get()));
+        }
+
         return text().append(text("[", ACCENT))
-                .append(text(achievement.name(), achievementColor(achievement, player))
-                        .hoverEvent(achievementInfo(achievement, player))
-                        .clickEvent(runCommand(INFO.apply(achievement)))
-                )
+                .append(textComponent)
                 .append(text("]", ACCENT))
                 .build();
     }
@@ -611,6 +608,22 @@ public final class Messages {
 
         return Component.text(Strings.repeat("" + completedColor + symbol, progressBars)
                 + Strings.repeat("" + notCompletedColor + symbol, totalBars - progressBars));
+    }
+
+    private static ClickEvent tpCommand(Location loc) {
+
+        World world = loc.getWorld();
+        return runCommand("tp " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ() + " " + (world != null ? world.getName() : ""));
+    }
+
+    private static Optional<Location> getLocation(Achievement achievement) {
+
+        return RCAchievements.instance().achievementManager().active(achievement)
+                .map(AchievementContext::type)
+                .filter(type -> type instanceof LocationAchievement)
+                .map(type -> (LocationAchievement) type)
+                .map(LocationAchievement::getLocation)
+                .map(ConfiguredLocation::getLocation);
     }
 
     private Messages() {}
