@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/raidcraft/rcachievements/compare/v1.20.0...v1.21.0) (2021-02-15)
+
+
+### Features
+
+* add true/false autocompletion to rcaa commands ([6ba2763](https://github.com/raidcraft/rcachievements/commit/6ba2763d792994e0707c18dbb5f63726a4e62310))
+
 # [1.20.0](https://github.com/raidcraft/rcachievements/compare/v1.19.0...v1.20.0) (2021-02-15)
 
 
