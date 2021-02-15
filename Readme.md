@@ -21,6 +21,7 @@ RCAchievements ist das Achievement Plugin des [Raid-Craft](https://raid-craft.de
   * [login](#login)
   * [statistic](#statistic)
   * [biomes](#biomes)
+  * [money](#money)
 
 ## Configuration
 
@@ -209,3 +210,11 @@ Keeps track of biomes the player visited. Defaults to all biomes if none are lis
 | `biomes` | `[]` | A list of biomes the player must visit. Defaults to all biomes in the game. |
 | `prefix` | `Fortschritt:` | The prefix that is written before the statistic count. |
 | `suffix` | `Biome besucht` | A suffix that should be written after the statistic count in the overview, e.g. `<prefix> 10/100 <suffix>`. |
+
+### money
+
+Tracks the money a player has.
+
+| Config | Default | Description |
+| ------ | ------- | ----------- |
+| `amount` | `0` | The amount of money the player needs to unlock the achievement. |

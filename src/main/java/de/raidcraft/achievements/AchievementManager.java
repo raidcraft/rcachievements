@@ -56,6 +56,7 @@ public final class AchievementManager {
             register(new LoginAchievement.Factory());
             register(new PlayerStatisticAchievement.Factory());
             register(new BiomeAchievement.Factory());
+            register(new MoneyAchievement.Factory());
         } catch (TypeRegistrationException e) {
             log.severe("failed to register default types: " + e.getMessage());
             e.printStackTrace();

@@ -73,6 +73,7 @@ dependencies {
     implementation group: 'net.kyori', name: 'adventure-text-serializer-plain', version: '4.5.0'
 
     implementation group: 'io.art-framework.core', name: 'api', version: '4.5.4'
+    implementation 'de.raidcraft:economy:2.4.0'
 
     testImplementation 'io.ebean:ebean-test:12.6.7'
 
@@ -95,11 +96,13 @@ shadowJar {
         include(dependency('co.aikar:acf-paper:'))
         include(dependency('net.silthus.configlib:configlib-bukkit:'))
         include(dependency('net.kyori::'))
+        include(dependency('de.raidcraft.economy:wrapper:'))
     }
     relocate 'co.aikar.commands', "shadow.${pluginName}.acf"
     relocate 'co.aikar.locales', "shadow.${pluginName}.locales"
     relocate 'de.exlll.configlib', "shadow.${pluginName}.configlib"
     relocate 'net.kyori', "shadow.${pluginName}.text"
+    relocate 'de.raidcraft.economy.wrapper', "de.raidcraft.achievements.economy"
 }
 
 tasks.build.dependsOn(shadowJar)
