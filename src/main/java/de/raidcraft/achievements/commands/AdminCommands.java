@@ -19,7 +19,9 @@ import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.Category;
+import de.raidcraft.achievements.types.CountAchievement;
 import de.raidcraft.achievements.types.LocationAchievement;
+import de.raidcraft.achievements.types.ManualCountAchievement;
 import de.raidcraft.achievements.util.LocationUtil;
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -96,6 +98,20 @@ public class AdminCommands extends BaseCommand {
         } else {
             send(getCurrentCommandIssuer(), addError(achievement, player));
         }
+    }
+
+    @Subcommand("addcount|increase")
+    @CommandPermission(PERMISSION_PREFIX + "admin.achievement.addcount")
+    @CommandCompletion("@players @achievements *")
+    @Description("Manually increases the count of an achievement and player.")
+    public void addCount(AchievementPlayer player, Achievement achievement, @Default("1") int amount) {
+
+        plugin.achievementManager().active(achievement)
+                .filter(context -> context.type() instanceof CountAchievement)
+                .ifPresentOrElse(context -> {
+                    ((CountAchievement) context.type()).increaseAndCheck(player, amount);
+                    Messages.send(getCurrentCommandIssuer(), increaseCountSuccess(achievement, player, amount));
+                }, () -> send(getCurrentCommandIssuer(), Messages.increaseCountError(achievement, player)));
     }
 
     @Subcommand("delete|del")

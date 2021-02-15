@@ -129,6 +129,19 @@ public final class Messages {
                 .build();
     }
 
+    public static Component increaseCountSuccess(Achievement achievement, AchievementPlayer player, int amount) {
+
+        return text().append(text("Der Counter des Erfolges ", SUCCESS))
+                .append(achievement(achievement))
+                .append(text(" wurde für ", SUCCESS))
+                .append(player(player))
+                .append(text(" erfolgreich um ", SUCCESS))
+                .append(text(amount, HIGHLIGHT))
+                .append(text(" erhöht.", SUCCESS))
+                .build();
+    }
+
+
     public static Component addError(Achievement achievement, AchievementPlayer player) {
 
         return text().append(text("Der Erfolg ", ERROR))
@@ -136,6 +149,16 @@ public final class Messages {
                 .append(text(" konnte ", ERROR))
                 .append(player(player))
                 .append(text(" nicht zugewiesen werden.", ERROR))
+                .build();
+    }
+
+    public static Component increaseCountError(Achievement achievement, AchievementPlayer player) {
+
+        return text().append(text("Der Counter des Erfolges ", ERROR))
+                .append(achievement(achievement))
+                .append(text(" konnte für ", ERROR))
+                .append(player(player))
+                .append(text(" nicht erhöht werden.", ERROR))
                 .build();
     }
 

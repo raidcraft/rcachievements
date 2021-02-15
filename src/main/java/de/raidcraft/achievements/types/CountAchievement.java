@@ -100,7 +100,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      *
      * @param player the player to check the counter for
      */
-    protected void increaseAndCheck(AchievementPlayer player) {
+    public final void increaseAndCheck(AchievementPlayer player) {
 
         if (increase(player) >= count) {
             addTo(player);
@@ -114,7 +114,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to check the counter for
      * @param amount the amount for which the counter should be increased
      */
-    protected void increaseAndCheck(AchievementPlayer player, long amount) {
+    public final void increaseAndCheck(AchievementPlayer player, long amount) {
 
         if (increase(player, amount) >= count) {
             addTo(player);
@@ -128,7 +128,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to set and check the counter for
      * @param amount the amount of the count
      */
-    protected void setCountAndCheck(AchievementPlayer player, long amount) {
+    public final void setCountAndCheck(AchievementPlayer player, long amount) {
 
         count(player, amount);
         check(player);
@@ -139,7 +139,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      *
      * @param player the player to check the counter for
      */
-    protected void check(AchievementPlayer player) {
+    public final void check(AchievementPlayer player) {
 
         if (success(player)) {
             addTo(player);
@@ -152,7 +152,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to get the counter for
      * @return true if the current player count is greater or equal to the required count
      */
-    protected boolean success(AchievementPlayer player) {
+    public final boolean success(AchievementPlayer player) {
 
         return count(player) >= count;
     }
@@ -164,7 +164,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to increase the counter for
      * @return the new count of the player. can be negative.
      */
-    protected long increase(@NonNull AchievementPlayer player) {
+    public final long increase(@NonNull AchievementPlayer player) {
 
         return increase(player, 1L);
     }
@@ -175,7 +175,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param amount the amount for which the counter is increased
      * @return the new count of the player. can be negative.
      */
-    protected long increase(@NonNull AchievementPlayer player, long amount) {
+    public final long increase(@NonNull AchievementPlayer player, long amount) {
 
         return count(player, count(player) + amount);
     }
@@ -187,7 +187,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to decrease the counter for
      * @return the new count of the player. can be negative.
      */
-    protected long decrease(@NonNull AchievementPlayer player) {
+    public final long decrease(@NonNull AchievementPlayer player) {
 
         return count(player, count(player) - 1);
     }
@@ -199,7 +199,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to get the counter for
      * @return the current player count
      */
-    protected long count(@NonNull AchievementPlayer player) {
+    public final long count(@NonNull AchievementPlayer player) {
 
         return countCache.computeIfAbsent(player.id(),
                 uuid -> store(player).get(COUNT_KEY, Long.class, 0L)
@@ -213,7 +213,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param count the count value to set
      * @return the given count value
      */
-    protected long count(AchievementPlayer player, long count) {
+    public final long count(AchievementPlayer player, long count) {
 
         Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
                 .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player), this)));
