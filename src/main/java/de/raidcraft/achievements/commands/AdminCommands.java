@@ -239,7 +239,7 @@ public class AdminCommands extends BaseCommand {
 
         @Subcommand("enabled")
         @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.enabled")
-        @CommandCompletion("@achievements *")
+        @CommandCompletion("@achievements true|false")
         public void enabled(Achievement achievement, boolean enabled) {
 
             achievement.enabled(enabled).save();
@@ -248,7 +248,7 @@ public class AdminCommands extends BaseCommand {
 
         @Subcommand("hidden")
         @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.hidden")
-        @CommandCompletion("@achievements *")
+        @CommandCompletion("@achievements true|false")
         public void hidden(Achievement achievement, boolean hidden) {
 
             achievement.hidden(hidden).save();
@@ -257,7 +257,7 @@ public class AdminCommands extends BaseCommand {
 
         @Subcommand("secret")
         @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.secret")
-        @CommandCompletion("@achievements *")
+        @CommandCompletion("@achievements true|false")
         public void secret(Achievement achievement, boolean secret) {
 
             achievement.secret(secret).save();
@@ -266,7 +266,7 @@ public class AdminCommands extends BaseCommand {
 
         @Subcommand("broadcast")
         @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.broadcast")
-        @CommandCompletion("@achievements *")
+        @CommandCompletion("@achievements true|false")
         public void broadcast(Achievement achievement, boolean broadcast) {
 
             achievement.broadcast(broadcast).save();
@@ -275,7 +275,7 @@ public class AdminCommands extends BaseCommand {
 
         @Subcommand("restricted")
         @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.restricted")
-        @CommandCompletion("@achievements *")
+        @CommandCompletion("@achievements true|false")
         public void restricted(Achievement achievement, boolean restricted) {
 
             achievement.restricted(restricted).save();
