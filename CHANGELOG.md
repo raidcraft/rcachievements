@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/raidcraft/rcachievements/compare/v1.19.0...v1.20.0) (2021-02-15)
+
+
+### Features
+
+* add a manual counter achievement ([6d8952e](https://github.com/raidcraft/rcachievements/commit/6d8952ed019eb9e3b9499f05e325bf365ab86c42)), closes [#53](https://github.com/raidcraft/rcachievements/issues/53)
+
 # [1.19.0](https://github.com/raidcraft/rcachievements/compare/v1.18.5...v1.19.0) (2021-02-15)
 
 
