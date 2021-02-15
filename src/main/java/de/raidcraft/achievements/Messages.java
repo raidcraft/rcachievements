@@ -8,6 +8,8 @@ import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.Category;
 import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.types.LocationAchievement;
+import de.raidcraft.achievements.util.ConfiguredLocation;
 import de.raidcraft.achievements.util.TimeUtil;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -17,17 +19,14 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -316,13 +315,28 @@ public final class Messages {
 
                             if (value == null) return Collections.singleton(empty());
 
-                            return Collections.singleton(text()
+                            Optional<ConfiguredLocation> location = RCAchievements.instance().achievementManager().active(value.getKey())
+                                    .map(AchievementContext::type)
+                                    .filter(type -> type instanceof LocationAchievement)
+                                    .map(type -> (LocationAchievement) type)
+                                    .map(LocationAchievement::getLocation);
+
+                            TextComponent.Builder builder = text()
                                     .append(text("|  ", DARK_ACCENT))
                                     .append(achievement(value.getKey(), player))
                                     .append(text(" (", NOTE))
                                     .append(text(value.getValue() + "m", NOTE))
-                                    .append(text(")", NOTE))
-                                    .build());
+                                    .append(text(")", NOTE));
+
+                            if (location.isPresent()) {
+                                Location loc = location.get().getLocation();
+                                World world = loc.getWorld();
+                                builder.append(text(" - ", NOTE))
+                                        .append(text("[Teleport]", ACCENT, ITALIC)
+                                                .clickEvent(runCommand("tp " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ() + " " + (world != null ? world.getName() : ""))));
+                            }
+
+                            return Collections.singleton(builder.build());
                         }, p -> AdminCommands.NEARBY.apply(p, radius)
                 ).render(locations, page);
     }
