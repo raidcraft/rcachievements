@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/raidcraft/rcachievements/compare/v1.18.5...v1.19.0) (2021-02-15)
+
+
+### Features
+
+* add money achievement ([d004fb0](https://github.com/raidcraft/rcachievements/commit/d004fb0a1456be588dfefb15f31d5f3611947072))
+
 ## [1.18.5](https://github.com/raidcraft/rcachievements/compare/v1.18.4...v1.18.5) (2021-02-14)
 
 
