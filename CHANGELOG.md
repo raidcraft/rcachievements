@@ -1,3 +1,12 @@
+# [1.22.0](https://github.com/raidcraft/rcachievements/compare/v1.21.0...v1.22.0) (2021-02-15)
+
+
+### Features
+
+* add teleport option to achievement list ([f46a7c7](https://github.com/raidcraft/rcachievements/commit/f46a7c7692f483201411f67ee66be90edf57ac02))
+* add teleport option to nearby list of location achievements ([ee9d1e0](https://github.com/raidcraft/rcachievements/commit/ee9d1e0dc8bcf134e4f06c62afc0a35ea8f673ba))
+* delete file when deleting achievement ([8929fa3](https://github.com/raidcraft/rcachievements/commit/8929fa315880825aa7bd3583081f30b14f7d7c76))
+
 # [1.21.0](https://github.com/raidcraft/rcachievements/compare/v1.20.0...v1.21.0) (2021-02-15)
 
 
