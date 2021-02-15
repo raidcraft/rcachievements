@@ -121,8 +121,16 @@ public class AdminCommands extends BaseCommand {
     public void delete(Achievement achievement) {
 
         plugin.achievementManager().unload(achievement);
-        achievement.delete();
         send(getCurrentCommandIssuer(), deleteSuccess(achievement));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            if (!Strings.isNullOrEmpty(achievement.source())) {
+                File file = new File(achievement.source());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
+            achievement.delete();
+        });
     }
 
     @Subcommand("unassign")
