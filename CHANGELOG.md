@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/raidcraft/rcachievements/compare/v1.22.0...v1.23.0) (2021-02-16)
+
+
+### Features
+
+* add new achievement property to delay broadcasting ([e29aba9](https://github.com/raidcraft/rcachievements/commit/e29aba99f38a8d1297ab905422d0f0ee770486b6))
+
 # [1.22.0](https://github.com/raidcraft/rcachievements/compare/v1.21.0...v1.22.0) (2021-02-15)
 
 
