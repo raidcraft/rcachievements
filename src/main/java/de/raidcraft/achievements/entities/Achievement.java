@@ -268,6 +268,10 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
      */
     private boolean broadcast = true;
     /**
+     * True if broadcasting of the achievement is delayed.
+     */
+    private boolean delayedBroadcast = false;
+    /**
      * Restricted is true if a permission is required to obtain this achievement.
      * <p>This is useful for testing new achievements without giving every player access to it.
      */
@@ -371,6 +375,14 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     }
 
     /**
+     * @return true if the achievement is broadcasted delayed
+     */
+    public boolean delayedBroadcast() {
+
+        return this.delayedBroadcast || this.hidden() || this.secret();
+    }
+
+    /**
      * Constructs a configuration from the serialized configuration in the database.
      * <p>It will also contain the achievement config under the "with" key.
      * <p>Use the {@link #achievementConfig()} method if you want to retrieve it directly.
@@ -441,6 +453,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         config.set("secret", secret());
         config.set("hidden", hidden());
         config.set("broadcast", broadcast());
+        config.set("broadcast_delayed", delayedBroadcast());
         if(parent() != null) config.set("parent", parent().id().toString());
         if (category() != null) config.set("category", category().alias());
         if (worlds() != null) config.set("worlds", worlds());
@@ -511,6 +524,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.secret(config.getBoolean("secret", isChild() ? parent().secret() : secret()));
         this.hidden(config.getBoolean("hidden", isChild() ? parent().hidden() : hidden()));
         this.broadcast(config.getBoolean("broadcast", isChild() ? parent().broadcast() : broadcast()));
+        this.broadcast(config.getBoolean("broadcast_delayed", isChild() ? parent().delayedBroadcast() : delayedBroadcast()));
         this.restricted(config.getBoolean("restricted", isChild() ? parent().restricted() : restricted()));
         this.globalRewards(config.getBoolean("global_rewards", isChild() ? parent().globalRewards() : globalRewards()));
         Category.byAliasOrId(config.getString("category")).ifPresent(this::category);

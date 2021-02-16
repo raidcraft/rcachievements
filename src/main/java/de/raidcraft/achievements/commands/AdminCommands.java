@@ -57,6 +57,7 @@ public class AdminCommands extends BaseCommand {
     public static final String SET_BROADCAST = "/rca:admin set broadcast ";
     public static final String SET_PARENT = "/rca:admin set parent ";
     public static final String SET_CATEGORY = "/rca:admin set category ";
+    public static final String SET_DELAYED_BROADCAST = "/rca:admin set delayed-broadcast ";
     public static final SetCommand[] SET_COMMANDS = new SetCommand[]{
             new SetCommand(SET_ALIAS, "Setzt den Alias (eindeutigen Namen) des Achievements.\nDer Alias sollte nur aus Kleinbuchstaben, ohne Sonderzeichen und ohne Leerzeichen bestehen."),
             new SetCommand(SET_NAME, "Setzt den für Spieler sichtbaren Namen des Achievements."),
@@ -67,7 +68,8 @@ public class AdminCommands extends BaseCommand {
             new SetCommand(SET_RESTRICTED, "true/false. Wenn true können nur Spieler/Admins mit der rcachievements.achievement.<alias> Permission das Achievement freischalten."),
             new SetCommand(SET_ENABLED, "true/false. Wenn false kann niemand mehr das Achievement freischalten."),
             new SetCommand(SET_PARENT, "Setzt das Parent Achievement des Achievements.\nAchievements werden in einer flachen Ansicht angezeigt."),
-            new SetCommand(SET_CATEGORY, "Setzt die Kategorie des Achievements.\nDie Kategorie gruppiert die Achievements in der Liste.")
+            new SetCommand(SET_CATEGORY, "Setzt die Kategorie des Achievements.\nDie Kategorie gruppiert die Achievements in der Liste."),
+            new SetCommand(SET_DELAYED_BROADCAST, "Zeigt den Broadcast für andere Spieler erst nach einiger Zeit an.")
     };
 
     private final RCAchievements plugin;
@@ -279,6 +281,15 @@ public class AdminCommands extends BaseCommand {
 
             achievement.broadcast(broadcast).save();
             send(getCurrentCommandIssuer(), setSuccess(achievement, "broadcast"));
+        }
+
+        @Subcommand("broadcast-delayed")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.broadcast")
+        @CommandCompletion("@achievements true|false")
+        public void delayedBroadcast(Achievement achievement, boolean delayed) {
+
+            achievement.delayedBroadcast(delayed).save();
+            send(getCurrentCommandIssuer(), setSuccess(achievement, "broadcast-delayed"));
         }
 
         @Subcommand("restricted")
