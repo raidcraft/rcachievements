@@ -218,3 +218,4 @@ Tracks the money a player has.
 | Config | Default | Description |
 | ------ | ------- | ----------- |
 | `amount` | `0` | The amount of money the player needs to unlock the achievement. |
+
