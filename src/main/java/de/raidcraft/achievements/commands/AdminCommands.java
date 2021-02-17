@@ -59,6 +59,8 @@ public class AdminCommands extends BaseCommand {
     public static final String SET_PARENT = "/rca:admin set parent ";
     public static final String SET_CATEGORY = "/rca:admin set category ";
     public static final String SET_DELAYED_BROADCAST = "/rca:admin set delayed-broadcast ";
+    public static final String SET_REWARDS = "/rca:admin set rewards ";
+    public static final String SET_GLOBAL_REWARDS = "/rca:admin set rewards global ";
     public static final SetCommand[] SET_COMMANDS = new SetCommand[]{
             new SetCommand(SET_ALIAS, "Setzt den Alias (eindeutigen Namen) des Achievements.\nDer Alias sollte nur aus Kleinbuchstaben, ohne Sonderzeichen und ohne Leerzeichen bestehen."),
             new SetCommand(SET_NAME, "Setzt den für Spieler sichtbaren Namen des Achievements."),
@@ -70,7 +72,9 @@ public class AdminCommands extends BaseCommand {
             new SetCommand(SET_ENABLED, "true/false. Wenn false kann niemand mehr das Achievement freischalten."),
             new SetCommand(SET_PARENT, "Setzt das Parent Achievement des Achievements.\nAchievements werden in einer flachen Ansicht angezeigt."),
             new SetCommand(SET_CATEGORY, "Setzt die Kategorie des Achievements.\nDie Kategorie gruppiert die Achievements in der Liste."),
-            new SetCommand(SET_DELAYED_BROADCAST, "Zeigt den Broadcast für andere Spieler erst nach einiger Zeit an.")
+            new SetCommand(SET_DELAYED_BROADCAST, "Zeigt den Broadcast für andere Spieler erst nach einiger Zeit an."),
+            new SetCommand(SET_REWARDS, "Legt die Belohnungen für das Achievement fest. Nutze ${player} für den Spieler Namen. z.B.: /rcsa add exp ${player} 100 ${achievement}"),
+            new SetCommand(SET_GLOBAL_REWARDS, "Legt fest ob die globalen Belohnungen für das Achievement aktiv sind.")
     };
 
     private final RCAchievements plugin;
@@ -329,6 +333,50 @@ public class AdminCommands extends BaseCommand {
 
             achievement.category(category).save();
             send(getCurrentCommandIssuer(), setSuccess(achievement, "category"));
+        }
+
+        @Subcommand("rewards")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.rewards")
+        public class CodeRewards extends BaseCommand {
+
+            @Subcommand("add")
+            @CommandCompletion("@achievements *")
+            public void add(Achievement achievement, String reward) {
+
+                achievement.rewards().add(reward);
+                achievement.save();
+                getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Die Belohnung wurde zum Achievement " + achievement.name() + " hinzugefügt.");
+            }
+
+            @Subcommand("remove")
+            @CommandCompletion("@achievements *")
+            public void remove(Achievement achievement, int index) {
+
+                if (achievement.rewards().size() < index) {
+                    throw new InvalidCommandArgument("Es gibt keine Belohnung mit der ID " + index);
+                }
+                String remove = achievement.rewards().remove(index);
+                achievement.save();
+                getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Die Belohnung \"" + remove
+                        + "\" wurde vom Achievement " + achievement.name() + " entfernt.");
+            }
+
+            @Subcommand("clear")
+            @CommandCompletion("@achievements")
+            public void clear(Achievement achievement) {
+
+                achievement.rewards().clear();
+                achievement.save();
+                getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Die Belohnungen vom Erfolg " + achievement.alias() + " gelöscht.");
+            }
+
+            @Subcommand("global")
+            @CommandCompletion("@achievements true|false")
+            public void broadcast(Achievement achievement, boolean global) {
+
+                achievement.globalRewards(global).save();
+                send(getCurrentCommandIssuer(), setSuccess(achievement, "broadcast"));
+            }
         }
     }
 

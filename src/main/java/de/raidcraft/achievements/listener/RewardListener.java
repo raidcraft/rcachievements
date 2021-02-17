@@ -1,6 +1,7 @@
 package de.raidcraft.achievements.listener;
 
 import de.raidcraft.achievements.RCAchievements;
+import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import io.artframework.ArtContext;
@@ -38,18 +39,24 @@ public class RewardListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onUnlocked(PlayerUnlockedAchievementEvent event) {
 
-        if (event.achievement().rewards().isEmpty()) return;
+        Achievement achievement = event.achievement();
+        if (achievement.rewards().isEmpty()) return;
 
         Player player = event.player().offlinePlayer().getPlayer();
         PlayerAchievement playerAchievement = event.playerAchievement();
 
         if (!playerAchievement.claimedRewards()) {
-            rewards.computeIfAbsent(event.achievement().id(),
+            rewards.computeIfAbsent(achievement.id(),
                     uuid -> {
                         try {
-                            return scope.load("rcachievement:rewards:" + event.achievement().alias() + ":" + uuid, event.achievement().rewards());
+                            ArtContext context = scope.load("rcachievement:rewards:" + achievement.alias() + ":" + uuid, achievement.rewards());
+                            context.var("achievement", achievement.name())
+                                    .var("achievement_alias", achievement.alias())
+                                    .var("achievement_id", achievement.id().toString())
+                                    .var("achievement_name", achievement.name());
+                            return context;
                         } catch (ParseException e) {
-                            log.severe("failed to parse rewards of " + event.achievement().alias() + " (" + uuid + "): " + e.getMessage());
+                            log.severe("failed to parse rewards of " + achievement.alias() + " (" + uuid + "): " + e.getMessage());
                             return ArtContext.empty();
                         }
                     }
@@ -59,11 +66,16 @@ public class RewardListener implements Listener {
 
 
         if (!plugin.pluginConfig().getGlobalRewards().isEmpty()) {
-            this.globalRewards.computeIfAbsent(event.achievement().id(), uuid -> {
+            this.globalRewards.computeIfAbsent(achievement.id(), uuid -> {
                 try {
-                    return scope.load("rcachievement:global-rewards:" + event.achievement().alias() + ":" + uuid, plugin.pluginConfig().getGlobalRewards());
+                    ArtContext context = scope.load("rcachievement:global-rewards:" + achievement.alias() + ":" + uuid, plugin.pluginConfig().getGlobalRewards());
+                    context.var("achievement", achievement.name())
+                            .var("achievement_alias", achievement.alias())
+                            .var("achievement_id", achievement.id().toString())
+                            .var("achievement_name", achievement.name());
+                    return context;
                 } catch (ParseException e) {
-                    log.severe("failed to parse global rewards of " + event.achievement().alias() + " (" + uuid + "): " + e.getMessage());
+                    log.severe("failed to parse global rewards of " + achievement.alias() + " (" + uuid + "): " + e.getMessage());
                     return ArtContext.empty();
                 }
             }).execute(player);
