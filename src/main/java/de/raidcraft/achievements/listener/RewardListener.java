@@ -64,8 +64,7 @@ public class RewardListener implements Listener {
             playerAchievement.claimedRewards(true);
         }
 
-
-        if (!plugin.pluginConfig().getGlobalRewards().isEmpty()) {
+        if (!plugin.pluginConfig().getGlobalRewards().isEmpty() && !playerAchievement.claimedGlobalRewards()) {
             this.globalRewards.computeIfAbsent(achievement.id(), uuid -> {
                 try {
                     ArtContext context = scope.load("rcachievement:global-rewards:" + achievement.alias() + ":" + uuid, plugin.pluginConfig().getGlobalRewards());
