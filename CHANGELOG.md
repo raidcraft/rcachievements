@@ -1,3 +1,10 @@
+## [1.24.4](https://github.com/raidcraft/rcachievements/compare/v1.24.3...v1.24.4) (2021-02-17)
+
+
+### Bug Fixes
+
+* wrong broadcast-delayed command order ([42ae94b](https://github.com/raidcraft/rcachievements/commit/42ae94b4f67145926c287b2a9b1e2e015efda0e4))
+
 ## [1.24.3](https://github.com/raidcraft/rcachievements/compare/v1.24.2...v1.24.3) (2021-02-17)
 
 
