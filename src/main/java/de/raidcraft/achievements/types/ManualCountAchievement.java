@@ -2,6 +2,8 @@ package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.TypeFactory;
+import de.raidcraft.achievements.events.AchievementCountChangedEvent;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.time.Instant;
@@ -35,5 +37,15 @@ public class ManualCountAchievement extends CountAchievement implements Listener
     protected ManualCountAchievement(AchievementContext context) {
 
         super(context);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onCountChange(AchievementCountChangedEvent event) {
+
+        if (event.getCountAchievement().equals(this)) return;
+        if (notApplicable(event.player())) return;
+        if (event.achievement().isParentOf(achievement())) return;
+
+
     }
 }

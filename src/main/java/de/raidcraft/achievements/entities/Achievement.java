@@ -564,4 +564,21 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
 
         return alias() + " (" + id() + ")";
     }
+
+    public boolean isParentOf(Achievement achievement) {
+
+        if (achievement.equals(this)) return false;
+        if (!achievement.isChild()) return false;
+        if (!isParent()) return false;
+
+        do {
+            Achievement parent = achievement.parent();
+            if (parent.equals(this)) {
+                return true;
+            }
+            achievement = parent;
+        } while (achievement.isChild());
+
+        return false;
+    }
 }

@@ -7,6 +7,7 @@ import de.raidcraft.achievements.Progressable;
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.events.AchievementCountChangedEvent;
 import de.raidcraft.achievements.events.AchievementProgressChangeEvent;
 import io.ebean.annotation.Transactional;
 import lombok.Getter;
@@ -215,8 +216,13 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      */
     public final long count(AchievementPlayer player, long count) {
 
-        Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
-                .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player), this)));
+        Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> {
+            PlayerAchievement achievement = PlayerAchievement.of(achievement(), player);
+            Bukkit.getPluginManager()
+                    .callEvent(new AchievementProgressChangeEvent(achievement, this));
+            Bukkit.getPluginManager()
+                    .callEvent(new AchievementCountChangedEvent(achievement, this, count));
+        });
 
         return countCache.compute(player.id(), (uuid, integer) -> count);
     }

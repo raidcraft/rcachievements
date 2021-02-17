@@ -117,4 +117,59 @@ class AchievementTest extends TestBase {
                     .isEqualTo(rewards);
         }
     }
+
+    @Nested
+    @DisplayName("isParent(...)")
+    class isParent {
+
+        private Achievement parent;
+
+        @BeforeEach
+        void setUp() {
+
+            parent = loadAchievement("parent").get();
+        }
+
+        @Test
+        @DisplayName("should not check non child achievements")
+        void shouldNotCheckNonChildAchievements() {
+
+            assertThat(parent.isParentOf(loadAchievement())).isFalse();
+        }
+
+        @Test
+        @DisplayName("should return true if direct parent")
+        void shouldReturnTrueIfDirectParent() {
+
+            Achievement achievement = loadAchievement();
+            achievement.parent(parent).save();
+            parent.refresh();
+
+            assertThat(parent.isParentOf(achievement)).isTrue();
+        }
+
+        @Test
+        @DisplayName("should return true if root parent")
+        void shouldReturnTrueIfRootParent() {
+
+            Achievement parent = loadAchievement().parent(this.parent);
+            parent.save();
+            Achievement achievement = loadAchievement().parent(parent);
+            achievement.save();
+            this.parent.refresh();
+
+            assertThat(this.parent.isParentOf(achievement)).isTrue();
+        }
+
+        @Test
+        @DisplayName("should not return true if is child of parent")
+        void shouldNotReturnTrueIfIsChild() {
+
+            Achievement achievement = loadAchievement();
+            parent.parent(achievement).save();
+            parent.refresh();
+
+            assertThat(parent.isParentOf(achievement)).isFalse();
+        }
+    }
 }
