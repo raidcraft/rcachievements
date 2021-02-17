@@ -1,3 +1,10 @@
+## [1.24.6](https://github.com/raidcraft/rcachievements/compare/v1.24.5...v1.24.6) (2021-02-17)
+
+
+### Bug Fixes
+
+* show more details on achievement info ([2c4770d](https://github.com/raidcraft/rcachievements/commit/2c4770d8a3e1a6f012aef3504d79dd32090d37f0))
+
 ## [1.24.5](https://github.com/raidcraft/rcachievements/compare/v1.24.4...v1.24.5) (2021-02-17)
 
 
