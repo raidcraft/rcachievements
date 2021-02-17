@@ -1,3 +1,10 @@
+## [1.24.3](https://github.com/raidcraft/rcachievements/compare/v1.24.2...v1.24.3) (2021-02-17)
+
+
+### Bug Fixes
+
+* add option to change rewards of an achievement ([fdeff49](https://github.com/raidcraft/rcachievements/commit/fdeff495a8f2eb3a5ede53f5d8cc518e8786dc9b))
+
 ## [1.24.2](https://github.com/raidcraft/rcachievements/compare/v1.24.1...v1.24.2) (2021-02-17)
 
 
