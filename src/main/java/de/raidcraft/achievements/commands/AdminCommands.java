@@ -58,7 +58,7 @@ public class AdminCommands extends BaseCommand {
     public static final String SET_BROADCAST = "/rca:admin set broadcast ";
     public static final String SET_PARENT = "/rca:admin set parent ";
     public static final String SET_CATEGORY = "/rca:admin set category ";
-    public static final String SET_DELAYED_BROADCAST = "/rca:admin set delayed-broadcast ";
+    public static final String SET_DELAYED_BROADCAST = "/rca:admin set broadcast-delayed ";
     public static final String SET_REWARDS = "/rca:admin set rewards ";
     public static final String SET_GLOBAL_REWARDS = "/rca:admin set rewards global ";
     public static final SetCommand[] SET_COMMANDS = new SetCommand[]{
