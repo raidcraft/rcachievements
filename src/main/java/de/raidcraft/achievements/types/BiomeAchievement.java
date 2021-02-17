@@ -2,9 +2,12 @@ package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.TypeFactory;
+import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.util.EnumUtil;
 import de.raidcraft.achievements.util.LocationUtil;
 import lombok.extern.java.Log;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,8 +19,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static de.raidcraft.achievements.Messages.Colors.*;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
+import static net.kyori.adventure.text.Component.newline;
+import static net.kyori.adventure.text.Component.text;
 
 @Log(topic = "RCAchievements:biome")
 public class BiomeAchievement extends CountAchievement implements Listener {
@@ -78,6 +84,22 @@ public class BiomeAchievement extends CountAchievement implements Listener {
         suffix(config.getString("suffix", "Biome besucht"));
 
         return true;
+    }
+
+    @Override
+    public Component progressText(AchievementPlayer player) {
+
+        Set<Biome> playerBiomes = playerVisitedBiomesMap.getOrDefault(player.id(), new HashSet<>());
+        TextComponent.Builder builder = text();
+        text().append(super.progressText(player));
+
+        for (Biome biome : biomeTypes) {
+            builder.append(text(" - ", TEXT)
+                    .append(text(biome.getKey().getKey(), playerBiomes.contains(biome) ? SUCCESS : ERROR))
+            ).append(newline());
+        }
+
+        return builder.build();
     }
 
     @SuppressWarnings("unchecked")
