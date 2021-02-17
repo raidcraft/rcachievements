@@ -508,7 +508,18 @@ public final class Messages {
                         .append(newline())
                         .append(text("broadcast: ", TEXT)).append(text(achievement.broadcast(), ACCENT))
                         .append(newline())
+                        .append(text("broadcast-delayed: ", TEXT)).append(text(achievement.delayedBroadcast(), ACCENT))
+                        .append(newline())
+                        .append(text("global-rewards: ", TEXT)).append(text(achievement.globalRewards(), ACCENT))
+                        .append(newline())
                         .append(text("enabled: ", TEXT)).append(text(achievement.broadcast(), ACCENT))
+                        .append(newline())
+                        .append(text("rewards: ", TEXT)).append(achievement.rewards().stream()
+                        .map(s -> text()
+                                .append(newline())
+                                .append(text(" - ", TEXT))
+                                .append(text(s, AQUA)))
+                        .collect(Collectors.toSet()))
                         .append(newline());
 
                 Set<Map.Entry<String, Object>> entries = achievement.achievementConfig().getValues(true).entrySet();
