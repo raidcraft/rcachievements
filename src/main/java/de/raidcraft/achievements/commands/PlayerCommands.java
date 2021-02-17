@@ -28,7 +28,7 @@ import static de.raidcraft.achievements.Messages.send;
 public class PlayerCommands extends BaseCommand {
 
     public static final Function<Achievement, String> INFO = (achievement) -> "/rcachievements info " + achievement.id().toString();
-    public static final Function<Integer, String> LIST = (page) -> "/rcachievements list " + page;
+    public static final BiFunction<AchievementPlayer, Integer, String> LIST = (player, page) -> "/rcachievements list " + page + " " + player.id().toString();
     public static final Function<Integer, String> CATEGORIES = (page) -> "/rcachievements categories " + page;
     public static final BiFunction<Integer, String, String> LIST_CATEGORY = (page, category) -> "/rcachievements list " + page + " " + category;
     public static final Function<Integer, String> TOP = (page) -> "/rcachievements top " + page;
