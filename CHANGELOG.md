@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/raidcraft/rcachievements/compare/v1.24.0...v1.24.1) (2021-02-17)
+
+
+### Bug Fixes
+
+* run tp command with / ([4ac529d](https://github.com/raidcraft/rcachievements/commit/4ac529d314d4ad7887830b9114a8e118338f5822))
+
 # [1.24.0](https://github.com/raidcraft/rcachievements/compare/v1.23.0...v1.24.0) (2021-02-17)
 
 
