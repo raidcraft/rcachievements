@@ -348,9 +348,7 @@ public final class Messages {
         achievements = achievements.stream()
                 .filter(Achievement::enabled)
                 .filter(achievement -> !achievement.isChild())
-                .sorted((o1, o2) -> Boolean.compare(player.unlocked(o1), player.unlocked(o2)))
-                .sorted((o1, o2) -> Boolean.compare(player.canView(o1), player.canView(o2)))
-                .sorted(Comparator.reverseOrder())
+                .sorted()
                 .collect(Collectors.toList());
 
         return Pagination.builder()
