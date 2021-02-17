@@ -12,6 +12,20 @@
 
 * add progress counter to statistic achievement ([b5eaf20](https://github.com/raidcraft/rcachievements/commit/b5eaf205b04b65dea17ecdfc1a5d9abb995f1abd))
 
+# [1.26.0](https://github.com/raidcraft/rcachievements/compare/v1.25.0...v1.26.0) (2021-02-17)
+
+
+### Bug Fixes
+
+* allow usage of keyed type in statistic achievement ([7bd37df](https://github.com/raidcraft/rcachievements/commit/7bd37dfc351bc5349f7981fd6f70f6b6e67ced47))
+* check global reward progress ([bb0b46b](https://github.com/raidcraft/rcachievements/commit/bb0b46bf12838eaad70f345cd5b3163e5a08f648))
+* update player value when statistic event is fired ([99517cb](https://github.com/raidcraft/rcachievements/commit/99517cbae68d92752ee4ea137d5515eb46136fec))
+
+
+### Features
+
+* add progress counter to statistic achievement ([b5eaf20](https://github.com/raidcraft/rcachievements/commit/b5eaf205b04b65dea17ecdfc1a5d9abb995f1abd))
+
 # [1.25.0](https://github.com/raidcraft/rcachievements/compare/v1.24.6...v1.25.0) (2021-02-17)
 
 
