@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,6 +92,18 @@ public class AdminCommands extends BaseCommand {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             plugin.reload();
             commandIssuer.sendMessage(ChatColor.GREEN + "RCAchievements wurde erfolgreich neu geladen.");
+        });
+    }
+
+    @Subcommand("info")
+    @CommandPermission(PERMISSION_PREFIX + "admin.achievement.info")
+    @CommandCompletion("@players @achievements")
+    @Description("Shows detailled information about an achievement.")
+    public void info(Achievement achievement, AchievementPlayer player) {
+
+        final CommandIssuer commandIssuer = getCurrentCommandIssuer();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            Messages.send(commandIssuer, Messages.achievementInfo(achievement, player));
         });
     }
 
