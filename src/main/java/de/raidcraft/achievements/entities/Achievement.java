@@ -417,13 +417,11 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
      * <p>Will do nothing and return the existing achievement if it is already unlocked.
      *
      * @param player the player to add the achievement to
-     * @return true if the achievement was unlocked or is already unlocked.
-     *         <p>false if the unlock failed, e.g. a cancelled event
      * @see PlayerAchievement#unlock()
      */
-    public boolean addTo(AchievementPlayer player) {
+    public void addTo(AchievementPlayer player) {
 
-        return PlayerAchievement.of(this, player).unlock();
+        PlayerAchievement.of(this, player).unlock();
     }
 
     /**
@@ -433,7 +431,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
      */
     public void removeFrom(AchievementPlayer player) {
 
-        PlayerAchievement.of(this, player).delete();
+        PlayerAchievement.of(this, player).remove();
     }
 
     /**

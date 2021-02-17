@@ -8,6 +8,7 @@ import de.raidcraft.achievements.Messages;
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.PlayerAchievement;
+import de.raidcraft.achievements.events.PlayerLostAchievementEvent;
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
@@ -53,6 +54,12 @@ public class PlayerListener implements Listener, PluginMessageListener {
                 broadcast(event.playerAchievement());
             }
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onAchievementLost(PlayerLostAchievementEvent event) {
+
+        Messages.send(event.player(), Messages.achievementLostSelf(event.playerAchievement()));
     }
 
     private void broadcast(PlayerAchievement achievement) {

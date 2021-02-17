@@ -92,11 +92,9 @@ public interface AchievementContext {
      * <p>Will do nothing and return the existing achievement if it is already unlocked.
      *
      * @param player the player to add the achievement to
-     * @return true if the achievement was unlocked or is already unlocked
-     *         false if the unlock failed, e.g. a cancelled event
      * @see PlayerAchievement#unlock()
      */
-    boolean addTo(AchievementPlayer player);
+    void addTo(AchievementPlayer player);
 
     /**
      * Removes this achievement from the player if it is present.

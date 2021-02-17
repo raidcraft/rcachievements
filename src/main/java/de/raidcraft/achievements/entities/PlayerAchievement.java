@@ -1,6 +1,7 @@
 package de.raidcraft.achievements.entities;
 
 import de.raidcraft.achievements.RCAchievements;
+import de.raidcraft.achievements.events.PlayerLostAchievementEvent;
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import io.ebean.Finder;
 import lombok.AccessLevel;
@@ -81,6 +82,18 @@ public class PlayerAchievement extends BaseEntity {
     private Instant unlocked;
 
     /**
+     * True if the player already claimed the global rewards of the achievement.
+     */
+    @Setter
+    private boolean claimedGlobalRewards = false;
+
+    /**
+     * True if the player claimed the achievement specific rewards.
+     */
+    @Setter
+    private boolean claimedRewards = false;
+
+    /**
      * The meta data store of the player achievement.
      * <p>It can hold additional persistent information for the execution of various achievement types.
      */
@@ -121,19 +134,28 @@ public class PlayerAchievement extends BaseEntity {
     /**
      * Unlocks the achievement for this player if it is not unlocked.
      * <p>Nothing will happen if the achievement is already unlocked.
-     *
-     * @return true if the achievement was unlocked or is already unlocked
-     *         false if the unlock failed, e.g. a cancelled event
      */
-    public boolean unlock() {
+    public void unlock() {
 
-        if (unlocked() != null) return true;
+        if (unlocked() != null) return;
 
         unlocked(Instant.now()).save();
 
         Bukkit.getScheduler().runTask(RCAchievements.instance(), () ->
             Bukkit.getPluginManager().callEvent(new PlayerUnlockedAchievementEvent(this)));
+    }
 
-        return true;
+    /**
+     * Removes the achievement from the player if he already unlocked it.
+     * <p>The {@link #claimedGlobalRewards()} properties will stay untouched.
+     */
+    public void remove() {
+
+        if (!isUnlocked()) return;
+
+        unlocked(null).save();
+
+        Bukkit.getScheduler().runTask(RCAchievements.instance(), () ->
+                Bukkit.getPluginManager().callEvent(new PlayerLostAchievementEvent(this)));
     }
 }

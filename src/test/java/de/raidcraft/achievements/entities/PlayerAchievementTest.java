@@ -23,7 +23,7 @@ class PlayerAchievementTest extends TestBase {
 
             PlayerAchievement achievement = PlayerAchievement.of(loadAchievement(), player());
 
-            assertThat(achievement.unlock()).isTrue();
+            achievement.unlock();
             assertThat(achievement.unlocked())
                     .isNotNull()
                     .isCloseTo(Instant.now(), new TemporalUnitWithinOffset(10, ChronoUnit.SECONDS));

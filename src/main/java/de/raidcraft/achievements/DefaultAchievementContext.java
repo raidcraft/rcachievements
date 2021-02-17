@@ -185,13 +185,13 @@ public class DefaultAchievementContext implements AchievementContext {
     }
 
     @Override
-    public boolean addTo(AchievementPlayer player) {
+    public void addTo(AchievementPlayer player) {
 
         synchronized (applicableCheckCache) {
             applicableCheckCache.remove(player.id());
         }
 
-        return achievement().addTo(player);
+        achievement().addTo(player);
     }
 
     @Override

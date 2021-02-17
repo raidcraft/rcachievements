@@ -19,6 +19,7 @@ import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.Category;
+import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.types.CountAchievement;
 import de.raidcraft.achievements.types.LocationAchievement;
 import de.raidcraft.achievements.types.ManualCountAchievement;
@@ -95,11 +96,12 @@ public class AdminCommands extends BaseCommand {
     @Description("Manually adds an achievement to a player.")
     public void add(AchievementPlayer player, Achievement achievement) {
 
-        if (achievement.addTo(player)) {
-            send(getCurrentCommandIssuer(), addSuccess(achievement, player));
-        } else {
-            send(getCurrentCommandIssuer(), addError(achievement, player));
+        if (player.unlocked(achievement)) {
+            throw new ConditionFailedException("Der Spieler hat den Erfolg bereits.");
         }
+
+        achievement.addTo(player);
+        send(getCurrentCommandIssuer(), addSuccess(achievement, player));
     }
 
     @Subcommand("addcount|increase")
@@ -137,15 +139,21 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("unassign")
     @CommandPermission(PERMISSION_PREFIX + "admin.achievement.unassign")
-    @CommandCompletion("@players @unlocked-achievements")
+    @CommandCompletion("@players @unlocked-achievements true|false")
     @Description("Unassigns an achievement from a player.")
-    public void unassign(AchievementPlayer player, Achievement achievement) {
+    public void unassign(AchievementPlayer player, Achievement achievement, @Default("false") boolean clearRewards) {
 
         if (!player.unlocked(achievement)) {
             throw new ConditionFailedException("Der Spieler " + player.name() + " hat den Erfolg " + achievement.name() + " (" + achievement.alias() + ") nicht.");
         }
 
         achievement.removeFrom(player);
+        if (clearRewards) {
+            PlayerAchievement.of(achievement, player)
+                    .claimedRewards(false)
+                    .claimedGlobalRewards(false)
+                    .save();
+        }
         plugin.achievementManager().active(achievement).ifPresent(AchievementContext::clearCache);
         send(getCurrentCommandIssuer(), unassignSuccess(achievement, player));
     }

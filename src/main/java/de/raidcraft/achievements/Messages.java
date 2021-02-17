@@ -245,6 +245,16 @@ public final class Messages {
                 .build();
     }
 
+    public static Component achievementLostSelf(PlayerAchievement achievement) {
+
+        return text().append(text("Du", ACCENT, BOLD)
+                .hoverEvent(playerInfo(achievement.player()).asHoverEvent()))
+                .append(text(" hast den Erfolg ", ERROR))
+                .append(achievement(achievement.achievement()))
+                .append(text(" verloren!", ERROR))
+                .build();
+    }
+
     public static Component achievementUnlockedOther(PlayerAchievement achievement, AchievementPlayer viewer) {
 
         return text().append(player(achievement.player()))

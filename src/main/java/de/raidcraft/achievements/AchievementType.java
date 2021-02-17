@@ -87,13 +87,11 @@ public interface AchievementType {
      * <p>Will do nothing and return the existing achievement if it is already unlocked.
      *
      * @param player the player to add the achievement to
-     * @return true if the achievement was unlocked or is already unlocked
-     *         false if the unlock failed, e.g. a cancelled event
      * @see AchievementContext#addTo(AchievementPlayer)
      */
-    default boolean addTo(AchievementPlayer player) {
+    default void addTo(AchievementPlayer player) {
 
-        return context().addTo(player);
+        context().addTo(player);
     }
 
     /**

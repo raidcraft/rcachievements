@@ -132,13 +132,11 @@ public class AchievementPlayer extends BaseEntity implements Comparable<Achievem
      * Adds the given achievement to the player unlocking it.
      *
      * @param achievement the achievement to add
-     * @return true if the achievement was unlocked or is already unlocked.
-     *         <p>false if the unlock failed, e.g. a cancelled event
      * @see Achievement#addTo(AchievementPlayer)
      */
-    public boolean add(Achievement achievement) {
+    public void add(Achievement achievement) {
 
-        return achievement.addTo(this);
+        achievement.addTo(this);
     }
 
     /**
