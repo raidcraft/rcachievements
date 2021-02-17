@@ -483,7 +483,10 @@ public final class Messages {
                     .append(text("Kategorie: ", TEXT))
                     .append(text(achievement.category() != null ? achievement.category().name() : "n/a", NOTE))
                     .append(newline())
-                    .append(text("Freigeschaltet: ", TEXT))
+                    .append(text(achievement.playerAchievements().stream().filter(PlayerAchievement::isUnlocked).count(), SUCCESS))
+                    .append(text(" Spieler haben diesen Erfolg bereits", TEXT))
+                    .append(newline())
+                    .append(text("Freigeschaltet am ", TEXT))
                     .append(text(playerAchievement.isUnlocked() ? TimeUtil.formatDateTime(playerAchievement.unlocked()) : "N/A", playerAchievement.isUnlocked() ? UNLOCKED : NOT_UNLOCKED));
 
             RCAchievements.instance().achievementManager()
@@ -493,10 +496,6 @@ public final class Messages {
                     .ifPresent(context -> builder.append(newline()).append(context.progressText(player)));
 
             if (bukkitPlayer != null && bukkitPlayer.hasPermission(Constants.SHOW_ADMIN_DETAILS)) {
-                builder.append(text("Freigeschaltet: ", TEXT))
-                        .append(text(achievement.playerAchievements().stream().filter(PlayerAchievement::isUnlocked).count(), SUCCESS))
-                        .append(text(" Spieler", ACCENT))
-                        .append(newline());
                 if (achievement.isChild()) {
                     builder.append(newline())
                             .append(text("parent: ", TEXT)).append(text(achievement.parent().toString(), ACCENT));
