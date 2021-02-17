@@ -1,3 +1,10 @@
+## [1.24.2](https://github.com/raidcraft/rcachievements/compare/v1.24.1...v1.24.2) (2021-02-17)
+
+
+### Bug Fixes
+
+* increase count of child counter achievements ([cefff3c](https://github.com/raidcraft/rcachievements/commit/cefff3cc2ef77b2ff4358dcdf1f4fa300c780a84))
+
 ## [1.24.1](https://github.com/raidcraft/rcachievements/compare/v1.24.0...v1.24.1) (2021-02-17)
 
 
