@@ -623,7 +623,7 @@ public final class Messages {
     private static ClickEvent tpCommand(Location loc) {
 
         World world = loc.getWorld();
-        return runCommand("tp " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ() + " " + (world != null ? world.getName() : ""));
+        return runCommand("/tp " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ() + " " + (world != null ? world.getName() : ""));
     }
 
     private static Optional<Location> getLocation(Achievement achievement) {
