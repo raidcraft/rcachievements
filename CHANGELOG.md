@@ -1,3 +1,10 @@
+## [1.24.5](https://github.com/raidcraft/rcachievements/compare/v1.24.4...v1.24.5) (2021-02-17)
+
+
+### Bug Fixes
+
+* achievement sorting reversed ([3114c6a](https://github.com/raidcraft/rcachievements/commit/3114c6a397b4ac98b63acf01ea11ccd2e9a1f0db))
+
 ## [1.24.4](https://github.com/raidcraft/rcachievements/compare/v1.24.3...v1.24.4) (2021-02-17)
 
 
