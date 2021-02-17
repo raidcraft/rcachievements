@@ -1,3 +1,16 @@
+# [1.25.0](https://github.com/raidcraft/rcachievements/compare/v1.24.6...v1.25.0) (2021-02-17)
+
+
+### Bug Fixes
+
+* other player pagination not working ([6e54620](https://github.com/raidcraft/rcachievements/commit/6e54620c8a76e502aba1d9ed809a595e585b1dd6))
+
+
+### Features
+
+* add unlock count to achievement info ([6ed6bf9](https://github.com/raidcraft/rcachievements/commit/6ed6bf9c5260e053f07ad0e81d5300b044a3d2c8))
+* add unlock count to public achievement display ([b866a57](https://github.com/raidcraft/rcachievements/commit/b866a579f7f153fa70c24c6a9c1d403bde722639))
+
 ## [1.24.6](https://github.com/raidcraft/rcachievements/compare/v1.24.5...v1.24.6) (2021-02-17)
 
 
