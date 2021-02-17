@@ -1,3 +1,11 @@
+# [1.24.0](https://github.com/raidcraft/rcachievements/compare/v1.23.0...v1.24.0) (2021-02-17)
+
+
+### Features
+
+* add option to remove achievements without duplicating rewards ([a3df3e8](https://github.com/raidcraft/rcachievements/commit/a3df3e8fab77459f4c54eea0e5591e88d6470c5e))
+* show biome names in achievement progress ([2851175](https://github.com/raidcraft/rcachievements/commit/2851175240a7355abe9638a4bf776ff8d41f055b))
+
 # [1.23.0](https://github.com/raidcraft/rcachievements/compare/v1.22.0...v1.23.0) (2021-02-16)
 
 
