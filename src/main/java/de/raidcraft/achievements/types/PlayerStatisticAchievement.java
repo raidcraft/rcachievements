@@ -25,10 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerStatisticIncrementEvent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static de.raidcraft.achievements.Messages.Colors.ACCENT;
 import static de.raidcraft.achievements.Messages.Colors.DARK_HIGHLIGHT;
@@ -70,7 +67,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
     private String suffix;
     private int count;
 
-    private final Map<UUID, Integer> playerValues = new HashMap<>();
+    private final Map<UUID, Integer> playerValues = Collections.synchronizedMap(new HashMap<>());
 
     protected PlayerStatisticAchievement(AchievementContext context) {
 
@@ -143,17 +140,19 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
 
         if (notApplicable(player)) return;
 
-        int value = playerValues.compute(player.getUniqueId(), (uuid, oldValue) -> {
-            int newValue = statisticValue(player);
-            if (oldValue != null && newValue != oldValue) {
-                Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
-                        .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player(player)), this)));
-            }
-            return newValue;
-        });
+        synchronized (playerValues) {
+            int value = playerValues.compute(player.getUniqueId(), (uuid, oldValue) -> {
+                int newValue = statisticValue(player);
+                if (oldValue != null && newValue != oldValue) {
+                    Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> Bukkit.getPluginManager()
+                            .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player(player)), this)));
+                }
+                return newValue;
+            });
 
-        if (value >= this.count) {
-            addTo(player(player));
+            if (value >= this.count) {
+                addTo(player(player));
+            }
         }
     }
 
@@ -175,6 +174,10 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
                     return;
                 }
                 break;
+        }
+
+        synchronized (playerValues) {
+            playerValues.put(event.getPlayer().getUniqueId(), event.getNewValue());
         }
 
         Bukkit.getPluginManager()
