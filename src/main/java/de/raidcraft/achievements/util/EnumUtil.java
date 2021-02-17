@@ -1,5 +1,6 @@
 package de.raidcraft.achievements.util;
 
+import com.google.common.base.Strings;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 
@@ -15,6 +16,8 @@ public final class EnumUtil {
      * @return the enum if a value was found. otherwise null.
      */
     public static <T extends Enum<?>> T searchEnum(Class<T> enumeration, String search) {
+
+        if (Strings.isNullOrEmpty(search)) return null;
 
         for (T each : enumeration.getEnumConstants()) {
             if (each.name().compareToIgnoreCase(search) == 0) {

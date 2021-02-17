@@ -11,6 +11,7 @@ import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.events.AchievementCountChangedEvent;
 import de.raidcraft.achievements.events.AchievementProgressChangeEvent;
+import de.raidcraft.achievements.util.EnumUtil;
 import lombok.extern.java.Log;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -102,9 +103,8 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         suffix = config.getString("suffix");
 
         String stat = config.getString("statistic");
-        try {
-            statistic = Statistic.valueOf(Objects.requireNonNull(stat).toUpperCase());
-        } catch (IllegalArgumentException | NullPointerException e) {
+        statistic = EnumUtil.searchEnum(Statistic.class, stat);
+        if (statistic == null) {
             log.severe("invalid statistic type " + stat + " in config of " + alias() + " (" + id() + ")");
             return false;
         }
@@ -124,9 +124,8 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         } else if (statistic.getType() == Statistic.Type.ENTITY) {
             String entity = config.getString("entity");
             if (!Strings.isNullOrEmpty(entity)) {
-                try {
-                    this.entityType = EntityType.valueOf(entity);
-                } catch (IllegalArgumentException e) {
+                this.entityType = EnumUtil.searchEnum(EntityType.class, entity);
+                if (entityType == null) {
                     log.severe("invalid entity type \"" + entity + "\" for statistic " + stat + " in config of " + alias() + " (" + id() + ")");
                     return false;
                 }
