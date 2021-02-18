@@ -97,7 +97,7 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("info")
     @CommandPermission(PERMISSION_PREFIX + "admin.achievement.info")
-    @CommandCompletion("@players @achievements")
+    @CommandCompletion("@achievements @players")
     @Description("Shows detailled information about an achievement.")
     public void info(Achievement achievement, AchievementPlayer player) {
 
