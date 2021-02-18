@@ -43,6 +43,7 @@ public class ProgressListener implements Listener {
     public void onProgressChange(AchievementProgressChangeEvent event) {
 
         if (!event.playerAchievement().isActive()) return;
+        if (!event.achievement().showProgress()) return;
 
         event.player().bukkitPlayer().ifPresent(player -> {
             float progress = event.progress();

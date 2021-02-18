@@ -60,6 +60,7 @@ public class AdminCommands extends BaseCommand {
     public static final String SET_PARENT = "/rca:admin set parent ";
     public static final String SET_CATEGORY = "/rca:admin set category ";
     public static final String SET_DELAYED_BROADCAST = "/rca:admin set broadcast-delayed ";
+    public static final String SET_SHOW_PROGRESS = "/rca:admin set show-progress ";
     public static final String SET_REWARDS = "/rca:admin set rewards ";
     public static final String SET_GLOBAL_REWARDS = "/rca:admin set rewards global ";
     public static final SetCommand[] SET_COMMANDS = new SetCommand[]{
@@ -75,7 +76,8 @@ public class AdminCommands extends BaseCommand {
             new SetCommand(SET_CATEGORY, "Setzt die Kategorie des Achievements.\nDie Kategorie gruppiert die Achievements in der Liste."),
             new SetCommand(SET_DELAYED_BROADCAST, "Zeigt den Broadcast für andere Spieler erst nach einiger Zeit an."),
             new SetCommand(SET_REWARDS, "Legt die Belohnungen für das Achievement fest. Nutze ${player} für den Spieler Namen. z.B.: /rcsa add exp ${player} 100 ${achievement}"),
-            new SetCommand(SET_GLOBAL_REWARDS, "Legt fest ob die globalen Belohnungen für das Achievement aktiv sind.")
+            new SetCommand(SET_GLOBAL_REWARDS, "Legt fest ob die globalen Belohnungen für das Achievement aktiv sind."),
+            new SetCommand(SET_SHOW_PROGRESS, "Legt fest ob der Spieler den Fortschritt des Achievements angezeigt bekommt.")
     };
 
     private final RCAchievements plugin;
@@ -315,6 +317,15 @@ public class AdminCommands extends BaseCommand {
 
             achievement.delayedBroadcast(delayed).save();
             send(getCurrentCommandIssuer(), setSuccess(achievement, "broadcast-delayed"));
+        }
+
+        @Subcommand("show-progress")
+        @CommandPermission(PERMISSION_PREFIX + "admin.achievement.set.progress")
+        @CommandCompletion("@achievements true|false")
+        public void showProgress(Achievement achievement, boolean progress) {
+
+            achievement.showProgress(progress).save();
+            send(getCurrentCommandIssuer(), setSuccess(achievement, "show-progress"));
         }
 
         @Subcommand("restricted")

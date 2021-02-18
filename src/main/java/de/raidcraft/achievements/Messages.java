@@ -489,11 +489,13 @@ public final class Messages {
                     .append(text("Freigeschaltet am ", TEXT))
                     .append(text(playerAchievement.isUnlocked() ? TimeUtil.formatDateTime(playerAchievement.unlocked()) : "N/A", playerAchievement.isUnlocked() ? UNLOCKED : NOT_UNLOCKED));
 
-            RCAchievements.instance().achievementManager()
-                    .active(achievement)
-                    .filter(context -> context.type() instanceof Progressable)
-                    .map(context -> (Progressable) context.type())
-                    .ifPresent(context -> builder.append(newline()).append(context.progressText(player)));
+            if (achievement.showProgress()) {
+                RCAchievements.instance().achievementManager()
+                        .active(achievement)
+                        .filter(context -> context.type() instanceof Progressable)
+                        .map(context -> (Progressable) context.type())
+                        .ifPresent(context -> builder.append(newline()).append(context.progressText(player)));
+            }
 
             if (bukkitPlayer != null && bukkitPlayer.hasPermission(Constants.SHOW_ADMIN_DETAILS)) {
                 if (achievement.isChild()) {

@@ -282,6 +282,11 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     @DbDefault("true")
     private boolean globalRewards = true;
     /**
+     * Shows progress of the achievement to the player.
+     */
+    @DbDefault("true")
+    private boolean showProgress = true;
+    /**
      * The path to the config file that loaded the achievement
      * or null if the achievement was created from code.
      */
@@ -452,6 +457,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         config.set("hidden", hidden());
         config.set("broadcast", broadcast());
         config.set("broadcast_delayed", delayedBroadcast());
+        config.set("show_progress", showProgress());
         if(parent() != null) config.set("parent", parent().id().toString());
         if (category() != null) config.set("category", category().alias());
         if (worlds() != null) config.set("worlds", worlds());
@@ -522,9 +528,10 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.secret(config.getBoolean("secret", isChild() ? parent().secret() : secret()));
         this.hidden(config.getBoolean("hidden", isChild() ? parent().hidden() : hidden()));
         this.broadcast(config.getBoolean("broadcast", isChild() ? parent().broadcast() : broadcast()));
-        this.broadcast(config.getBoolean("broadcast_delayed", isChild() ? parent().delayedBroadcast() : delayedBroadcast()));
+        this.delayedBroadcast(config.getBoolean("broadcast_delayed", isChild() ? parent().delayedBroadcast() : delayedBroadcast()));
         this.restricted(config.getBoolean("restricted", isChild() ? parent().restricted() : restricted()));
         this.globalRewards(config.getBoolean("global_rewards", isChild() ? parent().globalRewards() : globalRewards()));
+        this.showProgress(config.getBoolean("show_progress", isChild() ? parent().showProgress() : showProgress()));
         Category.byAliasOrId(config.getString("category")).ifPresent(this::category);
         if (config.isSet("rewards")) {
             rewards(config.getStringList("rewards"));
