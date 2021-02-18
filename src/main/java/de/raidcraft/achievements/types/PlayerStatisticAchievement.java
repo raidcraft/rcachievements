@@ -190,6 +190,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
 
     private int statisticValue(OfflinePlayer player) {
 
+        if (statistic == null) return 0;
         switch (statistic.getType()) {
             case BLOCK:
             case ITEM:
