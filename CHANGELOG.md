@@ -1,3 +1,11 @@
+## [1.27.1](https://github.com/raidcraft/rcachievements/compare/v1.27.0...v1.27.1) (2021-02-18)
+
+
+### Bug Fixes
+
+* login streak is not counted ([1e71152](https://github.com/raidcraft/rcachievements/commit/1e71152ed5b95b9e713c5c37308dd081a088edf7)), closes [#58](https://github.com/raidcraft/rcachievements/issues/58)
+* remove async login achievement task ([2b9e226](https://github.com/raidcraft/rcachievements/commit/2b9e226b8e5ef1a489dbc72411016bc4a5fecb25))
+
 # [1.27.0](https://github.com/raidcraft/rcachievements/compare/v1.26.1...v1.27.0) (2021-02-18)
 
 
