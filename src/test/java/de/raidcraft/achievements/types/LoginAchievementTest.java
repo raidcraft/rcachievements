@@ -138,6 +138,43 @@ class LoginAchievementTest extends TestBase {
             assertThat(achievement.count(player())).isEqualTo(2);
             verify(context, times(1)).addTo(player());
         }
+
+        @Test
+        @DisplayName("should increase the counter if logging in three days in a row")
+        void shouldIncreaseTheCounterIfLoggedInThreeDaysInARow() throws UnknownHostException {
+
+            MemoryConfiguration config = new MemoryConfiguration();
+            config.set("count", 5);
+
+            achievement.load(config);
+
+            achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
+            assertThat(achievement.count(player())).isEqualTo(1);
+
+            Clock clock = Clock.fixed(Instant.now().plus(1, ChronoUnit.DAYS), ZoneId.of("UTC"));
+            new MockUp<Instant>() {
+                @Mock
+                public Instant now() {
+                    return Instant.now(clock);
+                }
+            };
+
+            achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
+
+            assertThat(achievement.count(player())).isEqualTo(2);
+
+            Clock newClock = Clock.fixed(Instant.now().plus(1, ChronoUnit.DAYS), ZoneId.of("UTC"));
+            new MockUp<Instant>() {
+                @Mock
+                public Instant now() {
+                    return Instant.now(newClock);
+                }
+            };
+
+            achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
+
+            assertThat(achievement.count(player())).isEqualTo(3);
+        }
     }
 
     @Nested
