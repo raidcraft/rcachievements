@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addUniqueConstraint constraintName="uq_rcachievements_placed_blocks_world_x_y_z" tableName="rcachievements_placed_blocks" columnNames="DROP CONSTRAINT" nullableColumns="world"/>
+    </changeSet>
+</migration>

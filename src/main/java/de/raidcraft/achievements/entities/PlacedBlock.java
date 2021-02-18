@@ -29,7 +29,6 @@ import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 @Table(name = TABLE_PREFIX + "placed_blocks")
 @Log(topic = "RCSkills")
 @EqualsAndHashCode(of = {"world", "x", "y", "z"}, callSuper = false)
-@Index(unique = true, columnNames = {"world", "x", "y", "z"})
 public class PlacedBlock extends BaseEntity {
 
     public static final Finder<UUID, PlacedBlock> find = new Finder<>(PlacedBlock.class);
@@ -73,7 +72,7 @@ public class PlacedBlock extends BaseEntity {
                 .and().eq("y", block.y())
                 .and().eq("z", block.z())
                 .and().eq("world", block.world())
-                .findOneOrEmpty();
+                .findList().stream().findAny();
     }
 
     @Index
