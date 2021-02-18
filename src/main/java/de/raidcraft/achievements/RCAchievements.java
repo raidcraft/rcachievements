@@ -129,10 +129,10 @@ public class RCAchievements extends JavaPlugin {
         return art != null;
     }
 
-    public void reload() {
+    public void reload(boolean force) {
 
         loadConfig();
-        achievementManager().reload();
+        achievementManager().reload(force);
         if (rewardListener != null) {
             rewardListener.reload();
         }

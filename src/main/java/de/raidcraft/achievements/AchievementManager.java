@@ -56,10 +56,10 @@ public final class AchievementManager {
         }
     }
 
-    public void reload() {
+    public void reload(boolean force) {
 
         failedLoads().clear();
-        if (plugin.pluginConfig().isAutoSave()) {
+        if (!force && plugin.pluginConfig().isAutoSave()) {
             saveAchievements(Achievement.find.all());
         }
         loadAchievements();

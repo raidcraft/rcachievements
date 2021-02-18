@@ -87,12 +87,13 @@ public class AdminCommands extends BaseCommand {
     }
 
     @Subcommand("reload")
+    @CommandCompletion("force")
     @CommandPermission(PERMISSION_PREFIX + "admin.reload")
-    public void reload() {
+    public void reload(@Optional String force) {
 
         final CommandIssuer commandIssuer = getCurrentCommandIssuer();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            plugin.reload();
+            plugin.reload(!Strings.isNullOrEmpty(force));
             commandIssuer.sendMessage(ChatColor.GREEN + "RCAchievements wurde erfolgreich neu geladen.");
         });
     }
@@ -503,7 +504,7 @@ public class AdminCommands extends BaseCommand {
         getCurrentCommandIssuer().sendMessage(ChatColor.GREEN + "Alle Erfolge von " + player.name() + " wurden zurückgesetzt.");
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             player.delete();
-            plugin.reload();
+            plugin.reload(false);
         });
     }
 
