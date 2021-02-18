@@ -1,3 +1,11 @@
+## [1.27.2](https://github.com/raidcraft/rcachievements/compare/v1.27.1...v1.27.2) (2021-02-18)
+
+
+### Bug Fixes
+
+* auto save achievements to disk on reload ([8ccd5ed](https://github.com/raidcraft/rcachievements/commit/8ccd5edece53f6cf28f4949393054b86df8a6bdf))
+* check player rewards on join for unclaimed achievements ([9977bb0](https://github.com/raidcraft/rcachievements/commit/9977bb097038f9e7d9dc952e0807c1a3f990721f))
+
 ## [1.27.1](https://github.com/raidcraft/rcachievements/compare/v1.27.0...v1.27.1) (2021-02-18)
 
 
