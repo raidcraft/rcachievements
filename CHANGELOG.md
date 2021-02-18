@@ -1,3 +1,11 @@
+# [1.27.0](https://github.com/raidcraft/rcachievements/compare/v1.26.1...v1.27.0) (2021-02-18)
+
+
+### Features
+
+* add option to divide progress of statistic achievement ([f24a130](https://github.com/raidcraft/rcachievements/commit/f24a130a2447c16b626bfa31a8c5dae4104fa903))
+* add option to hide the progress of an achievement ([cf5b692](https://github.com/raidcraft/rcachievements/commit/cf5b692c61ecf54c6eb690289c08c483df2088a8)), closes [#59](https://github.com/raidcraft/rcachievements/issues/59)
+
 ## [1.26.1](https://github.com/raidcraft/rcachievements/compare/v1.26.0...v1.26.1) (2021-02-18)
 
 
