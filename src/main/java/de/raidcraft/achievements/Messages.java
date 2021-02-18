@@ -555,7 +555,7 @@ public final class Messages {
                 .append(text(category.achievements().size(), HIGHLIGHT))
                 .append(text(")", NOTE))
                 .build()
-                .clickEvent(runCommand(PlayerCommands.LIST_CATEGORY.apply(1, category.alias())));
+                .clickEvent(runCommand(PlayerCommands.LIST_CATEGORY.apply(1, category.alias()) + " " + player.id().toString()));
     }
 
     public static Component categoryInfo(@NonNull Category category, @NonNull AchievementPlayer player) {

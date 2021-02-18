@@ -246,6 +246,7 @@ public class RCAchievements extends JavaPlugin {
 
         commandManager.getCommandContexts().registerContext(Category.class, context -> {
             String arg = context.popFirstArg();
+            if (Strings.isNullOrEmpty(arg) || arg.equalsIgnoreCase("all")) return null;
             return Category.byAlias(arg).orElseThrow(
                     () -> new InvalidCommandArgument("Es wurde keine Kategorie mit dem alias " + arg + " gefunden!")
             );
