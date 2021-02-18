@@ -1,3 +1,10 @@
+## [1.27.3](https://github.com/raidcraft/rcachievements/compare/v1.27.2...v1.27.3) (2021-02-18)
+
+
+### Bug Fixes
+
+* allow duplicate player placed blocks ([e28ab05](https://github.com/raidcraft/rcachievements/commit/e28ab058048407e272bc11685905c712bdf03490))
+
 ## [1.27.2](https://github.com/raidcraft/rcachievements/compare/v1.27.1...v1.27.2) (2021-02-18)
 
 
