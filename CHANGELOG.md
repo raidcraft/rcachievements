@@ -1,3 +1,10 @@
+## [1.27.5](https://github.com/raidcraft/rcachievements/compare/v1.27.4...v1.27.5) (2021-02-18)
+
+
+### Bug Fixes
+
+* add option to force reload configs from disk ([ea7d329](https://github.com/raidcraft/rcachievements/commit/ea7d329405283804e2fb3a8cde8ec7e83df2eab4))
+
 ## [1.27.4](https://github.com/raidcraft/rcachievements/compare/v1.27.3...v1.27.4) (2021-02-18)
 
 
