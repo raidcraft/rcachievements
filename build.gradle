@@ -88,6 +88,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:3.+"
     testImplementation 'org.assertj:assertj-core:3.+'
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.20.0'
+    testImplementation 'org.jmockit:jmockit:1.49'
 }
 
 shadowJar {
@@ -115,6 +116,7 @@ test {
         events "passed", "skipped", "failed"
     }
     ignoreFailures = false
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
 }
 
 processResources {

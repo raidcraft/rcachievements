@@ -60,7 +60,7 @@ public final class AchievementManager {
 
         failedLoads().clear();
         if (plugin.pluginConfig().isAutoSave()) {
-            saveAchievements(Achievement.allEnabled());
+            saveAchievements(Achievement.find.all());
         }
         loadAchievements();
         reloadAchievements();
@@ -527,7 +527,7 @@ public final class AchievementManager {
 
                 try {
                     achievement.toConfig().save(file);
-                    log.info("saved database achievement " + achievement + " to disk: " + file.getAbsolutePath());
+                    log.info("saved achievement " + achievement + " to disk: " + file.getAbsolutePath());
                 } catch (IOException e) {
                     log.severe("failed to save achievement configuration of " + achievement + " to " + file.getAbsolutePath() + ": " + e.getMessage());
                     e.printStackTrace();

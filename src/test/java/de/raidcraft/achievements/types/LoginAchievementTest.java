@@ -4,21 +4,28 @@ import de.raidcraft.achievements.AchievementContext;
 import de.raidcraft.achievements.TestBase;
 import de.raidcraft.achievements.entities.DataStore;
 import lombok.SneakyThrows;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.integration.junit5.JMockitExtension;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(JMockitExtension.class)
 class LoginAchievementTest extends TestBase {
 
     private DataStore store;
@@ -77,7 +84,7 @@ class LoginAchievementTest extends TestBase {
         }
 
         @Test
-        @DisplayName("should give achievement ot player when count is reached")
+        @DisplayName("should give achievement to player when count is reached")
         void shouldGiveAchievementWhenCountIsMet() throws UnknownHostException {
 
             MemoryConfiguration config = new MemoryConfiguration();
@@ -104,6 +111,32 @@ class LoginAchievementTest extends TestBase {
             achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
 
             assertThat(achievement.count(player())).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("should increase the counter if logging in two days in a row")
+        void shouldIncreaseTheCounterIfLoggedInTwoDaysInARow() throws UnknownHostException {
+
+            MemoryConfiguration config = new MemoryConfiguration();
+            config.set("count", 2);
+
+            achievement.load(config);
+
+            achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
+            assertThat(achievement.count(player())).isEqualTo(1);
+
+            Clock clock = Clock.fixed(Instant.now().plus(1, ChronoUnit.DAYS), ZoneId.of("UTC"));
+            new MockUp<Instant>() {
+                @Mock
+                public Instant now() {
+                    return Instant.now(clock);
+                }
+            };
+
+            achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
+
+            assertThat(achievement.count(player())).isEqualTo(2);
+            verify(context, times(1)).addTo(player());
         }
     }
 
