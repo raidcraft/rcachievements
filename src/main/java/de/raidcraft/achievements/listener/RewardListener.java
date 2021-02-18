@@ -2,15 +2,18 @@ package de.raidcraft.achievements.listener;
 
 import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.entities.Achievement;
+import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.entities.PlayerAchievement;
 import de.raidcraft.achievements.events.PlayerUnlockedAchievementEvent;
 import io.artframework.ArtContext;
 import io.artframework.ParseException;
 import io.artframework.Scope;
 import lombok.extern.java.Log;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,8 +46,26 @@ public class RewardListener implements Listener {
         if (achievement.rewards().isEmpty()) return;
 
         Player player = event.player().offlinePlayer().getPlayer();
-        PlayerAchievement playerAchievement = event.playerAchievement();
+        checkRewards(player, achievement);
+    }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+
+        Player player = event.getPlayer();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (player.isOnline()) {
+                AchievementPlayer.of(player)
+                        .unlockedAchievements().stream()
+                        .filter(achievement -> !achievement.claimedGlobalRewards() || !achievement.claimedRewards())
+                        .forEach(achievement -> checkRewards(player, achievement.achievement()));
+            }
+        }, 400L);
+    }
+
+    private void checkRewards(Player player, Achievement achievement) {
+
+        PlayerAchievement playerAchievement = PlayerAchievement.of(achievement, AchievementPlayer.of(player));
         if (!playerAchievement.claimedRewards()) {
             rewards.computeIfAbsent(achievement.id(),
                     uuid -> {
