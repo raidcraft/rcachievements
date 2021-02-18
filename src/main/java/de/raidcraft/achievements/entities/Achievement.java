@@ -1,7 +1,9 @@
 package de.raidcraft.achievements.entities;
 
+import co.aikar.commands.ConditionFailedException;
 import com.google.common.base.Strings;
 import de.raidcraft.achievements.Constants;
+import de.raidcraft.achievements.RCAchievements;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.annotation.DbDefault;
@@ -15,6 +17,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
 import net.silthus.ebean.BaseEntity;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,6 +43,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static de.raidcraft.achievements.Constants.TABLE_PREFIX;
 
@@ -463,7 +468,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         if (worlds() != null) config.set("worlds", worlds());
 
         ConfigurationSection childs = config.createSection("childs");
-        for (Achievement child : children()) {
+        for (Achievement child : children().stream().filter(achievement -> Strings.isNullOrEmpty(achievement.source())).collect(Collectors.toSet())) {
             childs.set(child.alias(), child.toConfig());
         }
 

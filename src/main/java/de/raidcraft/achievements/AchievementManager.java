@@ -18,15 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -67,6 +59,9 @@ public final class AchievementManager {
     public void reload() {
 
         failedLoads().clear();
+        if (plugin.pluginConfig().isAutoSave()) {
+            saveAchievements(Achievement.allEnabled());
+        }
         loadAchievements();
         reloadAchievements();
     }
@@ -93,8 +88,8 @@ public final class AchievementManager {
      *
      * @param factory the factory that holds the meta information for your type
      * @param <TType> the type that is registered
-     * @throws TypeRegistrationException if a type with the same identifier is already registered
      * @return the created type registration
+     * @throws TypeRegistrationException if a type with the same identifier is already registered
      */
     public <TType extends AchievementType> AchievementType.Registration<TType> register(@NonNull TypeFactory<TType> factory) throws TypeRegistrationException {
 
@@ -108,11 +103,11 @@ public final class AchievementManager {
      * <p>Use the {@link #register(TypeFactory)} method to directly register an instance of your type factory.
      *
      * @param identifier the unique type identifier used inside the config to reference the type
-     * @param typeClass the class of the type that is created by the factory
-     * @param factory the factory that creates instances of your type
-     * @param <TType> the type that is registered
-     * @throws TypeRegistrationException if a type with the same identifier is already registered
+     * @param typeClass  the class of the type that is created by the factory
+     * @param factory    the factory that creates instances of your type
+     * @param <TType>    the type that is registered
      * @return the created type registration
+     * @throws TypeRegistrationException if a type with the same identifier is already registered
      */
     public <TType extends AchievementType> AchievementType.Registration<TType> register(@NonNull String identifier,
                                                                                         @NonNull Class<TType> typeClass,
@@ -148,7 +143,7 @@ public final class AchievementManager {
      * <p>Nothing happens if no achievement type with the given class is registered.
      *
      * @param typeClass the type class that should be disabled
-     * @param <TType> the type of the achievement
+     * @param <TType>   the type of the achievement
      */
     public <TType extends AchievementType> void unregister(Class<TType> typeClass) {
 
@@ -302,39 +297,7 @@ public final class AchievementManager {
         log.info("loaded " + achievements.size() + " achievements without a file config from the database.");
 
         if (plugin().pluginConfig().isAutoSave()) {
-            achievements.stream()
-                    .filter(achievement -> !achievement.isChild())
-                    .forEach(achievement -> {
-                File file = filePathOf(achievement);
-                if (file.exists()) {
-                    YamlConfiguration existingConfig = YamlConfiguration.loadConfiguration(file);
-                    String id = existingConfig.getString("id");
-                    if (Strings.isNullOrEmpty(id)) {
-                        if (!achievement.alias().equalsIgnoreCase(existingConfig.getString("alias"))) {
-                            log.warning("cannot save " + achievement + " to disk. A file already exists with an empty id but different alias: " + file.getAbsolutePath());
-                            return;
-                        }
-                    } else {
-                        try {
-                            if (!achievement.id().equals(UUID.fromString(id))) {
-                                log.warning("cannot save " + achievement + " to disk. A file already exists with a different id: " + file.getAbsolutePath());
-                                return;
-                            }
-                        } catch (Exception e) {
-                            log.warning("cannot save " + achievement + " to disk. A file already exists without a valid id: " + file.getAbsolutePath());
-                            return;
-                        }
-                    }
-                }
-
-                try {
-                    achievement.toConfig().save(file);
-                    log.info("saved database achievement " + achievement + " to disk: " + file.getAbsolutePath());
-                } catch (IOException e) {
-                    log.severe("failed to save achievement configuration of " + achievement + " to " + file.getAbsolutePath() + ": " + e.getMessage());
-                    e.printStackTrace();
-                }
-            });
+            saveAchievements(achievements);
         }
     }
 
@@ -447,7 +410,7 @@ public final class AchievementManager {
      *     <li>A database error occured
      * </ul>
      *
-     * @param alias the alias of the achievement. must not be null or empty.
+     * @param alias  the alias of the achievement. must not be null or empty.
      * @param config the config of the achievement. can be null, but then an empty returns.
      * @return the loaded achievement
      */
@@ -511,11 +474,15 @@ public final class AchievementManager {
      */
     public File filePathOf(Achievement achievement) {
 
-        File baseDir = new File(plugin.getDataFolder(), plugin.pluginConfig().getAchievements());
-        File file = new File(baseDir, achievement.alias() + ".yml");
-        file.getParentFile().mkdirs();
+        if (Strings.isNullOrEmpty(achievement.source())) {
+            File baseDir = new File(plugin.getDataFolder(), plugin.pluginConfig().getAchievements());
+            File file = new File(baseDir, achievement.alias() + ".yml");
+            file.getParentFile().mkdirs();
 
-        return file;
+            return file;
+        }
+
+        return new File(achievement.source());
     }
 
     private void loadFailed(String alias, ConfigurationSection config) {
@@ -529,5 +496,43 @@ public final class AchievementManager {
     private String registration(@NonNull ConfigurationSection config) {
 
         return config.getString("type", plugin().pluginConfig().getDefaultType());
+    }
+
+    private void saveAchievements(Collection<Achievement> achievements) {
+
+        achievements.stream()
+            .filter(achievement -> !achievement.isChild() || !Strings.isNullOrEmpty(achievement.source()))
+            .forEach(achievement -> {
+                File file = filePathOf(achievement);
+                if (file.exists()) {
+                    YamlConfiguration existingConfig = YamlConfiguration.loadConfiguration(file);
+                    String id = existingConfig.getString("id");
+                    if (Strings.isNullOrEmpty(id)) {
+                        if (!achievement.alias().equalsIgnoreCase(existingConfig.getString("alias"))) {
+                            log.warning("cannot save " + achievement + " to disk. A file already exists with an empty id but different alias: " + file.getAbsolutePath());
+                            return;
+                        }
+                    } else {
+                        try {
+                            if (!achievement.id().equals(UUID.fromString(id))) {
+                                log.warning("cannot save " + achievement + " to disk. A file already exists with a different id: " + file.getAbsolutePath());
+                                return;
+                            }
+                        } catch (Exception e) {
+                            log.warning("cannot save " + achievement + " to disk. A file already exists without a valid id: " + file.getAbsolutePath());
+                            return;
+                        }
+                    }
+                }
+
+                try {
+                    achievement.toConfig().save(file);
+                    log.info("saved database achievement " + achievement + " to disk: " + file.getAbsolutePath());
+                } catch (IOException e) {
+                    log.severe("failed to save achievement configuration of " + achievement + " to " + file.getAbsolutePath() + ": " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        );
     }
 }
