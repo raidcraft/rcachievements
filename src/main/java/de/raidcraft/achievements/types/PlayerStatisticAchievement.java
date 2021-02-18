@@ -66,6 +66,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
     private String prefix;
     private String suffix;
     private int count;
+    private float divideProgress = 1.0f;
 
     private final Map<UUID, Integer> playerValues = Collections.synchronizedMap(new HashMap<>());
 
@@ -77,7 +78,9 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
     @Override
     public float progress(AchievementPlayer player) {
 
-        return statisticValue(player.offlinePlayer()) * 1.0f / count;
+        float progress = statisticValue(player.offlinePlayer()) * 1.0f;
+        progress /= divideProgress;
+        return progress / count;
     }
 
     @Override
@@ -86,7 +89,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         int value = statisticValue(player.offlinePlayer());
 
         return text(prefix + " ", TEXT)
-                .append(text(value, HIGHLIGHT))
+                .append(text(value / divideProgress, HIGHLIGHT))
                 .append(text("/", DARK_HIGHLIGHT))
                 .append(text(count, ACCENT))
                 .append(Strings.isNullOrEmpty(suffix) ? empty() : text(" " + suffix, TEXT));
@@ -98,6 +101,7 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         count = config.getInt("count", 1);
         prefix = config.getString("prefix", "Fortschritt:");
         suffix = config.getString("suffix");
+        divideProgress = (float) config.getDouble("divide_progress", 1.0);
 
         String stat = config.getString("statistic");
         statistic = EnumUtil.searchEnum(Statistic.class, stat);
