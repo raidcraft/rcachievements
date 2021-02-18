@@ -112,28 +112,19 @@ class LoginAchievementTest extends TestBase {
     class Today {
 
         @Test
-        @DisplayName("should return true if last check was today")
-        void shouldReturnTrueIfLastCheckWasToday() {
-
-            achievement.checkedToday.add(player().id());
-
-            assertThat(achievement.today(bukkitPlayer())).isTrue();
-        }
-
-        @Test
         @DisplayName("should check last login of player if cache is empty")
         void shouldCheckLastLoginOfPlayerIfCacheIsEmpty() {
 
             store.set(LoginAchievement.LAST_LOGIN, Instant.now().toEpochMilli()).save();
 
-            assertThat(achievement.today(bukkitPlayer())).isTrue();
+            assertThat(achievement.checkedToday(bukkitPlayer())).isTrue();
         }
 
         @Test
         @DisplayName("should return false if not logged in or checked today")
         void shouldReturnFalseIfNotCheckedToday() {
 
-            assertThat(achievement.today(bukkitPlayer())).isFalse();
+            assertThat(achievement.checkedToday(bukkitPlayer())).isFalse();
         }
 
         @Test
@@ -142,7 +133,7 @@ class LoginAchievementTest extends TestBase {
 
             store.set(LoginAchievement.LAST_LOGIN, Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli()).save();
 
-            assertThat(achievement.today(bukkitPlayer())).isFalse();
+            assertThat(achievement.checkedToday(bukkitPlayer())).isFalse();
         }
     }
 
