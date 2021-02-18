@@ -65,17 +65,14 @@ public class LoginAchievement extends CountAchievement implements Listener {
 
         if (notApplicable(event.getPlayer())) return;
 
-        Bukkit.getScheduler().runTaskAsynchronously(RCAchievements.instance(), () -> {
+        if (checkedToday(event.getPlayer())) return;
+        if (!streak(event.getPlayer())) {
+            setCountAndCheck(player(event.getPlayer()), 1);
+            return;
+        }
 
-            if (checkedToday(event.getPlayer())) return;
-            if (!streak(event.getPlayer())) {
-                setCountAndCheck(player(event.getPlayer()), 1);
-                return;
-            }
-
-            increaseAndCheck(player(event.getPlayer()));
-            store(event.getPlayer()).set(LAST_LOGIN, Instant.now().toEpochMilli()).save();
-        });
+        increaseAndCheck(player(event.getPlayer()));
+        store(event.getPlayer()).set(LAST_LOGIN, Instant.now().toEpochMilli()).save();
     }
 
     boolean checkedToday(Player player) {
