@@ -1,3 +1,12 @@
+## [1.26.1](https://github.com/raidcraft/rcachievements/compare/v1.26.0...v1.26.1) (2021-02-18)
+
+
+### Bug Fixes
+
+* /rca list pagination not working ([bbffd61](https://github.com/raidcraft/rcachievements/commit/bbffd611b1cb68785498407a9c0867dc88b1f066))
+* unloaded statistic achievement npe ([35e87e9](https://github.com/raidcraft/rcachievements/commit/35e87e908e5ea9609fa50fc9e3650d3d631a6d5e))
+* wrong autocompletion order in /rcaa info ([1b9e1ea](https://github.com/raidcraft/rcachievements/commit/1b9e1eaac5dcdf24219f949266ddfc0da24c8454))
+
 # [1.26.0](https://github.com/raidcraft/rcachievements/compare/v1.25.0...v1.26.0) (2021-02-17)
 
 
