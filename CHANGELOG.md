@@ -1,3 +1,10 @@
+## [1.27.4](https://github.com/raidcraft/rcachievements/compare/v1.27.3...v1.27.4) (2021-02-18)
+
+
+### Bug Fixes
+
+* not all achievements are saved to configs ([f927ebd](https://github.com/raidcraft/rcachievements/commit/f927ebd7ff2d15ad30b5a342395bf2eedb6ba0a2))
+
 ## [1.27.3](https://github.com/raidcraft/rcachievements/compare/v1.27.2...v1.27.3) (2021-02-18)
 
 
