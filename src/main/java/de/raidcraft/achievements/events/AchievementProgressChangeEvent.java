@@ -32,6 +32,16 @@ public class AchievementProgressChangeEvent extends PlayerAchievementEvent {
         return progressable.progressText(player());
     }
 
+    public long count() {
+
+        return progressable.progressCount(player());
+    }
+
+    public long maxCount() {
+
+        return progressable.progressMaxCount(player());
+    }
+
     @NotNull
     @Override
     public HandlerList getHandlers() {

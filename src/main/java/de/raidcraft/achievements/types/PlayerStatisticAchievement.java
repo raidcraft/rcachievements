@@ -79,7 +79,6 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
     public float progress(AchievementPlayer player) {
 
         float progress = statisticValue(player.offlinePlayer()) * 1.0f;
-        progress /= divideProgress;
         return progress / count;
     }
 
@@ -89,10 +88,22 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         int value = statisticValue(player.offlinePlayer());
 
         return text(prefix + " ", TEXT)
-                .append(text(value / divideProgress, HIGHLIGHT))
+                .append(text(value, HIGHLIGHT))
                 .append(text("/", DARK_HIGHLIGHT))
                 .append(text(count, ACCENT))
                 .append(Strings.isNullOrEmpty(suffix) ? empty() : text(" " + suffix, TEXT));
+    }
+
+    @Override
+    public long progressCount(AchievementPlayer player) {
+
+        return statisticValue(player.offlinePlayer());
+    }
+
+    @Override
+    public long progressMaxCount(AchievementPlayer player) {
+
+        return count;
     }
 
     @Override
@@ -102,6 +113,10 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         prefix = config.getString("prefix", "Fortschritt:");
         suffix = config.getString("suffix");
         divideProgress = (float) config.getDouble("divide_progress", 1.0);
+        if (divideProgress == 0) {
+            log.severe("divide_progress must not be 0 in " + achievement());
+            return false;
+        }
 
         String stat = config.getString("statistic");
         statistic = EnumUtil.searchEnum(Statistic.class, stat);
@@ -180,14 +195,15 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
                 break;
         }
 
+        int newValue = (int) (event.getNewValue() / divideProgress);
         synchronized (playerValues) {
-            playerValues.put(event.getPlayer().getUniqueId(), event.getNewValue());
+            playerValues.put(event.getPlayer().getUniqueId(), newValue);
         }
 
         Bukkit.getPluginManager()
                 .callEvent(new AchievementProgressChangeEvent(PlayerAchievement.of(achievement(), player(event.getPlayer())), this));
 
-        if (event.getNewValue() >= count) {
+        if (newValue >= count) {
             addTo(player(event.getPlayer()));
         }
     }
@@ -198,11 +214,11 @@ public class PlayerStatisticAchievement extends AbstractAchievementType implemen
         switch (statistic.getType()) {
             case BLOCK:
             case ITEM:
-                return player.getStatistic(statistic, material);
+                return (int) (player.getStatistic(statistic, material) / divideProgress);
             case ENTITY:
-                return player.getStatistic(statistic, entityType);
+                return (int) (player.getStatistic(statistic, entityType) / divideProgress);
             default:
-                return player.getStatistic(statistic);
+                return (int) (player.getStatistic(statistic) / divideProgress);
         }
     }
 }

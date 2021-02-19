@@ -95,6 +95,18 @@ public abstract class CountAchievement extends AbstractAchievementType implement
                 .build();
     }
 
+    @Override
+    public long progressCount(AchievementPlayer player) {
+
+        return count(player);
+    }
+
+    @Override
+    public long progressMaxCount(AchievementPlayer player) {
+
+        return count();
+    }
+
     /**
      * Increases the counter for the player by one and then
      * checks if the player count is equal or greater then the configured count.

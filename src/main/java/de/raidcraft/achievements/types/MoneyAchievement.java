@@ -69,6 +69,18 @@ public class MoneyAchievement extends AbstractAchievementType implements Listene
         return Math.min(progress, 1.0f);
     }
 
+    @Override
+    public long progressCount(AchievementPlayer player) {
+
+        return (long) Economy.get().getBalance(player.offlinePlayer());
+    }
+
+    @Override
+    public long progressMaxCount(AchievementPlayer player) {
+
+        return (long) amount;
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onBalanceChange(PlayerBalanceChangedEvent event) {
 

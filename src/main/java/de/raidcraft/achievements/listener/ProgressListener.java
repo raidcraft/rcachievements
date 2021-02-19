@@ -22,9 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.raidcraft.achievements.Messages.Colors.ACCENT;
-import static de.raidcraft.achievements.Messages.Colors.HIGHLIGHT;
-import static de.raidcraft.achievements.Messages.Colors.TEXT;
+import static de.raidcraft.achievements.Messages.Colors.*;
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.format.TextDecoration.BOLD;
 
@@ -64,7 +62,18 @@ public class ProgressListener implements Listener {
             if (plugin.pluginConfig().isProgressBossBar()) {
 
                 Audience audience = BukkitAudiences.create(plugin).player(player);
-                BossBar bossBar = BossBar.bossBar(event.progressText(), progress, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS);
+                Component text;
+                if (event.count() >= 0 && event.maxCount() >= 0) {
+                    text = text().append(text(event.achievement().name(), TEXT))
+                            .append(text(": ", DARK_ACCENT))
+                            .append(text(event.count(), HIGHLIGHT))
+                            .append(text("/", DARK_ACCENT))
+                            .append(text(event.maxCount(), DARK_HIGHLIGHT))
+                            .build();
+                } else {
+                    text = event.progressText();
+                }
+                BossBar bossBar = BossBar.bossBar(text, progress, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS);
                 BossBar activeBossBar = activeBossBars.remove(event.playerAchievement().id());
                 if (activeBossBar != null) {
                     audience.hideBossBar(activeBossBar);

@@ -111,6 +111,18 @@ public class CombinedAchievement extends AbstractAchievementType implements List
                 .build();
     }
 
+    @Override
+    public long progressCount(AchievementPlayer player) {
+
+        return unlockedAchievementCount(player);
+    }
+
+    @Override
+    public long progressMaxCount(AchievementPlayer player) {
+
+        return achievements.size();
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onAchievementUnlocked(PlayerUnlockedAchievementEvent event) {
 
