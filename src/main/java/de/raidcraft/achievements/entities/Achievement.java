@@ -463,7 +463,8 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         config.set("broadcast", broadcast());
         config.set("broadcast_delayed", delayedBroadcast());
         config.set("show_progress", showProgress());
-        if(parent() != null) config.set("parent", parent().id().toString());
+        config.set("global_rewards", globalRewards());
+        if (parent() != null) config.set("parent", parent().id().toString());
         if (category() != null) config.set("category", category().alias());
         if (worlds() != null) config.set("worlds", worlds());
 
@@ -471,10 +472,13 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         for (Achievement child : children().stream().filter(achievement -> Strings.isNullOrEmpty(achievement.source())).collect(Collectors.toSet())) {
             childs.set(child.alias(), child.toConfig());
         }
+        config.set("childs", childs);
 
-        for (Map.Entry<String, Object> entry : config().getValues(true).entrySet()) {
-            config.set(entry.getKey(), entry.getValue());
+        ConfigurationSection with = config.createSection("with");
+        for (Map.Entry<String, Object> entry : achievementConfig().getValues(true).entrySet()) {
+            with.set(entry.getKey(), entry.getValue());
         }
+        config.set("with", with);
 
         return config;
     }
