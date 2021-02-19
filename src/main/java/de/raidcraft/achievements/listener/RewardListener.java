@@ -42,11 +42,8 @@ public class RewardListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onUnlocked(PlayerUnlockedAchievementEvent event) {
 
-        Achievement achievement = event.achievement();
-        if (achievement.rewards().isEmpty()) return;
-
         Player player = event.player().offlinePlayer().getPlayer();
-        checkRewards(player, achievement);
+        checkRewards(player, event.achievement());
     }
 
     @EventHandler(ignoreCancelled = true)

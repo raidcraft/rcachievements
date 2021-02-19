@@ -517,7 +517,7 @@ public final class Messages {
                         .append(newline())
                         .append(text("global-rewards: ", TEXT)).append(text(achievement.globalRewards(), ACCENT))
                         .append(newline())
-                        .append(text("enabled: ", TEXT)).append(text(achievement.broadcast(), ACCENT))
+                        .append(text("enabled: ", TEXT)).append(text(achievement.enabled(), ACCENT))
                         .append(newline())
                         .append(text("rewards: ", TEXT)).append(achievement.rewards().stream()
                         .map(s -> text()
