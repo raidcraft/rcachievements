@@ -1,3 +1,10 @@
+## [1.27.8](https://github.com/raidcraft/rcachievements/compare/v1.27.7...v1.27.8) (2021-02-19)
+
+
+### Bug Fixes
+
+* **cmd:** error on tab completion for /rca info ([61a2c80](https://github.com/raidcraft/rcachievements/commit/61a2c80b12c7b994b62ee213ec82952d5b4d367b))
+
 ## [1.27.7](https://github.com/raidcraft/rcachievements/compare/v1.27.6...v1.27.7) (2021-02-19)
 
 
