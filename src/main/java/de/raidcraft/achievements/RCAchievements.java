@@ -222,7 +222,7 @@ public class RCAchievements extends JavaPlugin {
     private void achievementsUnlockedCompletion(PaperCommandManager commandManager) {
 
         commandManager.getCommandCompletions().registerAsyncCompletion("unlocked-achievements", context -> {
-            AchievementPlayer player = context.getContextValue(AchievementPlayer.class);
+            AchievementPlayer player = AchievementPlayer.of(context.getPlayer());
             if (player == null) {
                 return Achievement.allEnabled().stream().map(Achievement::alias).collect(Collectors.toSet());
             }
