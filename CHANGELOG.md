@@ -1,3 +1,10 @@
+## [1.27.9](https://github.com/raidcraft/rcachievements/compare/v1.27.8...v1.27.9) (2021-02-19)
+
+
+### Bug Fixes
+
+* achievement information lost when reloading ([9dad2d2](https://github.com/raidcraft/rcachievements/commit/9dad2d25152fca94e232bac99c72b9b363e303ce))
+
 ## [1.27.8](https://github.com/raidcraft/rcachievements/compare/v1.27.7...v1.27.8) (2021-02-19)
 
 
