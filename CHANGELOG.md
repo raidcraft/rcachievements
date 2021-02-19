@@ -1,3 +1,10 @@
+## [1.27.6](https://github.com/raidcraft/rcachievements/compare/v1.27.5...v1.27.6) (2021-02-19)
+
+
+### Bug Fixes
+
+* progress boss bar showing full progress text ([e76a00c](https://github.com/raidcraft/rcachievements/commit/e76a00c6ae19566192f819024513daf0d60d5361))
+
 ## [1.27.5](https://github.com/raidcraft/rcachievements/compare/v1.27.4...v1.27.5) (2021-02-18)
 
 
