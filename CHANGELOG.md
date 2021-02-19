@@ -1,3 +1,10 @@
+## [1.27.7](https://github.com/raidcraft/rcachievements/compare/v1.27.6...v1.27.7) (2021-02-19)
+
+
+### Bug Fixes
+
+* achievement rewards not given immediatly ([abcf42a](https://github.com/raidcraft/rcachievements/commit/abcf42a7284223cbacd95f77934ee997753419d9))
+
 ## [1.27.6](https://github.com/raidcraft/rcachievements/compare/v1.27.5...v1.27.6) (2021-02-19)
 
 
