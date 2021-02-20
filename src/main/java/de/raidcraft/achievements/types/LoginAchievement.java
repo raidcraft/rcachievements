@@ -68,6 +68,7 @@ public class LoginAchievement extends CountAchievement implements Listener {
         if (checkedToday(event.getPlayer())) return;
         if (!streak(event.getPlayer())) {
             setCountAndCheck(player(event.getPlayer()), 1);
+            store(event.getPlayer()).set(LAST_LOGIN, Instant.now().toEpochMilli()).save();
             return;
         }
 

@@ -7,6 +7,8 @@ import lombok.SneakyThrows;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit5.JMockitExtension;
+import org.assertj.core.data.TemporalOffset;
+import org.assertj.core.data.TemporalUnitWithinOffset;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,6 +83,35 @@ class LoginAchievementTest extends TestBase {
             achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
 
             assertThat(achievement.count(player())).isEqualTo(1);
+            assertThat(store.get(LoginAchievement.LAST_LOGIN, Long.class).map(Instant::ofEpochMilli).get())
+                    .isCloseTo(Instant.now(), new TemporalUnitWithinOffset(5, ChronoUnit.SECONDS));
+        }
+
+        @Test
+        @DisplayName("should count streak after login streak failed")
+        void shouldCountStreakAfterFailedStreak() throws UnknownHostException {
+
+            MemoryConfiguration config = new MemoryConfiguration();
+            config.set("count", 5);
+
+            achievement.load(config);
+
+            store.set(LoginAchievement.LAST_LOGIN, Instant.now().minus(2, ChronoUnit.DAYS).toEpochMilli());
+            store.set(CountAchievement.COUNT_KEY, 4);
+
+            achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
+            assertThat(achievement.count(player())).isEqualTo(1);
+
+            Clock clock = Clock.fixed(Instant.now().plus(1, ChronoUnit.DAYS), ZoneId.of("UTC"));
+            new MockUp<Instant>() {
+                @Mock
+                public Instant now() {
+                    return Instant.now(clock);
+                }
+            };
+
+            achievement.onLogin(new PlayerLoginEvent(bukkitPlayer(), "", InetAddress.getByName("localhost")));
+            assertThat(achievement.count(player())).isEqualTo(2);
         }
 
         @Test
