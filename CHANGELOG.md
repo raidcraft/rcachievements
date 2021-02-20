@@ -1,3 +1,10 @@
+## [1.27.10](https://github.com/raidcraft/rcachievements/compare/v1.27.9...v1.27.10) (2021-02-20)
+
+
+### Bug Fixes
+
+* **login:** logins not counting after failed streak ([518ff59](https://github.com/raidcraft/rcachievements/commit/518ff5991d3b78d345edd261976b7a2a31e28fb7)), closes [#58](https://github.com/raidcraft/rcachievements/issues/58)
+
 ## [1.27.9](https://github.com/raidcraft/rcachievements/compare/v1.27.8...v1.27.9) (2021-02-19)
 
 
