@@ -1,3 +1,10 @@
+## [1.27.12](https://github.com/raidcraft/rcachievements/compare/v1.27.11...v1.27.12) (2021-02-21)
+
+
+### Bug Fixes
+
+* use parent category if not defined ([1e6f5fa](https://github.com/raidcraft/rcachievements/commit/1e6f5fa4e870c504b0a2458907b21531abbf9f49))
+
 ## [1.27.11](https://github.com/raidcraft/rcachievements/compare/v1.27.10...v1.27.11) (2021-02-21)
 
 
