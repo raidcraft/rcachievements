@@ -1,3 +1,10 @@
+## [1.27.11](https://github.com/raidcraft/rcachievements/compare/v1.27.10...v1.27.11) (2021-02-21)
+
+
+### Bug Fixes
+
+* login achievement not working ([d32629f](https://github.com/raidcraft/rcachievements/commit/d32629f2de338ffb8024a86b781291468c59bbcb)), closes [#58](https://github.com/raidcraft/rcachievements/issues/58)
+
 ## [1.27.10](https://github.com/raidcraft/rcachievements/compare/v1.27.9...v1.27.10) (2021-02-20)
 
 
