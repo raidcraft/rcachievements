@@ -541,7 +541,11 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.restricted(config.getBoolean("restricted", isChild() ? parent().restricted() : restricted()));
         this.globalRewards(config.getBoolean("global_rewards", isChild() ? parent().globalRewards() : globalRewards()));
         this.showProgress(config.getBoolean("show_progress", isChild() ? parent().showProgress() : showProgress()));
-        Category.byAliasOrId(config.getString("category")).ifPresent(this::category);
+        Category.byAliasOrId(config.getString("category")).ifPresentOrElse(this::category, () -> {
+            if (isChild()) {
+                category(parent().category());
+            }
+        });
         if (config.isSet("rewards")) {
             rewards(config.getStringList("rewards"));
         } else if (isChild()) {
