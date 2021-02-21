@@ -172,12 +172,12 @@ public class AchievementPlayer extends BaseEntity implements Comparable<Achievem
     public boolean canUnlock(Achievement achievement) {
 
         if (unlocked(achievement)) return false;
+        if (!achievement.restricted()) return true;
 
         Player player = Bukkit.getPlayer(id());
         if (player == null) return false;
 
-        return !achievement.restricted()
-                || player.hasPermission(Constants.ACHIEVEMENT_PERMISSION_PREFIX + achievement.alias());
+        return player.hasPermission(Constants.ACHIEVEMENT_PERMISSION_PREFIX + achievement.alias());
     }
 
     /**
