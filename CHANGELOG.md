@@ -1,3 +1,11 @@
+## [1.27.13](https://github.com/raidcraft/rcachievements/compare/v1.27.12...v1.27.13) (2021-02-22)
+
+
+### Bug Fixes
+
+* counter of childs not increased ([69ae316](https://github.com/raidcraft/rcachievements/commit/69ae3166490846aa0413f533469415e53497b45a))
+* counter of childs not increased ([63118ad](https://github.com/raidcraft/rcachievements/commit/63118adfd275054b02a455505f102cc050e06647))
+
 ## [1.27.12](https://github.com/raidcraft/rcachievements/compare/v1.27.11...v1.27.12) (2021-02-21)
 
 
