@@ -226,7 +226,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param count the count value to set
      * @return the given count value
      */
-    public final long count(AchievementPlayer player, long count) {
+    public long count(AchievementPlayer player, long count) {
 
         Bukkit.getScheduler().runTask(RCAchievements.instance(), () -> {
             PlayerAchievement achievement = PlayerAchievement.of(achievement(), player);

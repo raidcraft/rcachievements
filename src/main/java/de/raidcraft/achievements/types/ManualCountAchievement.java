@@ -1,13 +1,17 @@
 package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.AchievementContext;
+import de.raidcraft.achievements.AchievementManager;
+import de.raidcraft.achievements.RCAchievements;
 import de.raidcraft.achievements.TypeFactory;
+import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.events.AchievementCountChangedEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,13 +43,18 @@ public class ManualCountAchievement extends CountAchievement implements Listener
         super(context);
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onCountChange(AchievementCountChangedEvent event) {
+    @Override
+    public long count(AchievementPlayer player, long count) {
 
-        if (event.getCountAchievement().equals(this)) return;
-        if (notApplicable(event.player())) return;
-        if (event.achievement().isParentOf(achievement())) return;
+        AchievementManager achievementManager = RCAchievements.instance().achievementManager();
+        achievement().children().stream()
+                .map(achievementManager::active)
+                .flatMap(Optional::stream)
+                .map(AchievementContext::type)
+                .filter(type -> type instanceof CountAchievement)
+                .map(type -> (CountAchievement) type)
+                .forEach(countAchievement -> countAchievement.count(player, count));
 
-
+        return super.count(player, count);
     }
 }
