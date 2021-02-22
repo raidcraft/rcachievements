@@ -69,4 +69,26 @@ class ManualCountAchievementTest extends TestBase {
 
         assertThat(((ManualCountAchievement) manager().active("count2-child").get().type()).count(player())).isEqualTo(3);
     }
+
+    @Test
+    @DisplayName("should unlock achievement if count was reached")
+    void shouldGivePlayerAchievementIfCountReached() {
+
+        achievement.addTo(player());
+
+        counter.increaseAndCheck(player(), 5);
+
+        assertThat(player().unlocked(loadAchievement("count-test").get())).isTrue();
+    }
+
+    @Test
+    @DisplayName("should unlock child achievement if count was reached")
+    void shouldGivePlayerChildAchievementIfCountReached() {
+
+        achievement.addTo(player());
+
+        counter.increaseAndCheck(player(), 25);
+
+        assertThat(player().unlocked(loadAchievement("count2-child").get())).isTrue();
+    }
 }

@@ -127,7 +127,7 @@ public abstract class CountAchievement extends AbstractAchievementType implement
      * @param player the player to check the counter for
      * @param amount the amount for which the counter should be increased
      */
-    public final void increaseAndCheck(AchievementPlayer player, long amount) {
+    public void increaseAndCheck(AchievementPlayer player, long amount) {
 
         if (increase(player, amount) >= count) {
             addTo(player);

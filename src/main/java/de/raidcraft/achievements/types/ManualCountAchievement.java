@@ -10,10 +10,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ManualCountAchievement extends CountAchievement implements Listener {
 
@@ -44,17 +43,32 @@ public class ManualCountAchievement extends CountAchievement implements Listener
     }
 
     @Override
+    public void increaseAndCheck(AchievementPlayer player, long amount) {
+
+        allChildren()
+                .forEach(countAchievement -> countAchievement.increaseAndCheck(player, amount));
+
+        super.increaseAndCheck(player, amount);
+    }
+
+    @Override
     public long count(AchievementPlayer player, long count) {
 
+        allChildren()
+                .forEach(countAchievement -> countAchievement.count(player, count));
+
+        return super.count(player, count);
+    }
+
+    private Collection<CountAchievement> allChildren() {
+
         AchievementManager achievementManager = RCAchievements.instance().achievementManager();
-        achievement().children().stream()
+        return achievement().children().stream()
                 .map(achievementManager::active)
                 .flatMap(Optional::stream)
                 .map(AchievementContext::type)
                 .filter(type -> type instanceof CountAchievement)
                 .map(type -> (CountAchievement) type)
-                .forEach(countAchievement -> countAchievement.count(player, count));
-
-        return super.count(player, count);
+                .collect(Collectors.toUnmodifiableList());
     }
 }

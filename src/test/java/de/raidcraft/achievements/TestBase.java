@@ -5,6 +5,7 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
+import de.raidcraft.achievements.entities.PlayerAchievement;
 import io.ebean.Model;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -48,6 +49,7 @@ public class TestBase {
     @AfterEach
     protected void tearDown() {
 
+        PlayerAchievement.find.all().forEach(Model::delete);
         Achievement.find.query().where().isNull("parent").findList().forEach(Model::delete);
         MockBukkit.unmock();
     }
