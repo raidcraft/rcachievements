@@ -467,6 +467,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         if (parent() != null) config.set("parent", parent().id().toString());
         if (category() != null) config.set("category", category().alias());
         if (worlds() != null) config.set("worlds", worlds());
+        if (rewards() != null) config.set("rewards", rewards());
 
         ConfigurationSection childs = config.createSection("childs");
         for (Achievement child : children().stream().filter(achievement -> Strings.isNullOrEmpty(achievement.source())).collect(Collectors.toSet())) {
