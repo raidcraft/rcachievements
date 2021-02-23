@@ -1,3 +1,10 @@
+## [1.27.14](https://github.com/raidcraft/rcachievements/compare/v1.27.13...v1.27.14) (2021-02-23)
+
+
+### Bug Fixes
+
+* rewards not saved when reloading ([346c15f](https://github.com/raidcraft/rcachievements/commit/346c15f88b4dc901985600c660c2737effb830cd))
+
 ## [1.27.13](https://github.com/raidcraft/rcachievements/compare/v1.27.12...v1.27.13) (2021-02-22)
 
 
