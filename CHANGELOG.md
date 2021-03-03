@@ -1,3 +1,11 @@
+## [1.27.15](https://github.com/raidcraft/rcachievements/compare/v1.27.14...v1.27.15) (2021-03-03)
+
+
+### Bug Fixes
+
+* only add parent achievements to default category ([5a861d7](https://github.com/raidcraft/rcachievements/commit/5a861d7ad2bc9a4e9a0288ca9af201371d200a83)), closes [#66](https://github.com/raidcraft/rcachievements/issues/66)
+* pagination in sub category not working ([8a8f81c](https://github.com/raidcraft/rcachievements/commit/8a8f81c576ac8d7119df33953f2d4d140b23b889)), closes [#65](https://github.com/raidcraft/rcachievements/issues/65)
+
 ## [1.27.14](https://github.com/raidcraft/rcachievements/compare/v1.27.13...v1.27.14) (2021-02-23)
 
 
