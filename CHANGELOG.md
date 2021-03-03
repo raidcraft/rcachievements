@@ -1,3 +1,10 @@
+## [1.27.16](https://github.com/raidcraft/rcachievements/compare/v1.27.15...v1.27.16) (2021-03-03)
+
+
+### Bug Fixes
+
+* achievement list pagination not working ([1fd43e9](https://github.com/raidcraft/rcachievements/commit/1fd43e92132f94ad798406d40377b1cd8eb5c156))
+
 ## [1.27.15](https://github.com/raidcraft/rcachievements/compare/v1.27.14...v1.27.15) (2021-03-03)
 
 
