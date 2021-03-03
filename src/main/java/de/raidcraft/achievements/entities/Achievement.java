@@ -116,6 +116,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         return find.query()
                 .where().isNull("category")
                 .and().eq("enabled", true)
+                .and().isNull("parent")
                 .findList();
     }
 
