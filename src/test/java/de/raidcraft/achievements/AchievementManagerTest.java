@@ -212,7 +212,7 @@ class AchievementManagerTest extends TestBase {
                     .hasSize(1)
                     .first()
                     .extracting(Achievement::alias, Achievement::name, Achievement::type, Achievement::isChild)
-                    .contains("foobar:child1", "Child 1", "mock", true);
+                    .contains("foobar-child1", "Child 1", "mock", true);
         }
 
         @Test
@@ -259,7 +259,7 @@ class AchievementManagerTest extends TestBase {
                     .hasSize(1)
                     .first()
                     .extracting(Achievement::alias)
-                    .isEqualTo("foobar:child1");
+                    .isEqualTo("foobar-child1");
         }
 
         @Test
