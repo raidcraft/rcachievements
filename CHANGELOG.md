@@ -1,3 +1,10 @@
+## [1.27.17](https://github.com/raidcraft/rcachievements/compare/v1.27.16...v1.27.17) (2021-03-03)
+
+
+### Bug Fixes
+
+* invalid character in automatic child key creation ([008c9aa](https://github.com/raidcraft/rcachievements/commit/008c9aa0b983130c388134ea100231bc52e3ff5e))
+
 ## [1.27.16](https://github.com/raidcraft/rcachievements/compare/v1.27.15...v1.27.16) (2021-03-03)
 
 
