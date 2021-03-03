@@ -361,7 +361,7 @@ public final class Messages {
                             if (value == null) return Collections.singleton(empty());
 
                             return Collections.singleton(achievementChain(PlayerAchievement.of(value, player)));
-                        }, p -> listCategory(player, category, page)
+                        }, p -> listCategory(player, category, p)
                 ).render(achievements, page);
     }
 
