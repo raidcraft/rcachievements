@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
+import com.google.common.base.Strings;
 import de.raidcraft.achievements.Messages;
 import de.raidcraft.achievements.PluginConfig;
 import de.raidcraft.achievements.RCAchievements;
@@ -30,8 +31,12 @@ public class PlayerCommands extends BaseCommand {
     public static final Function<Achievement, String> INFO = (achievement) -> "/rcachievements info " + achievement.id().toString();
     public static final BiFunction<AchievementPlayer, Integer, String> LIST = (player, page) -> "/rcachievements list " + page + " all " + player.id().toString();
     public static final Function<Integer, String> CATEGORIES = (page) -> "/rcachievements categories " + page;
-    public static final BiFunction<Integer, String, String> LIST_CATEGORY = (page, category) -> "/rcachievements list " + page + " " + category;
     public static final Function<Integer, String> TOP = (page) -> "/rcachievements top " + page;
+
+    public static String listCategory(AchievementPlayer player, Category category, int page) {
+
+        return "/rcachievements list " + page + " " + (category == null ? "all" : category.alias()) + " " + player.id().toString();
+    }
 
     private final RCAchievements plugin;
 
@@ -84,10 +89,10 @@ public class PlayerCommands extends BaseCommand {
         CommandIssuer issuer = getCurrentCommandIssuer();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             if (category == null) {
-                Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)), page)
+                Messages.list(player, Achievement.allEnabled(issuer.hasPermission(SHOW_HIDDEN)), category, page)
                         .forEach(component -> send(issuer, component));
             } else {
-                Messages.list(player, category.achievements(), page)
+                Messages.list(player, category.achievements(), category, page)
                         .forEach(component -> send(issuer, component));
             }
         });
@@ -100,7 +105,7 @@ public class PlayerCommands extends BaseCommand {
     @CommandPermission(PERMISSION_PREFIX + "achievements.list")
     public void mylist(@Default("1") int page, @Conditions("self") AchievementPlayer player) {
 
-        Messages.list(player, player.unlockedAchievements().stream().map(PlayerAchievement::achievement).collect(Collectors.toList()), page)
+        Messages.list(player, player.unlockedAchievements().stream().map(PlayerAchievement::achievement).collect(Collectors.toList()), null, page)
                 .forEach(component -> send(getCurrentCommandIssuer(), component));
 
     }

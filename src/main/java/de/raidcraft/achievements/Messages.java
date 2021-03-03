@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 import static de.raidcraft.achievements.Constants.PAGE_WIDTH;
 import static de.raidcraft.achievements.Constants.RESULTS_PER_PAGE;
 import static de.raidcraft.achievements.Messages.Colors.*;
-import static de.raidcraft.achievements.commands.PlayerCommands.INFO;
+import static de.raidcraft.achievements.commands.PlayerCommands.*;
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.newline;
 import static net.kyori.adventure.text.Component.text;
@@ -343,7 +343,7 @@ public final class Messages {
                 ).render(locations, page);
     }
 
-    public static List<Component> list(@NonNull AchievementPlayer player, List<Achievement> achievements, int page) {
+    public static List<Component> list(@NonNull AchievementPlayer player, List<Achievement> achievements, Category category, int page) {
 
         achievements = achievements.stream()
                 .filter(Achievement::enabled)
@@ -361,7 +361,7 @@ public final class Messages {
                             if (value == null) return Collections.singleton(empty());
 
                             return Collections.singleton(achievementChain(PlayerAchievement.of(value, player)));
-                        }, p -> PlayerCommands.LIST.apply(player, p)
+                        }, p -> listCategory(player, category, page)
                 ).render(achievements, page);
     }
 
@@ -557,7 +557,7 @@ public final class Messages {
                 .append(text(category.achievements().size(), HIGHLIGHT))
                 .append(text(")", NOTE))
                 .build()
-                .clickEvent(runCommand(PlayerCommands.LIST_CATEGORY.apply(1, category.alias()) + " " + player.id().toString()));
+                .clickEvent(runCommand(PlayerCommands.listCategory(player, category, 1)));
     }
 
     public static Component categoryInfo(@NonNull Category category, @NonNull AchievementPlayer player) {
