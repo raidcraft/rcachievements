@@ -158,4 +158,12 @@ public class PlayerAchievement extends BaseEntity {
         Bukkit.getScheduler().runTask(RCAchievements.instance(), () ->
                 Bukkit.getPluginManager().callEvent(new PlayerLostAchievementEvent(this)));
     }
+
+    @PostLoad
+    void onPostLoad() {
+
+        if (data() == null) {
+            data(new DataStore());
+        }
+    }
 }
