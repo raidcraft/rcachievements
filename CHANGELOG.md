@@ -1,3 +1,10 @@
+## [1.27.19](https://github.com/raidcraft/rcachievements/compare/v1.27.18...v1.27.19) (2021-03-09)
+
+
+### Bug Fixes
+
+* set datastore if non existent ([fb63e7e](https://github.com/raidcraft/rcachievements/commit/fb63e7e7428d7191e0caa7a5bfde712edf72ab4a))
+
 ## [1.27.18](https://github.com/raidcraft/rcachievements/compare/v1.27.17...v1.27.18) (2021-03-07)
 
 
