@@ -489,6 +489,9 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     void onPostLoad() {
 
         load(config(), true);
+        if (data() == null) {
+            data(new DataStore());
+        }
     }
 
     Achievement load(ConfigurationSection config) {
