@@ -105,6 +105,15 @@ public class PlayerAchievement extends BaseEntity {
         this.player = player;
     }
 
+    public DataStore data() {
+
+        if (data == null) {
+            data = new DataStore();
+        }
+
+        return data;
+    }
+
     /**
      * @return true if the player unlocked the achievement
      */
@@ -157,13 +166,5 @@ public class PlayerAchievement extends BaseEntity {
 
         Bukkit.getScheduler().runTask(RCAchievements.instance(), () ->
                 Bukkit.getPluginManager().callEvent(new PlayerLostAchievementEvent(this)));
-    }
-
-    @PostLoad
-    void onPostLoad() {
-
-        if (data() == null) {
-            data(new DataStore());
-        }
     }
 }

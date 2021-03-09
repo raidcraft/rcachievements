@@ -360,6 +360,15 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
         this.name(alias);
     }
 
+    public DataStore data() {
+
+        if (data == null) {
+            data = new DataStore();
+        }
+
+        return data;
+    }
+
     /**
      * @return true if the achievement is disabled and should not be loaded
      */
@@ -489,9 +498,6 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     void onPostLoad() {
 
         load(config(), true);
-        if (data() == null) {
-            data(new DataStore());
-        }
     }
 
     Achievement load(ConfigurationSection config) {

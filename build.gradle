@@ -94,7 +94,7 @@ dependencies {
 shadowJar {
     classifier = ''
     dependencies {
-        include(dependency('co.aikar:acf-paper:'))
+        include(dependency('co.aikar::'))
         include(dependency('net.silthus.configlib:configlib-bukkit:'))
         include(dependency('net.kyori::'))
         include(dependency('de.raidcraft.economy:wrapper:'))
