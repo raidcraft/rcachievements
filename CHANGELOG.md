@@ -1,3 +1,10 @@
+## [1.27.20](https://github.com/raidcraft/rcachievements/compare/v1.27.19...v1.27.20) (2021-03-09)
+
+
+### Bug Fixes
+
+* create data store if it does not exist ([d98f92f](https://github.com/raidcraft/rcachievements/commit/d98f92fc6fc18fb4502929111cc329e1e46ce256))
+
 ## [1.27.19](https://github.com/raidcraft/rcachievements/compare/v1.27.18...v1.27.19) (2021-03-09)
 
 
