@@ -1,3 +1,10 @@
+## [1.27.21](https://github.com/raidcraft/rcachievements/compare/v1.27.20...v1.27.21) (2021-03-11)
+
+
+### Bug Fixes
+
+* do not use . for the achievement alias ([cfefe84](https://github.com/raidcraft/rcachievements/commit/cfefe8412db454c1d5578b6f4b9ba2fab888a518))
+
 ## [1.27.20](https://github.com/raidcraft/rcachievements/compare/v1.27.19...v1.27.20) (2021-03-09)
 
 
