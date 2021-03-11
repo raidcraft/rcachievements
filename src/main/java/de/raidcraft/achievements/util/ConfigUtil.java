@@ -17,8 +17,8 @@ public class ConfigUtil {
 
         Path relativePath = base.relativize(file.toPath());
         return relativePath.toString()
-                .replace("/", ".")
-                .replace("\\", ".")
+                .replace("/", "-")
+                .replace("\\", "-")
                 .toLowerCase()
                 .replace(".yml", "")
                 .replace(".yaml", "");
