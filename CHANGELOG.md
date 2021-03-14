@@ -1,3 +1,10 @@
+## [1.27.22](https://github.com/raidcraft/rcachievements/compare/v1.27.21...v1.27.22) (2021-03-14)
+
+
+### Bug Fixes
+
+* synchronize and save player data cache ([090ec79](https://github.com/raidcraft/rcachievements/commit/090ec794c2f0c570f25476dc8e8ffad45d0f5321))
+
 ## [1.27.21](https://github.com/raidcraft/rcachievements/compare/v1.27.20...v1.27.21) (2021-03-11)
 
 
