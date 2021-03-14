@@ -3,10 +3,10 @@ package de.raidcraft.achievements;
 import com.google.common.collect.ImmutableList;
 import de.raidcraft.achievements.entities.Achievement;
 import de.raidcraft.achievements.entities.AchievementPlayer;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Synchronized;
+import de.raidcraft.achievements.entities.DataStore;
+import de.raidcraft.achievements.entities.PlayerAchievement;
+import io.ebean.Model;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
@@ -35,6 +35,7 @@ public class DefaultAchievementContext implements AchievementContext {
     private BukkitTask tickTask;
 
     private final Map<UUID, Boolean> applicableCheckCache = Collections.synchronizedMap(new HashMap<>());
+    private final Map<UUID, DataStore> playerDataCache = Collections.synchronizedMap(new HashMap<>());
 
     public DefaultAchievementContext(RCAchievements plugin, Achievement achievement, AchievementType.Registration<?> registration) {
 
@@ -129,6 +130,9 @@ public class DefaultAchievementContext implements AchievementContext {
         try {
             updateEventListener(false);
             type.disable();
+            synchronized (playerDataCache) {
+                playerDataCache.values().forEach(Model::save);
+            }
         } catch (Exception e) {
             log.severe("failed to call disable() on achievement " + achievement().alias()
                     + " (" + achievement().id() + "): " + e.getMessage());
@@ -154,6 +158,18 @@ public class DefaultAchievementContext implements AchievementContext {
     public void clearCache() {
 
         applicableCheckCache.clear();
+        synchronized (playerDataCache) {
+            playerDataCache.values().forEach(Model::save);
+            playerDataCache.clear();
+        }
+    }
+
+    @Override
+    public DataStore store(@NonNull AchievementPlayer player) {
+
+        synchronized (playerDataCache) {
+            return playerDataCache.computeIfAbsent(player.id(), uuid -> PlayerAchievement.of(achievement(), player).data());
+        }
     }
 
     @Override

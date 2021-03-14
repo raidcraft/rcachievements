@@ -136,10 +136,7 @@ public interface AchievementContext {
      * @param player the player to get the linked data store for this achievement
      * @return the data store of this achievement player combination
      */
-    default DataStore store(@NonNull AchievementPlayer player) {
-
-        return PlayerAchievement.of(achievement(), player).data();
-    }
+    DataStore store(@NonNull AchievementPlayer player);
 
     /**
      * Checks if the given player can receive this achievement and should be checked.

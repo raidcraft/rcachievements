@@ -236,7 +236,10 @@ public abstract class CountAchievement extends AbstractAchievementType implement
                     .callEvent(new AchievementCountChangedEvent(achievement, this, count));
         });
 
-        return countCache.compute(player.id(), (uuid, integer) -> count);
+        countCache.put(player.id(), count);
+        store(player).set(COUNT_KEY, count);
+
+        return count;
     }
 
     /**
