@@ -2,6 +2,8 @@ package de.raidcraft.achievements.types;
 
 import de.raidcraft.achievements.TestBase;
 import de.raidcraft.achievements.entities.Achievement;
+import de.raidcraft.achievements.entities.DataStore;
+import de.raidcraft.achievements.entities.PlayerAchievement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

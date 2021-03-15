@@ -48,7 +48,7 @@ public class RCAchievements extends JavaPlugin {
     @Accessors(fluent = true)
     private static RCAchievements instance;
 
-    @Getter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PUBLIC)
     private Database database;
     @Getter
     @Setter(AccessLevel.PACKAGE)

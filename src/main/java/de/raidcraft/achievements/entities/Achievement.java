@@ -336,7 +336,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
     /**
      * The persistent meta data store of this achievement.
      */
-    @Setter(AccessLevel.PRIVATE)
+    @Setter(AccessLevel.PACKAGE)
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private DataStore data = new DataStore();
     @Setter(AccessLevel.PRIVATE)
@@ -364,6 +364,7 @@ public class Achievement extends BaseEntity implements Comparable<Achievement> {
 
         if (data == null) {
             data = new DataStore();
+            save();
         }
 
         return data;

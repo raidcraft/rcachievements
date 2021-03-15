@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -170,6 +171,39 @@ class AchievementTest extends TestBase {
             parent.refresh();
 
             assertThat(parent.isParentOf(achievement)).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("data()")
+    class DataStoreTest {
+
+        @Test
+        @DisplayName("should create and new data store if store is null")
+        void shouldCreateNewDataIfNull() {
+
+            Achievement achievement = loadAchievement();
+            achievement.data(null).save();
+
+            assertThat(achievement.data()).isNotNull();
+        }
+
+        @Test
+        @DisplayName("should persist new data store in player achievement")
+        void shouldPersistNewDataStore() {
+
+            Achievement achievement = loadAchievement();
+            achievement.data(null).save();
+
+            achievement.data().set("test", 2).save();
+
+            achievement.refresh();
+            DataStore data = achievement.data();
+
+            assertThat(data.get("test", Long.class))
+                    .isNotEmpty()
+                    .get()
+                    .isEqualTo(2L);
         }
     }
 }

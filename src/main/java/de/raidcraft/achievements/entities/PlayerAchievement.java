@@ -109,6 +109,7 @@ public class PlayerAchievement extends BaseEntity {
 
         if (data == null) {
             data = new DataStore();
+            save();
         }
 
         return data;
