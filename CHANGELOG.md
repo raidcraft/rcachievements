@@ -1,3 +1,10 @@
+## [1.27.23](https://github.com/raidcraft/rcachievements/compare/v1.27.22...v1.27.23) (2021-03-15)
+
+
+### Bug Fixes
+
+* persist new data store after creating it ([b84c68c](https://github.com/raidcraft/rcachievements/commit/b84c68cbd1dcf0437a7e424b0fa53db174efdd33)), closes [#74](https://github.com/raidcraft/rcachievements/issues/74)
+
 ## [1.27.22](https://github.com/raidcraft/rcachievements/compare/v1.27.21...v1.27.22) (2021-03-14)
 
 
