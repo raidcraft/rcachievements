@@ -1,3 +1,10 @@
+## [1.28.1](https://github.com/raidcraft/rcachievements/compare/v1.28.0...v1.28.1) (2021-03-18)
+
+
+### Bug Fixes
+
+* missing soft depend on plan ([830f05d](https://github.com/raidcraft/rcachievements/commit/830f05de4d3c404e78513e6d6a690f4c29c57688))
+
 # [1.28.0](https://github.com/raidcraft/rcachievements/compare/v1.27.23...v1.28.0) (2021-03-18)
 
 
