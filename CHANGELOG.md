@@ -1,3 +1,15 @@
+# [1.28.0](https://github.com/raidcraft/rcachievements/compare/v1.27.23...v1.28.0) (2021-03-18)
+
+
+### Bug Fixes
+
+* store biomes per player to avoid cross server overwrites ([e309bcb](https://github.com/raidcraft/rcachievements/commit/e309bcb231da277f6b0f483609e37510a35bd4f4)), closes [#74](https://github.com/raidcraft/rcachievements/issues/74)
+
+
+### Features
+
+* add player statistics about achievement count ([3e9a60b](https://github.com/raidcraft/rcachievements/commit/3e9a60bfd8cb6ed7f9ba6d0a9448a2afa82ccb28))
+
 ## [1.27.23](https://github.com/raidcraft/rcachievements/compare/v1.27.22...v1.27.23) (2021-03-15)
 
 
