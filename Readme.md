@@ -22,6 +22,7 @@ RCAchievements ist das Achievement Plugin des [Raid-Craft](https://raid-craft.de
   * [statistic](#statistic)
   * [biomes](#biomes)
   * [money](#money)
+* [SQL Statements](#sql-statements)
 
 ## Configuration
 
@@ -219,3 +220,37 @@ Tracks the money a player has.
 | ------ | ------- | ----------- |
 | `amount` | `0` | The amount of money the player needs to unlock the achievement. |
 
+## SQL Statements
+
+You can use the following SQL statements to sync the block break data from core protect into the achievement statistics.
+
+```sql
+UPDATE `rcachievements_achievements` as a
+RIGHT JOIN rcachievements_player_achievements as pa
+    ON pa.achievement_id = a.id
+LEFT JOIN rcachievements_datastore as data 
+    ON data.id = pa.data_id
+JOIN rcachievements_players as p 
+    ON p.id = pa.player_id
+SET data.data = JSON_REPLACE(data.data, '$.count', (
+    SELECT SUM(bb.block_count)
+    FROM `total_broken_blocks` bb
+    WHERE
+    	bb.uuid = p.id
+    AND JSON_CONTAINS(a.config, CONCAT('"', bb.material, '"'), '$."with.blocks"')
+))
+WHERE a.type = 'block'
+AND pa.when_created > '2021-03-18';
+
+SELECT data.id, alias, p.name, json_extract(data.data, '$.count') as `count`
+FROM `rcachievements_achievements` as a
+JOIN rcachievements_player_achievements as pa
+    ON pa.achievement_id = a.id
+JOIN rcachievements_datastore as data ON data.id = pa.data_id
+JOIN rcachievements_players as p ON p.id = pa.player_id
+WHERE a.type = 'block'
+AND data.data != '{}'
+AND a.parent_id is NULL
+AND `count` is not NULL
+ORDER BY `count` DESC;
+```
