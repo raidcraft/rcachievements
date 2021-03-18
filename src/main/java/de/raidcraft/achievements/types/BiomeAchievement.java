@@ -5,19 +5,26 @@ import de.raidcraft.achievements.TypeFactory;
 import de.raidcraft.achievements.entities.AchievementPlayer;
 import de.raidcraft.achievements.util.EnumUtil;
 import de.raidcraft.achievements.util.LocationUtil;
+import io.ebeaninternal.server.lib.Str;
 import lombok.extern.java.Log;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static de.raidcraft.achievements.Messages.Colors.*;
 import static java.util.stream.Collectors.toMap;
@@ -51,9 +58,9 @@ public class BiomeAchievement extends CountAchievement implements Listener {
         }
     }
 
-    private final Set<Biome> biomeTypes = new HashSet<>();
-    private final Map<UUID, Location> lastLocations = new HashMap<>();
-    private final Map<UUID, Set<Biome>> playerVisitedBiomesMap = new HashMap<>();
+    final Set<Biome> biomeTypes = new HashSet<>();
+    final Map<UUID, Location> lastLocations = new HashMap<>();
+    final Map<UUID, Set<Biome>> playerVisitedBiomesMap = new HashMap<>();
 
     protected BiomeAchievement(AchievementContext context) {
 
@@ -102,18 +109,10 @@ public class BiomeAchievement extends CountAchievement implements Listener {
         return builder.build();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void enable() {
 
-        Map<String, Collection<String>> entry = store().get(VISITED_BIOMES, Map.class, new HashMap<String, Collection<String>>());
-        for (Map.Entry<String, Collection<String>> playerEntry : entry.entrySet()) {
-            playerVisitedBiomesMap.put(UUID.fromString(playerEntry.getKey()), playerEntry.getValue().stream()
-                    .map(s -> EnumUtil.searchEnum(Biome.class, s))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet())
-            );
-        }
+        Bukkit.getOnlinePlayers().forEach(this::loadBiomes);
 
         super.enable();
     }
@@ -121,13 +120,23 @@ public class BiomeAchievement extends CountAchievement implements Listener {
     @Override
     public void disable() {
 
-        store().set(VISITED_BIOMES, playerVisitedBiomesMap.entrySet().stream()
-                .collect(toMap(t -> t.getKey().toString(), entry -> entry.getValue().stream()
-                        .map(biome -> biome.getKey().toString())
-                        .collect(toSet())
-                ))).save();
+        playerVisitedBiomesMap.keySet()
+                .stream().map(Bukkit::getOfflinePlayer)
+                .forEach(this::saveBiomes);
 
         super.disable();
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+
+        loadBiomes(event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+
+        saveBiomes(event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -152,5 +161,26 @@ public class BiomeAchievement extends CountAchievement implements Listener {
         Location lastLocation = lastLocations.getOrDefault(player.getUniqueId(), player.getLocation());
         lastLocations.put(player.getUniqueId(), lastLocation);
         return !LocationUtil.isBlockEquals(lastLocation, player.getLocation());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadBiomes(Player player) {
+
+        Set<String> visitedBiomes = store(player).get(VISITED_BIOMES, Set.class, new HashSet<String>());
+
+        playerVisitedBiomesMap.compute(player.getUniqueId(), (uuid, biomes) ->
+                Stream.concat(visitedBiomes.stream()
+                                .map(s -> EnumUtil.searchEnum(Biome.class, s)),
+                        Objects.requireNonNullElse(biomes, new HashSet<Biome>()).stream())
+                        .collect(Collectors.toSet())
+        );
+    }
+
+    private void saveBiomes(OfflinePlayer player) {
+
+        Set<String> biomes = playerVisitedBiomesMap.getOrDefault(player.getUniqueId(), new HashSet<>())
+                .stream().map(biome -> biome.getKey().toString())
+                .collect(toSet());
+        store(player).set(VISITED_BIOMES, biomes).save();
     }
 }
