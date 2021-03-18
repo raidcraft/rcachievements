@@ -251,6 +251,6 @@ JOIN rcachievements_players as p ON p.id = pa.player_id
 WHERE a.type = 'block'
 AND data.data != '{}'
 AND a.parent_id is NULL
-AND `count` is not NULL
+AND pa.when_created > '2021-03-18';
 ORDER BY `count` DESC;
 ```
