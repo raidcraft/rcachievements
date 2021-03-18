@@ -10,6 +10,7 @@ import de.raidcraft.achievements.entities.*;
 import de.raidcraft.achievements.listener.PlayerListener;
 import de.raidcraft.achievements.listener.ProgressListener;
 import de.raidcraft.achievements.listener.RewardListener;
+import de.raidcraft.achievements.plan.PlanHook;
 import de.raidcraft.achievements.types.ArtAchievement;
 import io.artframework.Scope;
 import io.artframework.annotations.ArtModule;
@@ -64,6 +65,7 @@ public class RCAchievements extends JavaPlugin {
     private BlockTracker blockTracker;
     @Getter
     private Scope art;
+    private PlanHook planHook;
 
     @Getter
     private static boolean testing = false;
@@ -87,6 +89,9 @@ public class RCAchievements extends JavaPlugin {
         setupAchievementManager();
         setupListener();
         setupCommands();
+        if (!testing()) {
+            setupPlayerAnalytics();
+        }
     }
 
     @Override
@@ -143,6 +148,12 @@ public class RCAchievements extends JavaPlugin {
         getDataFolder().mkdirs();
         pluginConfig = new PluginConfig(new File(getDataFolder(), "config.yml").toPath());
         pluginConfig.loadAndSave();
+    }
+
+    private void setupPlayerAnalytics() {
+
+        planHook = new PlanHook();
+        planHook.hookIntoPlan();
     }
 
     private void setupAchievementManager() {

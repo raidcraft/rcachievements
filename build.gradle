@@ -56,6 +56,7 @@ repositories {
     maven { url = 'https://jitpack.io' }
     spigot()
     maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+    maven { url = "https://dl.bintray.com/rsl1122/Plan-repository" }
 }
 
 dependencies {
@@ -74,6 +75,7 @@ dependencies {
 
     implementation group: 'io.art-framework.core', name: 'api', version: '4.5.4'
     implementation 'de.raidcraft:economy:2.4.0'
+    implementation 'com.djrapitops:Plan-api:5.1-R0.4'
 
     testImplementation 'io.ebean:ebean-test:12.7.2'
 
