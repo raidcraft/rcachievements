@@ -20,10 +20,8 @@ public class PlanHook {
     private void registerDataExtension() {
         try {
             ExtensionService.getInstance().register(new RCAchievementsDataExtension());
-        } catch (IllegalStateException planIsNotEnabled) {
-            // Plan is not enabled, handle exception
-        } catch (IllegalArgumentException dataExtensionImplementationIsInvalid) {
-            // The DataExtension implementation has an implementation error, handle exception
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
