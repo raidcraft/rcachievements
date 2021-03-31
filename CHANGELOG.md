@@ -1,3 +1,10 @@
+## [1.28.2](https://github.com/raidcraft/rcachievements/compare/v1.28.1...v1.28.2) (2021-03-31)
+
+
+### Bug Fixes
+
+* print plan registration stacktrace on error ([0f39963](https://github.com/raidcraft/rcachievements/commit/0f3996336476252032b7dc6fb22d74fdd906a515))
+
 ## [1.28.1](https://github.com/raidcraft/rcachievements/compare/v1.28.0...v1.28.1) (2021-03-18)
 
 
