@@ -166,7 +166,7 @@ public class BiomeAchievement extends CountAchievement implements Listener {
     @SuppressWarnings("unchecked")
     private void loadBiomes(Player player) {
 
-        Set<String> visitedBiomes = store(player).get(VISITED_BIOMES, Set.class, new HashSet<String>());
+        Set<String> visitedBiomes = Set.copyOf(store(player).get(VISITED_BIOMES, Collection.class, new HashSet<>()));
 
         playerVisitedBiomesMap.compute(player.getUniqueId(), (uuid, biomes) ->
                 Stream.concat(visitedBiomes.stream()
