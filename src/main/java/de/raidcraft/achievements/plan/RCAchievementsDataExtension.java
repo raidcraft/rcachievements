@@ -76,7 +76,7 @@ public class RCAchievementsDataExtension implements DataExtension {
             iconColor = Color.DEEP_ORANGE,
             showInPlayerTable = true
     )
-    public int level(UUID playerUUID) {
+    public long level(UUID playerUUID) {
 
         return Optional.ofNullable(AchievementPlayer.find.byId(playerUUID))
                 .map(player -> player.unlockedAchievements().size())
