@@ -11,7 +11,7 @@ plugins {
     id 'idea'
     id 'io.freefair.lombok' version '6.4.3.1'
     id 'io.ebean' version '13.0.0'
-    id 'kr.entree.spigradle' version '2.2.3'
+    id 'kr.entree.spigradle' version '2.4.3'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
